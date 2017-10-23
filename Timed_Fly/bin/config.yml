@@ -1,0 +1,166 @@
+Messages:
+  NoPermission:
+    Message: '&cTimedFly >> You don''t have permission to use command'
+    Title: '&cNo Permission'
+    SubTitle: '&7Are You An Admin?'
+  SetItem:
+    Usage: '&cTimedFly >> &eUsage: &7/tf setItem <itemID>'
+    Found: '&cTimedFly >> &eYou have changed the item of &7%itemid%.'
+    NotFound: '&cTimedFly >> &eI could not find the itemID &7%itemid%.'
+  SetTime:
+    Usage: '&cTimedFly >> &eUsage: &7/tf setTime <itemID> <minutes>'
+    Found: '&cTimedFly >> &eYou have set the time of &7%itemid% &eto &7%time%.'
+    NotFound: '&cTimedFly >> &eI could not find the itemID &7%itemid%.'
+  SetPrice:
+    Usage: '&cTimedFly >> &eUsage: &7/tf setPrice <itemID> <price>'
+    Found: '&cTimedFly >> &eYou have set the price of &7%itemid% &eto &7$%price%.'
+    NotFound: '&cTimedFly >> &eI could not find the itemID &7%itemid%.'
+  Reload:
+    Title: '&cTimed Fly'
+    SubTitle: '&eThe config was reloaded'
+    FadeIn: 1
+    Stay: 2
+    FadeOut: 1
+    Chat: '&cTimedFly >> &eThe config file was succesfully reloaded.'
+Fly:
+  DisabledSound: 'ENTITY_WITHER_DEATH'
+  JoinFlying:
+    Enabled: true
+    Height: 2
+  Message:
+    ToPlayer: '&cTimedFly >> &aFly mode enabled to &7%target% &afor &7%time% &aminutes.'
+    FromPlayer: '&cTimedFly >> &aFly mode enabled from &7%player% &afor &7%time% &aminutes.'
+    Enabled: '&cTimedFly >> &aYou have added &7%time% &aminutes to your flight time
+      for &7$%price%.'
+    Disabled: '&cTimedFly >> &aFly mode disabled. You can buy another one.'
+    NoMoney: '&cTimedFly >> &aYou don''t have enough money to buy this.'
+    SetOn: '&cTimedFly >> &aFly mode enabled.'
+    SetOff: '&cTimedFly >> &aFly mode disabled.'
+    TimeLeft: '&cTimedFly >> &aYou have %timeleft% time left.'
+  ActionBar:
+    Enabled: true
+    Message: '&cYou have %timeleft% of fly time'
+  Titles:
+    Enabled:
+      Use: true
+      Title: '&cYou have added'
+      SubTitle: '&f%time% minutes to your flight'
+    Disabled:
+      Use: true
+      Title: '&cFlight Disabled'
+      SubTitle: '&fYou can buy more time'
+Announce:
+  Sound: 'ENTITY_EXPERIENCE_ORB_PICKUP'
+  Chat:
+    Enabled: false
+    Message: '&cTimedFly >> &aFly mode will be disabled in &7%seconds% &aseconds.'
+  Titles:
+    Enabled: true
+    Title: '&c%seconds% Seconds'
+    SubTitle: '&fUntil Flight Disables'
+  Times:
+  - '10'
+  - '5'
+  - '4'
+  - '3'
+  - '2'
+  - '1'
+Gui:
+  DisplayName: TimedFly
+  Slots: 9
+  Items:
+    '1':
+      Name: '&7%time% &eMinutes Fly'
+      Slot: 0
+      Material: 340
+      Data: 0
+      Ammount: 1
+      Lore:
+      - ' '
+      - '&eBalance: &7%balance%'
+      - ' '
+      - '&eGet access to fly'
+      - '&efor %time% minutes'
+      - ' '
+      - '&eCost: &a$%price%'
+      - ' '
+      - '&7You will stop flying'
+      - '&7after the %time% minutes'
+      - ' '
+      - '&eTime Left: %timeleft%'
+      - ' '
+      Hide_Attributes: false
+      Hide_Enchants: true
+      Hide_Place_On: false
+      Hide_Potion_Effects: false
+      Hide_Unbreakable: false
+      Glow: false
+      Permission: something.here
+      PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
+        buying a rank'
+      Price: 2000
+      Time: 15
+    '2':
+      Name: '&7%time% &eMinutes Fly'
+      Slot: 1
+      Material: 340
+      Data: 0
+      Ammount: 1
+      Lore:
+      - ' '
+      - '&eBalance: &7%balance%'
+      - ' '
+      - '&eGet access to fly'
+      - '&efor %time% minutes'
+      - ' '
+      - '&eCost: &a$%price%'
+      - ' '
+      - '&7You will stop flying'
+      - '&7after the %time% minutes'
+      - ' '
+      - '&eTime Left: %timeleft%'
+      - ' '
+      Hide_Attributes: false
+      Hide_Enchants: true
+      Hide_Place_On: false
+      Hide_Potion_Effects: false
+      Hide_Unbreakable: false
+      Glow: false
+      Permission: something.here
+      PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
+        buying a rank'
+      Price: 5000
+      Time: 20
+    '3':
+      Name: '&7%time% &eMinutes Fly'
+      Slot: 2
+      Material: 340
+      Data: 0
+      Ammount: 1
+      Lore:
+      - ' '
+      - '&eBalance: &7%balance%'
+      - ' '
+      - '&eGet access to fly'
+      - '&efor %time% minutes'
+      - ' '
+      - '&eCost: &a$%price%'
+      - ' '
+      - '&7You will stop flying'
+      - '&7after the %time% minutes'
+      - ' '
+      - '&7Rank Needed: &eVIP'
+      - ' '
+      - '&eTime Left: %timeleft%'
+      - ' '
+      Hide_Attributes: false
+      Hide_Enchants: true
+      Hide_Place_On: false
+      Hide_Potion_Effects: false
+      Hide_Unbreakable: false
+      Glow: true
+      Permission: something.here
+      PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
+        buying a rank'
+      Price: 10000
+      Time: 60
