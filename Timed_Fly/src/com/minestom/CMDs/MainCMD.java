@@ -10,6 +10,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.minestom.TimedFly;
+import com.minestom.Languages.ItemsConfig;
+import com.minestom.Languages.LangConfig;
 
 import be.maximvdw.titlemotd.ui.Title;
 import mkremins.fanciful.FancyMessage;
@@ -17,12 +19,15 @@ import mkremins.fanciful.FancyMessage;
 public class MainCMD implements CommandExecutor {
 
 	public static TimedFly plugin = TimedFly.getPlugin(TimedFly.class);
+	private LangConfig lang = LangConfig.getInstance();
+	private ItemsConfig items = ItemsConfig.getInstance();
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String string, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("timedfly")) {
-			FileConfiguration config = plugin.getConfig();
+			FileConfiguration config = lang.getLang();
+			FileConfiguration itemscf = items.getItems();
 			if (args.length == 0) {
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cTimedFly &7created by &cBy_Jack"));
@@ -108,52 +113,59 @@ public class MainCMD implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("reload")) {
 					if (sender.hasPermission("timedfly.admin")) {
 						plugin.reloadConfig();
-						sender.sendMessage(
-								ChatColor.translateAlternateColorCodes('&', config.getString("Messages.Reload.Chat")));
+						lang.reloadLang();
+						lang.createFiles(plugin);
+						items.createFiles(plugin);
+						items.reloadItems();
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+								"&cTimedFly >> &econfig.yml was succesfully reloaded."));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+								"&cTimedFly >> &eitems.yml was succesfully reloaded."));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cTimedFly >> &elang_"
+								+ plugin.getConfig().getString("Lang") + ".yml was succesfully reloaded."));
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
 							if (Bukkit.getVersion().contains("1.8")) {
 								Title title = new Title(
-										ChatColor.translateAlternateColorCodes('&',
-												config.getString("Messages.Reload.Title")),
-										ChatColor.translateAlternateColorCodes('&',
-												config.getString("Messages.Reload.SubTitle")),
-										config.getInt("Messages.Reload.FadeIn"), config.getInt("Messages.Reload.Stay"),
-										config.getInt("Messages.Reload.FadeOut"));
+										ChatColor.translateAlternateColorCodes('&', "All files reloaded"), null, 1, 2,
+										1);
 								title.setTimingsToSeconds();
 								title.send(player);
 							} else {
-								player.sendTitle(
-										ChatColor.translateAlternateColorCodes('&',
-												config.getString("Messages.Reload.Title")),
-										ChatColor.translateAlternateColorCodes('&',
-												config.getString("Messages.Reload.SubTitle")),
-										config.getInt("Messages.Reload.FadeIn") * 20,
-										config.getInt("Messages.Reload.Stay") * 20,
-										config.getInt("Messages.Reload.FadeOut") * 20);
+								player.sendTitle(ChatColor.translateAlternateColorCodes('&', "All files reloaded"),
+										null, 1 * 20, 2 * 20, 1 * 20);
 							}
 						}
 						return true;
 					} else {
 						sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-								config.getString("Messages.NoPermission.Message")));
+								config.getString("Other.NoPermission.Message")));
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							Title title = new Title(
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.Title")),
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.SubTitle")),
-									1, 2, 1);
-							title.setTimingsToSeconds();
-							title.send(player);
+							if (Bukkit.getVersion().contains("1.8")) {
+								Title title = new Title(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1, 2, 1);
+								title.setTimingsToSeconds();
+								title.send(player);
+							} else {
+								player.sendTitle(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1 * 20, 2 * 20, 1 * 20);
+							}
 						}
 						return true;
 					}
 				}
 				if (args[0].equalsIgnoreCase("list")) {
 					if (sender.hasPermission("timedfly.admin")) {
-						ConfigurationSection section = config.getConfigurationSection("Gui.Items");
+						ConfigurationSection section = itemscf.getConfigurationSection("Items");
 						int i = 0;
 						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
 						sender.sendMessage(
@@ -167,17 +179,26 @@ public class MainCMD implements CommandExecutor {
 						return true;
 					} else {
 						sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-								config.getString("Messages.NoPermission.Message")));
+								config.getString("Other.NoPermission.Message")));
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							Title title = new Title(
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.Title")),
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.SubTitle")),
-									1, 2, 1);
-							title.setTimingsToSeconds();
-							title.send(player);
+							if (Bukkit.getVersion().contains("1.8")) {
+								Title title = new Title(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1, 2, 1);
+								title.setTimingsToSeconds();
+								title.send(player);
+							} else {
+								player.sendTitle(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1 * 20, 2 * 20, 1 * 20);
+							}
 						}
 						return true;
 					}
@@ -187,38 +208,47 @@ public class MainCMD implements CommandExecutor {
 						try {
 							int gettime = Integer.parseInt(args[1]);
 							int time = Integer.parseInt(args[2]);
-							if (config.contains("Gui.Items." + gettime)) {
-								config.set("Gui.Items." + gettime + ".Time", time);
-								plugin.saveConfig();
+							if (itemscf.contains("Items." + gettime)) {
+								itemscf.set("Items." + gettime + ".Time", time);
+								items.saveItems();
 								sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										config.getString("Messages.SetTime.Found")
+										config.getString("Other.SetTime.Found")
 												.replace("%time%", Integer.toString(time))
 												.replace("%itemid%", Integer.toString(gettime))));
 							} else {
 								sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										config.getString("Messages.SetTime.NotFound")
+										config.getString("Other.SetTime.NotFound")
 												.replace("%time%", Integer.toString(time))
 												.replace("%itemid%", Integer.toString(gettime))));
 							}
 
 						} catch (Exception e) {
 							sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-									config.getString("Messages.SetTime.Usage")));
+									config.getString("Other.SetTime.Usage")));
 						}
 						return true;
 					} else {
 						sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-								config.getString("Messages.NoPermission.Message")));
+								config.getString("Other.NoPermission.Message")));
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							Title title = new Title(
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.Title")),
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.SubTitle")),
-									1, 2, 1);
-							title.setTimingsToSeconds();
-							title.send(player);
+							if (Bukkit.getVersion().contains("1.8")) {
+								Title title = new Title(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1, 2, 1);
+								title.setTimingsToSeconds();
+								title.send(player);
+							} else {
+								player.sendTitle(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1 * 20, 2 * 20, 1 * 20);
+							}
 						}
 						return true;
 					}
@@ -228,38 +258,47 @@ public class MainCMD implements CommandExecutor {
 						try {
 							int getprice = Integer.parseInt(args[1]);
 							int price = Integer.parseInt(args[2]);
-							if (config.contains("Gui.Items." + getprice)) {
-								config.set("Gui.Items." + getprice + ".Price", price);
-								plugin.saveConfig();
+							if (itemscf.contains("Items." + getprice)) {
+								itemscf.set("Items." + getprice + ".Price", price);
+								items.saveItems();
 								sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										config.getString("Messages.SetPrice.Found")
+										config.getString("Other.SetPrice.Found")
 												.replace("%price%", Integer.toString(price))
 												.replace("%itemid%", Integer.toString(getprice))));
 							} else {
 								sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										config.getString("Messages.SetPrice.NotFound")
+										config.getString("Other.SetPrice.NotFound")
 												.replace("%price%", Integer.toString(price))
 												.replace("%itemid%", Integer.toString(getprice))));
 							}
 
 						} catch (Exception e) {
 							sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-									config.getString("Messages.SetPrice.Usage")));
+									config.getString("Other.SetPrice.Usage")));
 						}
 						return true;
 					} else {
 						sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-								config.getString("Messages.NoPermission.Message")));
+								config.getString("Other.NoPermission.Message")));
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							Title title = new Title(
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.Title")),
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.SubTitle")),
-									1, 2, 1);
-							title.setTimingsToSeconds();
-							title.send(player);
+							if (Bukkit.getVersion().contains("1.8")) {
+								Title title = new Title(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1, 2, 1);
+								title.setTimingsToSeconds();
+								title.send(player);
+							} else {
+								player.sendTitle(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1 * 20, 2 * 20, 1 * 20);
+							}
 						}
 						return true;
 					}
@@ -289,39 +328,48 @@ public class MainCMD implements CommandExecutor {
 							int data = player.getItemInHand().getDurability();
 							int ammount = player.getItemInHand().getAmount();
 							int id = player.getItemInHand().getTypeId();
-							if (config.contains("Gui.Items." + itemid)) {
-								config.set("Gui.Items." + itemid + ".Material", id);
-								config.set("Gui.Items." + itemid + ".Data", data);
-								config.set("Gui.Items." + itemid + ".Ammount", ammount);
-								plugin.saveConfig();
+							if (itemscf.contains("Items." + itemid)) {
+								itemscf.set("Items." + itemid + ".Material", id);
+								itemscf.set("Items." + itemid + ".Data", data);
+								itemscf.set("Items." + itemid + ".Ammount", ammount);
+								items.saveItems();
 								sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										config.getString("Messages.SetItem.Found").replace("%itemid%",
+										config.getString("Other.SetItem.Found").replace("%itemid%",
 												Integer.toString(itemid))));
 							} else {
 								sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										config.getString("Messages.SetItem.NotFound").replace("%itemid%",
+										config.getString("Other.SetItem.NotFound").replace("%itemid%",
 												Integer.toString(itemid))));
 							}
 
 						} catch (Exception e) {
 							sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-									config.getString("Messages.SetItem.Usage")));
+									config.getString("Other.SetItem.Usage")));
 						}
 
 						return true;
 					} else {
 						sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-								config.getString("Messages.NoPermission.Message")));
+								config.getString("Other.NoPermission.Message")));
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							Title title = new Title(
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.Title")),
-									ChatColor.translateAlternateColorCodes('&',
-											config.getString("Messages.NoPermission.SubTitle")),
-									1, 2, 1);
-							title.setTimingsToSeconds();
-							title.send(player);
+							if (Bukkit.getVersion().contains("1.8")) {
+								Title title = new Title(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1, 2, 1);
+								title.setTimingsToSeconds();
+								title.send(player);
+							} else {
+								player.sendTitle(
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.Title")),
+										ChatColor.translateAlternateColorCodes('&',
+												config.getString("Other.NoPermission.SubTitle")),
+										1 * 20, 2 * 20, 1 * 20);
+							}
 						}
 						return true;
 					}

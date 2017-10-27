@@ -30,13 +30,9 @@ public class Updater {
 			int actualVersion = Integer.valueOf(update.getDescription().getVersion().replace(".", "")).intValue();
 
 			if (spigotVersion > actualVersion) {
-				player.sendMessage("");
-				player.sendMessage("¡ì7--------¡ìcTimedFly¡ì7--------");
-				player.sendMessage("");
-				player.sendMessage("¡ìeNew version available: ¡ìa" + spigotVersionString);
-				player.sendMessage("¡ìeYou have: ¡ìa" + update.getDescription().getVersion());
-				player.sendMessage("¡ìeDownload:¡ìa https://www.spigotmc.org/resources/timed-fly-1-8-1-12-2.48668/");
-				player.sendMessage("");
+				player.sendMessage("¡ìcNew version of TimedFly available ¡ìb" + spigotVersionString);
+				player.sendMessage("¡ìcYou have ¡ìb" + update.getDescription().getVersion());
+				player.sendMessage("¡ìcDownload: https://www.spigotmc.org/resources/timed-fly-1-8-1-12-2.48668/");
 			}
 		} catch (Exception ex) {
 			player.sendMessage("¡ìcTimedFly >> Failed to check for an update on spigot.");

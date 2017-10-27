@@ -1,13 +1,15 @@
 main: com.minestom.TimedFly
 name: TimedFly
-version: 1.2
+version: 1.5.2
 author: By_Jack
 depend: [Vault]
-softdepend: [ActionBarAPI]
+softdepend: [ActionBarAPI, PlaceholderAPI]
 commands:
   fly:
     usage: /<command>
+    description: fly bitch fly
   timedfly:
     aliases: [tf, tfly, timedf]
     usage: /<command>
+    description: fly bitch fly
     
