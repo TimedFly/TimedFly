@@ -1,8 +1,8 @@
 package com.minestom;
 
 import java.io.File;
-import java.util.Map.Entry;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,7 +17,7 @@ import com.minestom.CMDs.FlyCMD;
 import com.minestom.CMDs.MainCMD;
 import com.minestom.Languages.DataConfig;
 import com.minestom.Languages.ItemsConfig;
-import com.minestom.Languages.LangConfig;
+import com.minestom.Languages.LangFiles;
 import com.minestom.Updater.Updater;
 import com.minestom.Utilities.GUI.GUIListener;
 import com.minestom.Utilities.Others.GeneralListener;
@@ -28,7 +28,7 @@ public class TimedFly extends JavaPlugin {
 	public static Economy economy;
 	public static TimedFly plugin;
 	private DataConfig data = DataConfig.getInstance();
-	private LangConfig lang = LangConfig.getInstance();
+	private LangFiles lang = LangFiles.getInstance();
 	private ItemsConfig items = ItemsConfig.getInstance();
 
 	@Override
@@ -38,8 +38,9 @@ public class TimedFly extends JavaPlugin {
 		lang.createFiles(this);
 		items.createFiles(this);
 		if (!setupEconomy()) {
-			Bukkit.getLogger().severe(String.format("¡ìcTimedFly >> Disabled due to no Vault dependency found!",
-					getDescription().getName()));
+			Bukkit.getLogger()
+					.severe(String.format(ChatColor.RED + "TimedFly >> Disabled due to no Vault dependency found!",
+							getDescription().getName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		} else {

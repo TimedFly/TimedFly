@@ -1,0 +1,72 @@
+#Translated by Toldi
+#https://www.spigotmc.org/members/toldi.251100/
+
+#Ez az, amikor a játékosnak a választott ideje marad, mond valamit
+Announcer:
+  Sound: ENTITY_EXPERIENCE_ORB_PICKUP
+  Chat:
+    Enabled: false
+    Message: '&cTimedFly >> &aA repülés mód le lesz tiltva &7%seconds% &amásodperc múlva.'
+  Titles:
+    Enabled: true
+    Title: '&c%seconds% másodperc'
+    SubTitle: '&fAmíg a repülést letiltja'
+  Times:
+  - '60'
+  - '10'
+  - '5'
+  - '4'
+  - '3'
+  - '2'
+  - '1'
+  
+#Ez az, amikor a játékos repül vagy repülési mód engedélyezve/letiltva
+Fly:
+  DisabledSound: ENTITY_WITHER_DEATH
+  JoinFlying:
+    Enabled: true
+    Height: 2
+  Message:
+    ToPlayer: '&cTimedFly >> &aRepülés mód engedélyezve &7%target% &7%time% &apercre.'
+    FromPlayer: '&cTimedFly >> &aRepülés mód engedélyezve van &7%player%&a-nak/-nek &7%time% &apercre.'
+    Enabled: '&cTimedFly >> &aHozzáadtál &7%time% &apercet a repülési időhöz
+      ára &7$%price%.'
+    Disabled: '&cTimedFly >> &aRepülés mód letiltva. Vásárolj egyet.'
+    NoMoney: '&cTimedFly >> &aNincs elegendő pénzed a vásárláshoz.'
+    SetOn: '&cTimedFly >> &aRepülés mód engedélyezve.'
+    SetOff: '&cTimedFly >> &aRepülés mód letiltva.'
+    TimeLeft: '&cTimedFly >> &aVan %timeleft% idő maradt.'
+  #A plugin használatához az ActionBar üzeneteket kell használnia.
+  #https://www.spigotmc.org/resources/actionbarapi-1-8-1-12-1.1315/
+  ActionBar:
+    Enabled: true
+    Message: '&cVan %timeleft% a repülési idő'
+  Titles:
+    Enabled:
+      Use: true
+      Title: '&cHozzáadtál'
+      SubTitle: '&f%time% percet a repülésedhez'
+    Disabled:
+      Use: true
+      Title: '&cRepülés letiltva'
+      SubTitle: '&fTöbb időt vehetsz'
+
+#Ez néhány egyéb üzenet
+Other:
+  NoPermission:
+    Message: '&cTimedFly >> Nincs jogod ehhez a parancshoz'
+    Title: '&cNincs jogod'
+    SubTitle: '&7Admin vagy?'
+  SetItem:
+    Usage: '&cTimedFly >> &eHasználat: &7/tf setItem <tárgyID>'
+    Found: '&cTimedFly >> &eMegváltoztattad a tárgyat &7%itemid%.'
+    NotFound: '&cTimedFly >> &eNem találtam a tárgy ID-t &7%itemid%. Használd /tf list az összes tárgy megtekintéséhez.'
+  SetTime:
+    Usage: '&cTimedFly >> &eHasználat: &7/tf setTime <tárgyID> <perc>'
+    Found: '&cTimedFly >> &eBeállítottad az időt &7%itemid% &7%time%.'
+    NotFound: '&cTimedFly >> &eNem találtam a tárgy ID-t &7%itemid%. Használd /tf list az összes tárgy megtekintéséhez.'
+  SetPrice:
+    Usage: '&cTimedFly >> &eHasználat: &7/tf setPrice <tárgyID> <ár>'
+    Found: '&cTimedFly >> &eBeállítottad az pénzt &7%itemid% &7$%price%.'
+    NotFound: '&cTimedFly >> &eNem találtam a tárgy ID-t &7%itemid%. Használd /tf list az összes tárgy megtekintéséhez.'
+  DisabledWorld: '&cTimedFly >> &eEz a világ nem engedélyezett. Ha úgy gondolod, hogy ez hiba, akkor jelentsd be a rendszergazdának.'

@@ -26,6 +26,6 @@ Enabled-Worlds:
 Check-For-Updates: true
 
 #Choose your own message file (if file name is lang_en.yml use the work after lang_ in this case will be en
-#Current languages es, sp, you can create your own and send it to me so I added for default.
+#Current languages es, sp, hu, you can create your own and send it to me so I added for default.
 #Is not recomended to use the /tf reload command, some messages will not change.
 Lang: en

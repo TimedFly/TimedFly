@@ -51,11 +51,17 @@ public class FlyGUI {
 				int i = (int) Math.round(economy.getBalance(player));
 				String format = NumberFormat.getIntegerInstance().format(i);
 				for (String list : l) {
-					String loreNoPAPI = ChatColor.translateAlternateColorCodes('&', list).replace("%time%", time)
-							.replace("%price%", price).replace("%timeleft%", "00:00:00")
-							.replace("%balance%", "" + format);
-					String lorePAPI = PlaceholderAPI.setPlaceholders(player, loreNoPAPI);
-					lore.add(lorePAPI);
+					if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI") == true) {
+						String loreNoPAPI = ChatColor.translateAlternateColorCodes('&', list).replace("%time%", time)
+								.replace("%price%", price).replace("%timeleft%", "00:00:00")
+								.replace("%balance%", "" + format);
+						String lorePAPI = PlaceholderAPI.setPlaceholders(player, loreNoPAPI);
+						lore.add(lorePAPI);
+					} else {
+						lore.add(ChatColor.translateAlternateColorCodes('&', list).replace("%time%", time)
+								.replace("%price%", price).replace("%timeleft%", "00:00:00")
+								.replace("%balance%", "" + format));
+					}
 				}
 			} else {
 				Integer millis = GUIListener.cooldown.get(player.getUniqueId()) * 1000;
@@ -114,6 +120,7 @@ public class FlyGUI {
 			}
 			item.setItemMeta(meta);
 			inv.setItem(itemscf.getInt("Items." + string + ".Slot"), item);
+
 		}
 		player.openInventory(inv);
 	}

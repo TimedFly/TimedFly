@@ -15,7 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.minestom.TimedFly;
-import com.minestom.Languages.LangConfig;
+import com.minestom.Languages.LangFiles;
 import com.minestom.Utilities.GUI.FlyGUI;
 import com.minestom.Utilities.GUI.GUIListener;
 
@@ -24,7 +24,7 @@ import be.maximvdw.titlemotd.ui.Title;
 public class FlyCMD implements CommandExecutor {
 
 	public static TimedFly plugin = TimedFly.getPlugin(TimedFly.class);
-	private LangConfig lang = LangConfig.getInstance();
+	private LangFiles lang = LangFiles.getInstance();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String string, String[] args) {

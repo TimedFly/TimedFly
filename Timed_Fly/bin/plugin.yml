@@ -1,6 +1,6 @@
 main: com.minestom.TimedFly
 name: TimedFly
-version: 1.5.2
+version: 1.5.4
 author: By_Jack
 depend: [Vault]
 softdepend: [ActionBarAPI, PlaceholderAPI]

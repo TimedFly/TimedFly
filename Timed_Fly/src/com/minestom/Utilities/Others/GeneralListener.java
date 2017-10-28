@@ -19,14 +19,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.minestom.TimedFly;
 import com.minestom.Languages.DataConfig;
-import com.minestom.Languages.LangConfig;
+import com.minestom.Languages.LangFiles;
 import com.minestom.Updater.Updater;
 import com.minestom.Utilities.GUI.GUIListener;
 
 public class GeneralListener implements Listener {
 
 	public TimedFly plugin = TimedFly.getPlugin(TimedFly.class);
-	private static LangConfig lang = LangConfig.getInstance();
+	private static LangFiles lang = LangFiles.getInstance();
 	private DataConfig data = DataConfig.getInstance();
 
 	public GeneralListener() {
@@ -128,7 +128,7 @@ public class GeneralListener implements Listener {
 							player.setAllowFlight(true);
 						}
 					}
-				}, 40L);
+				}, 10L);
 				
 			} else {
 				if (to != w) {

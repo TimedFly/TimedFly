@@ -23,7 +23,7 @@ import org.bukkit.inventory.Inventory;
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
 import com.minestom.TimedFly;
 import com.minestom.Languages.ItemsConfig;
-import com.minestom.Languages.LangConfig;
+import com.minestom.Languages.LangFiles;
 import com.minestom.Utilities.Others.OnClick;
 
 import be.maximvdw.titlemotd.ui.Title;
@@ -35,7 +35,7 @@ public class GUIListener implements Listener {
 	public static HashMap<UUID, Integer> godmode = new HashMap<UUID, Integer>();
 	private Economy economy = TimedFly.economy;
 	public TimedFly plugin = TimedFly.getPlugin(TimedFly.class);
-	private LangConfig lang = LangConfig.getInstance();
+	private LangFiles lang = LangFiles.getInstance();
 	private ItemsConfig items = ItemsConfig.getInstance();
 
 	public GUIListener() {
@@ -172,7 +172,7 @@ public class GUIListener implements Listener {
 	@EventHandler
 	public void flyListenerGui(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
-		Inventory inv = event.getClickedInventory();
+		Inventory inv = event.getInventory();
 		int slot = event.getSlot();
 		FileConfiguration config = lang.getLang();
 		FileConfiguration itemscf = items.getItems();

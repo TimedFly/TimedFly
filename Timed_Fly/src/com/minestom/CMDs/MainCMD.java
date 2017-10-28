@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import com.minestom.TimedFly;
 import com.minestom.Languages.ItemsConfig;
-import com.minestom.Languages.LangConfig;
+import com.minestom.Languages.LangFiles;
 
 import be.maximvdw.titlemotd.ui.Title;
 import mkremins.fanciful.FancyMessage;
@@ -19,7 +19,7 @@ import mkremins.fanciful.FancyMessage;
 public class MainCMD implements CommandExecutor {
 
 	public static TimedFly plugin = TimedFly.getPlugin(TimedFly.class);
-	private LangConfig lang = LangConfig.getInstance();
+	private LangFiles lang = LangFiles.getInstance();
 	private ItemsConfig items = ItemsConfig.getInstance();
 
 	@SuppressWarnings("deprecation")
