@@ -1,0 +1,69 @@
+#This is when the player has the choosen time left it says something
+Announcer:
+  Sound: ENTITY_EXPERIENCE_ORB_PICKUP
+  Chat:
+    Enabled: false
+    Message: '&cTimedFly >> &aFliegen wird in &7%seconds% &aSekunden deaktiviert.'
+  Titles:
+    Enabled: true
+    Title: '&c%seconds% Sekunden'
+    SubTitle: '&fBis fliegen deaktiviert wird.'
+  Times:
+  - '60'
+  - '10'
+  - '5'
+  - '4'
+  - '3'
+  - '2'
+  - '1'
+  
+#This is when the player is flying or fly mode is enabled/disabled
+Fly:
+  DisabledSound: ENTITY_WITHER_DEATH
+  JoinFlying:
+    Enabled: true
+    Height: 2
+  Message:
+    ToPlayer: '&cTimedFly >> &7%target% &a kann nun für &7%time% &aMinuten fliegen.'
+    FromPlayer: '&cTimedFly >> &aFliegen wurde von &7%player% &afür &7%time% &aMinuten aktiviert.'
+    Enabled: '&cTimedFly >> &aDu hast &7%time% &aMinuten Flugzeit hinzugefügt
+      für &7$%price%.'
+    Disabled: '&cTimedFly >> &aFliegen deaktiviert, du kannst weitere Zeit kaufen.'
+    NoMoney: '&cTimedFly >> &aDu verfügst über zu wenig Geld, um das kaufen zu können.'
+    SetOn: '&cTimedFly >> &aFly mode enabled.'
+    SetOff: '&cTimedFly >> &aFly mode disabled.'
+    TimeLeft: '&cTimedFly >> &aVerbleibende Zeit %timeleft%.'
+  #You need this plugin to use ActionBar messages. 
+  #https://www.spigotmc.org/resources/actionbarapi-1-8-1-12-1.1315/
+  ActionBar:
+    Enabled: true
+    Message: '&cVerbleibende Flugzeit %timeleft%'
+  Titles:
+    Enabled:
+      Use: true
+      Title: '&cDu hast'
+      SubTitle: '&f%time% Minuten Flugzeit hinzugefügt'
+    Disabled:
+      Use: true
+      Title: '&cFliegen deaktivier'
+      SubTitle: '&fDu kannst mehr Zeit kaufen'
+
+#This are some other messages
+Other:
+  NoPermission:
+    Message: '&cTimedFly >> Du hast keine Berechtigung diesen Befehl zu benutzen'
+    Title: '&cKeine Berechtigung'
+    SubTitle: '&7Bist du ein Admin?'
+  SetItem:
+    Usage: '&cTimedFly >> &eUsage: &7/tf setItem <itemID>'
+    Found: '&cTimedFly >> &eDu hast das Item zu &7%itemid% geändert.'
+    NotFound: '&cTimedFly >> &eDie ItemId &7%itemid% konnte nicht gefunden werden. Benutz /tf list um alle Items zu sehen.'
+  SetTime:
+    Usage: '&cTimedFly >> &eUsage: &7/tf setTime <itemID> <minuten>'
+    Found: '&cTimedFly >> &eDu hast die Zeit von &7%itemid% &ezu &7%time% gesetzt.'
+    NotFound: '&cTimedFly >> &eDie ItemId &7%itemid% konnte nicht gefunden werden. Benutz /tf list um alle Items zu sehen.'
+  SetPrice:
+    Usage: '&cTimedFly >> &eUsage: &7/tf setPrice <itemID> <price>'
+    Found: '&cTimedFly >> &eDu hast den Preis von &7%itemid% &ezu &7$%price% geändert.'
+    NotFound: '&cTimedFly >> &eDie ItemId &7%itemid% konnte nicht gefunden werden. Benutz /tf list um alle Items zu sehen.'
+  DisabledWorld: '&cTimedFly >> &eDiese Welt ist nicht aktiviert. Wenn du glaubst das es ein Fehler ist melde es einen Admin.'
