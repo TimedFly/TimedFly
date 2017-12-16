@@ -31,7 +31,7 @@ Fly:
   Message:
     ToPlayer: '&aRepülés mód engedélyezve &7%target% &7%time% &apercre.'
     FromPlayer: '&aRepülés mód engedélyezve van &7%player%&a-nak/-nek &7%time% &apercre.'
-    AddTime: '&aYou have added &7%time% &aminutes to &7%player%'
+    AddTime: '&aHozzáadtad &7%time% &apercet &7%player%&a játékoshoz'
     Enabled: '&aHozzáadtál &7%time% &apercet a repülési időhöz
       ára &7$%price%.'
     Disabled: '&aRepülés mód letiltva. Vásárolj egyet.'
@@ -54,15 +54,15 @@ Fly:
 
 Format:
   Singular:
-    Day: 'day'
-    Hour: 'hour'
-    Minute: 'minute'
-    Second: 'second'
+    Day: 'nap'
+    Hour: 'óra'
+    Minute: 'perc'
+    Second: 'másodperc'
   Plural:
-    Days: 'days'
-    Hours: 'hours'
-    Minutes: 'minutes'
-    Seconds: 'seconds'
+    Days: 'nap'
+    Hours: 'óra'
+    Minutes: 'perc'
+    Seconds: 'másodperc'
   NoTimeLeft: 'Nincs idő'
 
 
@@ -85,6 +85,6 @@ Other:
     Found: '&eBeállítottad az pénzt &7%itemid% &7$%price%.'
     NotFound: '&eNem találtam a tárgy ID-t &7%itemid%. Használd /tf list az összes tárgy megtekintéséhez.'
   DisabledWorld: '&eEz a világ nem engedélyezett. Ha úgy gondolod, hogy ez hiba, akkor jelentsd be a rendszergazdának.'
-  MaxReached: '&eYou have reached the maximum limit of your flight time allowed.'
-  MaxAllowed: '&eYou can''t choose more than your max time allowed (&c%time_allowed%&7).'
-  OnCooldown: '&7You can''t use this for %cooldown%'
+  MaxReached: '&eElérted a megengedett maximális repülési időt.'
+  MaxAllowed: '&eNem választhat többet, mint a megengedett maximális időt (&c%time_allowed%&7).'
+  OnCooldown: '&7Nem használhatod ezt %cooldown%'
