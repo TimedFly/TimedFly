@@ -1,15 +1,16 @@
-#Aqu¨ª es cuando el jugador tiene el tiempo elegido, dice algo
+# Aqui es cuando el jugador tiene el tiempo elegido, dice algo
 Announcer:
-  #Usa los sonidos corespondientes a tu version de minecraft, ahora se esta usando los de la 1.9+
+  # Usa los sonidos corespondientes a tu version de minecraft, ahora se esta usando los de la 1.9+
   Sound: ENTITY_EXPERIENCE_ORB_PICKUP
   Chat:
     Enabled: false
-    Message: '&cTimedFly >> &aModo vuelo se desactivara en &7%seconds% &asegundos.'
+    Message: '&aModo vuelo se desactivara en &7%time%.'
   Titles:
     Enabled: true
-    Title: '&c%seconds% Segundos'
+    Title: '&c%time%'
     SubTitle: '&fPara desactivar el Fly'
   Times:
+  - '120'
   - '60'
   - '10'
   - '5'
@@ -17,24 +18,24 @@ Announcer:
   - '3'
   - '2'
   - '1'
+  - '0'
   
-#Esto es cuando el jugador est¨¢ volando o el modo de vuelo est¨¢ habilitado / deshabilitado
+# Esto es cuando el jugador esta volando o el modo de vuelo esta habilitado / deshabilitado
 Fly:
   DisabledSound: ENTITY_WITHER_DEATH
   JoinFlying:
     Enabled: true
     Height: 2
   Message:
-    ToPlayer: '&cTimedFly >> &aModo vuelo activado para &7%target% &apor &7%time% &aminutos.'
-    FromPlayer: '&cTimedFly >> &aModo vuelo activado desde &7%player% &apor &7%time% &aminutos.'
-    Enabled: '&cTimedFly >> &aHas agregado &7%time% &aminutos a tu tiempo de vuelo por &7$%price%.'
-    Disabled: '&cTimedFly >> &aModo vuelo desactivado. Compra mas tiempo si quieres seguir.'
-    NoMoney: '&cTimedFly >> &aNo tienes sufuciente dinero para comprar esto, trabaja.'
-    SetOn: '&cTimedFly >> &aModo vuelo activado.'
-    SetOff: '&cTimedFly >> &aModo vuelo desactivado.'
-    TimeLeft: '&cTimedFly >> &aTe quedan %timeleft% restantes.'
-  #Necesitas este plugin para usar los mensajes en la ActionBar. 
-  #https://www.spigotmc.org/resources/actionbarapi-1-8-1-12-1.1315/    
+    ToPlayer: '&aModo vuelo activado para &7%target% &apor &7%time% &aminutos.'
+    FromPlayer: '&aModo vuelo activado desde &7%player% &apor &7%time% &aminutos.'
+    AddTime: '&aHas agregado &7%time% &aminutos al jugador &7%player%'
+    Enabled: '&aHas agregado &7%time% &aminutos a tu tiempo de vuelo por &7$%price%.'
+    Disabled: ' &aModo vuelo desactivado. Compra mas tiempo si quieres seguir.'
+    NoMoney: '&aNo tienes sufuciente dinero para comprar esto, trabaja.'
+    SetOn: '&aModo vuelo activado.'
+    SetOff: '&aModo vuelo desactivado.'
+    TimeLeft: '&aTe quedan %timeleft% restantes.'
   ActionBar:
     Enabled: true
     Message: '&aTe quedan %timeleft% restantes.'
@@ -42,29 +43,46 @@ Fly:
     Enabled:
       Use: true
       Title: '&cHas agregado'
-      SubTitle: '&f%time% minutos a tu vuelo'
+      SubTitle: '&f%time% a tu vuelo'
     Disabled:
       Use: true
       Title: '&cModo vuelo desactivado'
       SubTitle: '&fPuedes agregar mas tiempo'
 
-#Estos son otros mensajes
+Format:
+  Singular:
+    Day: 'dia'
+    Hour: 'hora'
+    Minute: 'minuto'
+    Second: 'segundo'
+  Plural:
+    Days: 'dias'
+    Hours: 'horas'
+    Minutes: 'minutos'
+    Seconds: 'segundos'
+  NoTimeLeft: 'Sin tiempo restante'
+
+# Estos son otros mensajes
 Other:
   NoPermission:
-    Message: '&cTimedFly >> No tienes permiso para usar este comando, creo que no eres Admin.'
+    Message: '&cNo tienes permiso para usar este comando, creo que no eres Admin.'
     Title: '&cSin permisos'
     SubTitle: '&7Eres un Admin?'
   SetItem:
-    Usage: '&cTimedFly >> &eUso: &7/tf setItem <itemID>'
-    Found: '&cTimedFly >> &eHas cambiado el item de &7%itemid%.'
-    NotFound: '&cTimedFly >> &eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
+    Usage: '&eUso: &7/tf setItem <itemID>'
+    Found: '&eHas cambiado el item de &7%itemid%.'
+    NotFound: '&eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
   SetTime:
-    Usage: '&cTimedFly >> &eUso: &7/tf setTime <itemID> <minutos>'
-    Found: '&cTimedFly >> &eHas puesto el tiempo de &7%itemid% &ea &7%time% minutos.'
-    NotFound: '&cTimedFly >> &eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
+    Usage: '&eUso: &7/tf setTime <itemID> <minutos>'
+    Found: '&eHas puesto el tiempo de &7%itemid% &ea &7%time% minutos.'
+    NotFound: '&eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
   SetPrice:
-    Usage: '&cTimedFly >> &eUso: &7/tf setPrice <itemID> <price>'
-    Found: '&cTimedFly >> &eHas puesto el precio de &7%itemid% &ea &7$%price%.'
-    NotFound: '&cTimedFly >> &eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
-  DisabledWorld: '&cTimedFly >> &eEste mundo no esta habilitado. Si usted cree que es un error por favor reportalo a un Admin'
+    Usage: '&eUso: &7/tf setPrice <itemID> <price>'
+    Found: '&eHas puesto el precio de &7%itemid% &ea &7$%price%.'
+    NotFound: '&eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
+  DisabledWorld: '&eEste mundo no esta habilitado. Si usted cree que es un error por favor reportalo a un Admin'
+  LimitReached: 'Has alcanzado el tiempo maximo de vuelo permitido.'
+  MaxReached: '&eHas llegado al limite maximo de tiempo de vuelo permitido.'
+  MaxAllowed: '&eNo puedes elegir mas tiempo del permitido (&c%time_allowed%&7).'
+  OnCooldown: '&7No puedes usar esto por &c%cooldown%'
     

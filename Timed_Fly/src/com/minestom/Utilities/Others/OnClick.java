@@ -8,7 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.minestom.Languages.ItemsConfig;
+import com.minestom.ConfigurationFiles.ItemsConfig;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 

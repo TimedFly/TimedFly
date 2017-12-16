@@ -1,14 +1,15 @@
-#This is when the player has the choosen time left it says something
+# This is when the player has the choosen time left it says something
 Announcer:
   Sound: ENTITY_EXPERIENCE_ORB_PICKUP
   Chat:
     Enabled: false
-    Message: '&cTimedFly >> &aFly mode will be disabled in &7%seconds% &aseconds.'
+    Message: '&aFly mode will be disabled in &7%time%'
   Titles:
     Enabled: true
-    Title: '&c%seconds% Seconds'
+    Title: '&c%time%'
     SubTitle: '&fUntil Flight Disables'
   Times:
+  - '120'
   - '60'
   - '10'
   - '5'
@@ -16,25 +17,25 @@ Announcer:
   - '3'
   - '2'
   - '1'
+  - '0'
   
-#This is when the player is flying or fly mode is enabled/disabled
+# This is when the player is flying or fly mode is enabled/disabled
 Fly:
   DisabledSound: ENTITY_WITHER_DEATH
   JoinFlying:
     Enabled: true
     Height: 2
   Message:
-    ToPlayer: '&cTimedFly >> &aFly mode enabled to &7%target% &afor &7%time% &aminutes.'
-    FromPlayer: '&cTimedFly >> &aFly mode enabled from &7%player% &afor &7%time% &aminutes.'
-    Enabled: '&cTimedFly >> &aYou have added &7%time% &aminutes to your flight time
+    ToPlayer: '&aFly mode enabled to &7%target% &afor &7%time% &aminutes.'
+    FromPlayer: '&aFly mode enabled from &7%player% &afor &7%time% &aminutes.'
+    AddTime: '&aYou have added &7%time% &aminutes to &7%player%'
+    Enabled: '&aYou have added &7%time% &aminutes to your flight time
       for &7$%price%.'
-    Disabled: '&cTimedFly >> &aFly mode disabled. You can buy another one.'
-    NoMoney: '&cTimedFly >> &aYou don''t have enough money to buy this.'
-    SetOn: '&cTimedFly >> &aFly mode enabled.'
-    SetOff: '&cTimedFly >> &aFly mode disabled.'
-    TimeLeft: '&cTimedFly >> &aYou have %timeleft% time left.'
-  #You need this plugin to use ActionBar messages. 
-  #https://www.spigotmc.org/resources/actionbarapi-1-8-1-12-1.1315/
+    Disabled: '&aFly mode disabled. You can buy another one.'
+    NoMoney: '&aYou don''t have enough money to buy this.'
+    SetOn: '&aFly mode enabled.'
+    SetOff: '&aFly mode disabled.'
+    TimeLeft: '&aYou have %timeleft% time left.'
   ActionBar:
     Enabled: true
     Message: '&cYou have %timeleft% of fly time'
@@ -42,28 +43,44 @@ Fly:
     Enabled:
       Use: true
       Title: '&cYou have added'
-      SubTitle: '&f%time% minutes to your flight'
+      SubTitle: '&f%time% to your flight'
     Disabled:
       Use: true
       Title: '&cFlight Disabled'
       SubTitle: '&fYou can buy more time'
 
-#This are some other messages
+Format:
+  Singular:
+    Days: 'day'
+    Hour: 'hour'
+    Minute: 'minute'
+    Second: 'second'
+  Plural:
+    Days: 'days'
+    Hours: 'hours'
+    Minutes: 'minutes'
+    Seconds: 'seconds'
+  NoTimeLeft: 'No time left'
+
+# This are some other messages
 Other:
   NoPermission:
-    Message: '&cTimedFly >> You don''t have permission to use command'
+    Message: '&cYou don''t have permission to use command'
     Title: '&cNo Permission'
     SubTitle: '&7Are You An Admin?'
   SetItem:
-    Usage: '&cTimedFly >> &eUsage: &7/tf setItem <itemID>'
-    Found: '&cTimedFly >> &eYou have changed the item of &7%itemid%.'
-    NotFound: '&cTimedFly >> &eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
+    Usage: '&eUsage: &7/tf setItem <itemID>'
+    Found: '&eYou have changed the item of &7%itemid%.'
+    NotFound: '&eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
   SetTime:
-    Usage: '&cTimedFly >> &eUsage: &7/tf setTime <itemID> <minutes>'
-    Found: '&cTimedFly >> &eYou have set the time of &7%itemid% &eto &7%time%.'
-    NotFound: '&cTimedFly >> &eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
+    Usage: '&eUsage: &7/tf setTime <itemID> <minutes>'
+    Found: '&eYou have set the time of &7%itemid% &eto &7%time%.'
+    NotFound: '&eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
   SetPrice:
-    Usage: '&cTimedFly >> &eUsage: &7/tf setPrice <itemID> <price>'
-    Found: '&cTimedFly >> &eYou have set the price of &7%itemid% &eto &7$%price%.'
-    NotFound: '&cTimedFly >> &eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
-  DisabledWorld: '&cTimedFly >> &eThis world is not enabled. If you think this is an error please report it to the Admin.'
+    Usage: '&eUsage: &7/tf setPrice <itemID> <price>'
+    Found: '&eYou have set the price of &7%itemid% &eto &7$%price%.'
+    NotFound: '&eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
+  DisabledWorld: '&eThis world is not enabled. If you think this is an error please report it to the Admin.'
+  MaxReached: '&eYou have reached the maximum limit of your flight time allowed.'
+  MaxAllowed: '&eYou can''t choose more than your max time allowed (&c%time_allowed%&7).'
+  OnCooldown: '&7You can''t use this for %cooldown%'

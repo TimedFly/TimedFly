@@ -1,266 +1,240 @@
 package com.minestom.Utilities.GUI;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.UUID;
-
+import com.minestom.ConfigurationFiles.ItemsConfig;
+import com.minestom.ConfigurationFiles.LangFiles;
+import com.minestom.Managers.CooldownManager;
+import com.minestom.Managers.DependenciesManager;
+import com.minestom.Managers.MessageManager;
+import com.minestom.Managers.TimeFormat;
+import com.minestom.TimedFly;
+import com.minestom.Utilities.Others.OnClick;
+import com.minestom.Utilities.Utility;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import com.connorlinfoot.actionbarapi.ActionBarAPI;
-import com.minestom.TimedFly;
-import com.minestom.Languages.ItemsConfig;
-import com.minestom.Languages.LangFiles;
-import com.minestom.Utilities.Others.OnClick;
-
-import be.maximvdw.titlemotd.ui.Title;
-import net.milkbowl.vault.economy.Economy;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class GUIListener implements Listener {
 
-	public static HashMap<UUID, Integer> cooldown = new HashMap<UUID, Integer>();
-	public static HashMap<UUID, Integer> godmode = new HashMap<UUID, Integer>();
-	private Economy economy = TimedFly.economy;
-	public TimedFly plugin = TimedFly.getPlugin(TimedFly.class);
-	private LangFiles lang = LangFiles.getInstance();
-	private ItemsConfig items = ItemsConfig.getInstance();
+    private TimedFly plugin = TimedFly.getInstance();
+    private TimeFormat format = new TimeFormat();
+    public static HashMap<UUID, Integer> flytime = new HashMap<>();
+    public static HashMap<UUID, Integer> godmode = new HashMap<>();
+    private LangFiles lang = LangFiles.getInstance();
+    private ItemsConfig items = ItemsConfig.getInstance();
+    private Utility utility = new Utility(plugin);
 
-	public GUIListener() {
-		FileConfiguration config = lang.getLang();
-		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-			@Override
-			public void run() {
-				for (Map.Entry<UUID, Integer> entry : cooldown.entrySet()) {
-					Player player = Bukkit.getPlayer(entry.getKey());
-					Integer time = entry.getValue();
-					if (time == 0) {
-						if (player == null) {
-							cooldown.remove(entry.getKey());
-						} else {
-							if (player != null) {
-								List<String> worlds = plugin.getConfig().getStringList("Enabled-Worlds");
-								cooldown.remove(player.getUniqueId());
-								for (String world : worlds) {
-									World w = Bukkit.getWorld(world);
-									if (player.getWorld() == w) {
-										godmode.put(player.getUniqueId(), 6);
-										player.setAllowFlight(false);
-										player.setFlying(false);
-										player.playSound(player.getLocation(),
-												Sound.valueOf(config.getString("Fly.DisabledSound")), 100, 1);
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-												config.getString("Fly.Message.Disabled")));
-										if (config.getBoolean("Fly.Titles.Disabled.Use") == true) {
-											if (Bukkit.getVersion().contains("1.8")) {
-												Title title = new Title(
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Fly.Titles.Disabled.Title").replace(
-																		"%time%", Integer.toString((int) (time - 1)))),
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Fly.Titles.Disabled.SubTitle")
-																		.replace("%time%",
-																				Integer.toString((int) (time - 1)))),
-														1, 2, 1);
-												title.send(player);
-											} else {
-												player.sendTitle(
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Fly.Titles.Disabled.Title").replace(
-																		"%time%", Integer.toString((int) (time - 1)))),
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Fly.Titles.Disabled.SubTitle")
-																		.replace("%time%",
-																				Integer.toString((int) (time - 1)))),
-														20, 40, 20);
-											}
-										}
-									}
-								}
-							}
-						}
-					} else {
-						cooldown.put(entry.getKey(), time - 1);
-						if (player != null) {
-							List<String> worlds = plugin.getConfig().getStringList("Enabled-Worlds");
-							for (String world : worlds) {
-								World w = Bukkit.getWorld(world);
-								if (player.getWorld() == w) {
-									if (player.getOpenInventory().getTitle()
-											.equals(ChatColor.translateAlternateColorCodes('&',
-													plugin.getConfig().getString("Gui.DisplayName")))) {
-										FlyGUI.flyGui(player);
-									}
-									if (Bukkit.getServer().getPluginManager().isPluginEnabled("ActionBarAPI") == true) {
-										Integer millis = GUIListener.cooldown.get(player.getUniqueId()) * 1000;
-										TimeZone tz = TimeZone.getTimeZone("UTC");
-										SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-										df.setTimeZone(tz);
-										String timel = df.format(new Date(millis));
-										ActionBarAPI.sendActionBar(player,
-												ChatColor.translateAlternateColorCodes('&',
-														config.getString("Fly.ActionBar.Message").replace("%timeleft%",
-																timel)));
-									}
+    public GUIListener() {
+        FileConfiguration config = lang.getLang();
+        FlyGUI gui = new FlyGUI();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Map.Entry<UUID, Integer> entry : flytime.entrySet()) {
+                    Player player = Bukkit.getPlayer(entry.getKey());
+                    Integer time = entry.getValue();
+                    if (time == 0) {
+                        if (player == null) {
+                            flytime.remove(entry.getKey());
+                        } else {
+                            flytime.remove(player.getUniqueId());
+                            if (utility.isWorldEnabled(player)) {
+                                godmode.put(player.getUniqueId(), 6);
+                                player.setAllowFlight(false);
+                                player.setFlying(false);
+                                player.playSound(player.getLocation(), Sound.valueOf(config.getString("Fly.DisabledSound")), 100, 1);
+                                utility.message(player, utility.color(config.getString("Fly.Message.Disabled")));
+                                if (config.getBoolean("Fly.Titles.Disabled.Use")) {
+                                    plugin.getNMS().sendTitle(player, utility.color(config.getString("Fly.Titles.Disabled.Title").replace(
+                                            "%time%", format.format(time - 1))), 0, 40, 20);
+                                    plugin.getNMS().sendSubtitle(player, utility.color(config.getString("Fly.Titles.Disabled.SubTitle").replace(
+                                            "%time%", format.format(time - 1))), 0, 40, 20);
+                                }
+                            }
+                        }
+                    } else {
+                        flytime.put(entry.getKey(), time - 1);
+                        if (player != null) {
+                            if (utility.isWorldEnabled(player)) {
+                                if (player.getOpenInventory().getTitle().equals(utility.color(plugin.getConfig().getString("Gui.DisplayName")))) {
+                                    gui.flyGui(player);
+                                }
+                                format.setActionBar(player, config);
+                                List<String> announce = config.getStringList("Announcer.Times");
+                                for (String list : announce) {
+                                    if (time - 1 == Integer.parseInt(list)) {
+                                        player.playSound(player.getLocation(), Sound.valueOf(config.getString("Announcer.Sound")), 2, 1);
+                                        if (config.getBoolean("Announcer.Chat.Enabled")) {
+                                            utility.message(player, utility.color(config.getString("Announcer.Chat.Message").replace(
+                                                    "%time%", format.format(time - 1))));
+                                        }
+                                        if (config.getBoolean("Announcer.Titles.Enabled")) {
+                                            plugin.getNMS().sendTitle(player, utility.color(config.getString("Announcer.Titles.Title")
+                                                    .replace("%time%", format.format(time - 1))), 0, 30, 0);
+                                            plugin.getNMS().sendSubtitle(player, utility.color(config.getString("Announcer.Titles.SubTitle")
+                                                    .replace("%time%", format.format(time - 1))), 0, 30, 0);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
 
-									List<String> announce = config.getStringList("Announcer.Times");
-									for (String list : announce) {
-										if (time - 1 == Integer.parseInt(list)) {
-											player.playSound(player.getLocation(),
-													Sound.valueOf(config.getString("Announcer.Sound")), 100, 1);
-											if (config.getBoolean("Announcer.Chat.Enabled") == true) {
-												player.sendMessage(
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Announcer.Chat.Message").replace(
-																		"%seconds%", Integer
-																				.toString((int) (time - 1)))));
-											}
-											if (config.getBoolean("Announcer.Titles.Enabled") == true) {
-												if (Bukkit.getVersion().contains("1.8")) {
-													Title title = new Title(
-															ChatColor.translateAlternateColorCodes('&',
-																	config.getString("Announcer.Titles.Title")
-																			.replace("%seconds%",
-																					Integer.toString(
-																							(int) (time - 1)))),
-															ChatColor.translateAlternateColorCodes('&',
-																	config.getString("Announcer.Titles.SubTitle")
-																			.replace("%seconds%",
-																					Integer.toString(
-																							(int) (time - 1)))),
-															1, 2, 1);
-													title.send(player);
-												} else {
-													player.sendTitle(
-															ChatColor.translateAlternateColorCodes('&',
-																	config.getString("Announcer.Titles.Title")
-																			.replace("%seconds%",
-																					Integer.toString(
-																							(int) (time - 1)))),
-															ChatColor.translateAlternateColorCodes('&',
-																	config.getString("Announcer.Titles.SubTitle")
-																			.replace("%seconds%",
-																					Integer.toString(
-																							(int) (time - 1)))),
-															5, 40, 5);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}, 0, 20L);
+    }
 
-	}
+    private String cooldowntime = plugin.getConfig().getString("Cooldown");
+    private int t = Integer.parseInt(cooldowntime.replaceAll("[a-zA-Z]", ""));
+    private static DependenciesManager depends = new DependenciesManager(TimedFly.getInstance());
 
-	@EventHandler
-	public void flyListenerGui(InventoryClickEvent event) {
-		Player player = (Player) event.getWhoClicked();
-		Inventory inv = event.getInventory();
-		int slot = event.getSlot();
-		FileConfiguration config = lang.getLang();
-		FileConfiguration itemscf = items.getItems();
-		List<String> worlds = plugin.getConfig().getStringList("Enabled-Worlds");
-		for (String world : worlds) {
-			World w = Bukkit.getWorld(world);
-			if (player.getWorld() == w) {
-				if (inv.getTitle().equals(
-						ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Gui.DisplayName")))) {
-					event.setCancelled(true);
-					ConfigurationSection section = itemscf.getConfigurationSection("Items");
-					for (String string : section.getKeys(false)) {
-						if (slot == itemscf.getInt("Items." + string + ".Slot")) {
-							if (event.getCurrentItem().hasItemMeta()) {
-								if (player.hasPermission(itemscf.getString("Items." + string + ".Permission"))) {
-									if (itemscf.getBoolean("Items." + string + ".FlyItem") == true) {
-										int price = itemscf.getInt("Items." + string + ".Price");
-										int time = itemscf.getInt("Items." + string + ".Time");
-										if (!cooldown.containsKey(player.getUniqueId())) {
-											if (economy.has(player, price)) {
-												economy.withdrawPlayer(player, price);
-											} else {
-												player.closeInventory();
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-														config.getString("Fly.Message.NoMoney")
-																.replace("%price%", Integer.toString(price))
-																.replace("%time%", Integer.toString(time))));
-												return;
-											}
-											if (player.getAllowFlight() == false) {
-												player.setAllowFlight(true);
-											}
-											cooldown.put(player.getUniqueId(), time * 60);
-										} else {
-											if (economy.has(player, price)) {
-												economy.withdrawPlayer(player, price);
-											} else {
-												player.closeInventory();
-												player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-														config.getString("Fly.Message.NoMoney")
-																.replace("%price%", Integer.toString(price))
-																.replace("%time%", Integer.toString(time))));
-												return;
-											}
-											cooldown.put(player.getUniqueId(),
-													cooldown.get(player.getUniqueId()) + time * 60);
-										}
-										player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-												config.getString("Fly.Message.Enabled")
-														.replace("%price%", Integer.toString(price))
-														.replace("%time%", Integer.toString(time))));
-										if (config.getBoolean("Fly.Titles.Enabled.Use") == true) {
-											if (Bukkit.getVersion().contains("1.8")) {
-												Title title = new Title(
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Fly.Titles.Enabled.Title")
-																		.replace("%time%", Integer.toString(time))),
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Fly.Titles.Enabled.SubTitle")
-																		.replace("%time%", Integer.toString(time))),
-														1, 2, 1);
-												title.send(player);
-											} else {
-												player.sendTitle(
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Fly.Titles.Enabled.Title")
-																		.replace("%time%", Integer.toString(time))),
-														ChatColor.translateAlternateColorCodes('&',
-																config.getString("Fly.Titles.Enabled.SubTitle")
-																		.replace("%time%", Integer.toString(time))),
-														20, 40, 20);
-											}
-										}
-										OnClick.clickEvent(player, string);
-									} else {
-										OnClick.clickEvent(player, string);
-									}
-								} else {
-									player.closeInventory();
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-											itemscf.getString("Items." + string + ".PermissionMSG")));
-									return;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+    @EventHandler
+    public void flyListenerGui(InventoryClickEvent event) {
+        Economy economy = plugin.getEconomy();
+        Player player = (Player) event.getWhoClicked();
+        int slot = event.getSlot();
+        FileConfiguration config = lang.getLang();
+        FileConfiguration itemscf = items.getItems();
+        if (utility.isWorldEnabled(player)) {
+            if (event.getView().getTopInventory().getTitle().equals(utility.color(plugin.getConfig().getString("Gui.DisplayName")))) {
+                event.setCancelled(true);
+                ConfigurationSection section = itemscf.getConfigurationSection("Items");
+                for (String string : section.getKeys(false)) {
+                    if (slot == itemscf.getInt("Items." + string + ".Slot") && event.getCurrentItem().hasItemMeta()) {
+                        if (itemscf.getBoolean("Items." + string + ".UsePermission") && !player.hasPermission(itemscf.getString("Items." + string + ".Permission"))) {
+                            player.closeInventory();
+                            utility.message(player, utility.color(
+                                    itemscf.getString("Items." + string + ".PermissionMSG")));
+                            return;
+                        }
+                        if (itemscf.getBoolean("Items." + string + ".FlyItem")) {
+                            int price = itemscf.getInt("Items." + string + ".Price");
+                            int time = itemscf.getInt("Items." + string + ".Time");
+                            if (!flytime.containsKey(player.getUniqueId())) {
+                                if (!player.hasPermission("timedfly.limit.bypass") && time > plugin.getConfig().getInt("LimitMaxTime")) {
+                                    utility.message(player, config.getString("Other.MaxAllowed"));
+                                    return;
+                                }
+                                if (plugin.getConfig().getBoolean("UseTokenManager")) {
+                                    if (depends.getTokens(player) >= price) {
+                                        depends.removeTokens(player, price);
+                                    } else {
+                                        player.closeInventory();
+                                        utility.message(player, MessageManager.NOMONEY.toString().replace("%price%", Integer.toString(price))
+                                                .replace("%time%", Integer.toString(time)));
+                                        return;
+                                    }
+                                }
+                                if (plugin.getConfig().getBoolean("UseVault")) {
+                                    if (economy.has(player, price)) {
+                                        economy.withdrawPlayer(player, price);
+                                    } else {
+                                        player.closeInventory();
+                                        utility.message(player, MessageManager.NOMONEY.toString().replace("%price%", Integer.toString(price))
+                                                .replace("%time%", Integer.toString(time)));
+                                        return;
+                                    }
+                                }
+                                if (!player.getAllowFlight()) {
+                                    player.setAllowFlight(true);
+                                }
+                                flytime.put(player.getUniqueId(), time * 60);
+                                if (!player.hasPermission("timedfly.cooldown.bypass") || !player.isOp()) {
+                                    if (!CooldownManager.isInCooldown(player.getUniqueId(), "fly")) {
+                                        if (cooldowntime.contains("s")) {
+                                            CooldownManager cooldownManager = new CooldownManager(player.getUniqueId(), "fly", t);
+                                            cooldownManager.start();
+                                        }
+                                        if (cooldowntime.contains("m")) {
+                                            t = t * 60;
+                                            CooldownManager cooldownManager = new CooldownManager(player.getUniqueId(), "fly", t);
+                                            cooldownManager.start();
+                                        }
+                                        if (cooldowntime.contains("h")) {
+                                            t = t * 3600;
+                                            CooldownManager cooldownManager = new CooldownManager(player.getUniqueId(), "fly", t);
+                                            cooldownManager.start();
+                                        }
+                                        if (cooldowntime.contains("d")) {
+                                            t = t * 86400;
+                                            CooldownManager cooldownManager = new CooldownManager(player.getUniqueId(), "fly", t);
+                                            cooldownManager.start();
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (plugin.getConfig().getBoolean("UseTokenManager")) {
+                                    if (depends.getTokens(player) >= price) {
+                                        depends.removeTokens(player, price);
+                                    } else {
+                                        player.closeInventory();
+                                        utility.message(player, MessageManager.NOMONEY.toString().replace("%price%", Integer.toString(price))
+                                                .replace("%time%", Integer.toString(time)));
+                                        return;
+                                    }
+                                }
+                                if (plugin.getConfig().getBoolean("UseVault")) {
+                                    if (economy.has(player, price)) {
+                                        economy.withdrawPlayer(player, price);
+                                    } else {
+                                        player.closeInventory();
+                                        utility.message(player, MessageManager.NOMONEY.toString().replace("%price%", Integer.toString(price))
+                                                .replace("%time%", Integer.toString(time)));
+                                        return;
+                                    }
+                                }
+                                flytime.put(player.getUniqueId(), flytime.get(player.getUniqueId()) + time * 60);
+                                if (!player.hasPermission("timedfly.cooldown.bypass") || !player.isOp()) {
+                                    if (!CooldownManager.isInCooldown(player.getUniqueId(), "fly")) {
+                                        if (cooldowntime.contains("s")) {
+                                            CooldownManager cooldownManager = new CooldownManager(player.getUniqueId(), "fly", t);
+                                            cooldownManager.start();
+                                        }
+                                        if (cooldowntime.contains("m")) {
+                                            t = t * 60;
+                                            CooldownManager cooldownManager = new CooldownManager(player.getUniqueId(), "fly", t);
+                                            cooldownManager.start();
+                                        }
+                                        if (cooldowntime.contains("h")) {
+                                            t = t * 3600;
+                                            CooldownManager cooldownManager = new CooldownManager(player.getUniqueId(), "fly", t);
+                                            cooldownManager.start();
+                                        }
+                                        if (cooldowntime.contains("d")) {
+                                            t = t * 86400;
+                                            CooldownManager cooldownManager = new CooldownManager(player.getUniqueId(), "fly", t);
+                                            cooldownManager.start();
+                                        }
+                                    }
+                                }
+                            }
+                            utility.message(player, config.getString("Fly.Message.Enabled").replace("%price%",
+                                    "" + price).replace("%time%", "" + time));
+                            if (config.getBoolean("Fly.Titles.Enabled.Use")) {
+                                plugin.getNMS().sendTitle(player, utility.color(config.getString("Fly.Titles.Enabled.Title")
+                                        .replace("%time%", format.format(time * 60))), 20, 40, 20);
+                                plugin.getNMS().sendSubtitle(player, utility.color(config.getString("Fly.Titles.Enabled.SubTitle")
+                                        .replace("%time%", format.format(time * 60))), 20, 40, 20);
+                            }
+                            OnClick.clickEvent(player, string);
+                        } else {
+                            OnClick.clickEvent(player, string);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

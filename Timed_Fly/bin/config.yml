@@ -5,27 +5,77 @@
 #                                              #
 ################################################
 
+# Use 'none' to disable
+Prefix: '&cTimedFly >> '
 
-#The iventory that shows up when using /fly
+# Cooldown time to get more flight time,use s for seconds, m for minutes
+# and h for hours
+Cooldown: 1h
+
+# Type: sqlite for flatfile or mysql for an external database.
+Type: 'sqlite'
+# Only edit if 'mysql' is set in Type
+MySQL:
+  # name of your database
+  Database: 'test'
+  # ip of you MySQL database
+  Host: 'localhost'
+  # port of you MySQL database, commonly is 3306
+  Port: 3306
+  # username of you MySQL database
+  Username: 'user'
+  # password of you MySQL database
+  Password: 'root'
+
+# Custom command to open the Timed Fly menu, for multiple commands use ';' (example below)
+OpenMenuCommand: 'fly;flymenu'
+
 Gui:
-  #Custom name of the inventory
+  # Custom name of the inventory
   DisplayName: TimedFly
-  #Rows of the inventory (must be multiple of 9, ex: 9, 18... etc)
+  # Rows of the inventory (must be multiple of 9, ex: 9, 18... etc)
   Slots: 9
 
-#Set to true if you want to stop the fly time when the player leaves the server
-#so when he joins again it resumes the time left.
-SaveTimeLeave: true
+# If true the currency used will be from TokenManager, balance placeholder: %tokens%
+UseTokenManager: false
 
-#A list of world in which you want the plugin to be enabled.
-Enabled-Worlds:
-- 'world'
-- 'survival'
+# If true the currency used will be from Vault, balance placeholder: %balance%
+UseVault: true
 
-#The name says it...
+# If set to true players will need a permission to use the command /fly
+UsePermission:
+  Use: false
+  Permission: 'timedfly.flygui'
+
+# Set to true if you want to stop the fly time when the player leaves the server
+# so when he joins again it resumes the time left.
+# SaveTimeLeave: true # ignore, will be deleted.
+
+# This is the limit amount of time a player can add to his fly time (in minutes)
+# bypass this with timedfly.limit.bypass.
+LimitMaxTime: 30
+
+# A list of world in which you want the plugin to be enabled.
+World-List:
+  # Available types:
+  # enabled: the plugin will work in worlds listed
+  # disabled: the plugin will not work in worlds listed
+  # all: the plugin will work in all worlds
+  Type: 'all'
+  Worlds:
+  - 'world'
+  - 'survival'
+
+# The name says it...
 Check-For-Updates: true
+# Auto download new updates
+Auto-Download: true
 
-#Choose your own message file (if file name is lang_en.yml use the work after lang_ in this case will be en
-#Current languages es, sp, hu, you can create your own and send it to me so I added for default.
-#Is not recomended to use the /tf reload command, some messages will not change.
+# Choose your own message file (if file name is lang_en.yml use the work after lang_ in this case will be en
+# Current languages es, sp, hu, de, you can create your own and send it to me so I added for default.
+# Is not recommended to use the /tf reload command, some messages will not change.
 Lang: en
+
+# Do not change if you don't want another config.yml in your folder unless I say you can :D
+# If for some reason your config keep resetting add 1 to this. Ex: 2+1 = 3
+Version: 2

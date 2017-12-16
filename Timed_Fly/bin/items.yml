@@ -9,8 +9,8 @@
 #    Material: 340
 #    This is if you are using items like dyes, instead of using 358:10 you put the 380 in Material and 10 in Data
 #    Data: 0
-#    Ammount of item to show
-#    Ammount: 1
+#    Amount of item to show
+#    Amount: 1
 #    Mm, the message under the item...
 #    Lore:
 #    - ' '
@@ -43,14 +43,15 @@
 #    Hide_Unbreakable: false
 #    This will make your item glow
 #    Glow: false
-#    Custom permission so the player can use this item (you must have something here)
+#    Custom permission so the player can use this item
+#    UsePermission: true
 #    Permission: something.here
 #    No permission message
 #    PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
 #      buying a rank'
 #    Price of the item
 #    Price: 2000
-#    Time in mintues of flight time
+#    Time in minutes of flight time
 #    Time: 15
 #
 #   Some Placeholders you could use are:
@@ -76,7 +77,7 @@ Items:
     Slot: 0
     Material: 340
     Data: 0
-    Ammount: 1
+    Amount: 1
     Lore:
     - ' '
     - '&eBalance: &7%balance%'
@@ -97,8 +98,9 @@ Items:
     Hide_Potion_Effects: false
     Hide_Unbreakable: false
     Glow: false
+    UsePermission: true
     Permission: something.here
-    PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
+    PermissionMSG: 'You don''t have permission to use this item. Try
       buying a rank'
     FlyItem: true
     OnClick:
@@ -111,7 +113,7 @@ Items:
     Slot: 1
     Material: 340
     Data: 0
-    Ammount: 1
+    Amount: 1
     Lore:
     - ' '
     - '&eBalance: &7%balance%'
@@ -132,8 +134,9 @@ Items:
     Hide_Potion_Effects: false
     Hide_Unbreakable: false
     Glow: false
+    UsePermission: true
     Permission: something.here
-    PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
+    PermissionMSG: 'You don''t have permission to use this item. Try
       buying a rank'
     FlyItem: true
     OnClick:
@@ -146,7 +149,7 @@ Items:
     Slot: 2
     Material: 340
     Data: 0
-    Ammount: 1
+    Amount: 1
     Lore:
     - ' '
     - '&eBalance: &7%balance%'
@@ -169,8 +172,9 @@ Items:
     Hide_Potion_Effects: false
     Hide_Unbreakable: false
     Glow: true
+    UsePermission: true
     Permission: something.here
-    PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
+    PermissionMSG: 'You don''t have permission to use this item. Try
       buying a rank'
     FlyItem: true
     OnClick:
@@ -178,33 +182,36 @@ Items:
     - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
     Price: 10000
     Time: 60
-  '4':
-    Name: '&7Click me :D'
-    Slot: 8
-    Material: 341
-    Data: 0
-    Ammount: 1
-    Lore:
-    - ' '
-    - '&cThis is a custom item'
-    - '&7Don''t forget to add more'
-    - '&7Slots in the &econfig.yml &7if'
-    - '&7You want more items'
-    - ' '
-    Hide_Attributes: false
-    Hide_Enchants: true
-    Hide_Place_On: false
-    Hide_Potion_Effects: false
-    Hide_Unbreakable: false
-    Glow: true
-    Permission: something.here
-    PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
-      buying a rank'
-    FlyItem: false
-    OnClick:
-    - '[player] say Hi! this is a test and I''m a player'
-    - '[console] tell %player% you clicked me and I''m a console'
-    - '[message] &9I''m a message that supports &cc&ao&bl&do&er &9codes.'
-    - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
-    - '[close]'
+
+# remove the # to use
+#  '4':
+#    Name: '&7Click me :D'
+#    Slot: 8
+#    Material: 341
+#    Data: 0
+#    Amount: 1
+#    Lore:
+#    - ' '
+#    - '&cThis is a custom item'
+#    - '&7Don''t forget to add more'
+#    - '&7Slots in the &econfig.yml &7if'
+#    - '&7You want more items'
+#    - ' '
+#    Hide_Attributes: false
+#    Hide_Enchants: true
+#    Hide_Place_On: false
+#    Hide_Potion_Effects: false
+#    Hide_Unbreakable: false
+#    Glow: true
+#    UsePermission: true
+#    Permission: something.here
+#    PermissionMSG: 'You don''t have permission to use this item. Try
+#      buying a rank'
+#    FlyItem: false
+#    OnClick:
+#    - '[player] say Hi! this is a test and I''m a player'
+#    - '[console] tell %player% you clicked me and I''m a console'
+#    - '[message] &9I''m a message that supports &cc&ao&bl&do&er &9codes.'
+#    - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
+#    - '[close]'
       
