@@ -81,6 +81,6 @@ Other:
     Found: '&eDu hast den Preis von &6%itemid% &ezu &6$%price% geändert.'
     NotFound: '&eDie ItemId &6%itemid% konnte nicht gefunden werden. Benutz /tf list um alle Items zu sehen.'
   DisabledWorld: 'Du darfst in dieser Welt nicht fliegen.'
-  MaxReached: '&eDu hast die Maximale Flugzeit erreicht.'
+  MaxReached: '&eDu hast die maximale Flugzeit erreicht.'
   MaxAllowed: '&eDu kannst nicht mehr als deine maximale Flugzeit auswählen (&c%time_allowed%&7).'
   OnCooldown: '&fWieder bereit in &6%cooldown%'
