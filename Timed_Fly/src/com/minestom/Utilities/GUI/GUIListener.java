@@ -2,12 +2,10 @@ package com.minestom.Utilities.GUI;
 
 import com.minestom.ConfigurationFiles.ItemsConfig;
 import com.minestom.ConfigurationFiles.LangFiles;
-import com.minestom.Managers.CooldownManager;
-import com.minestom.Managers.DependenciesManager;
-import com.minestom.Managers.MessageManager;
-import com.minestom.Managers.TimeFormat;
+import com.minestom.Managers.*;
 import com.minestom.TimedFly;
-import com.minestom.Utilities.Others.OnClick;
+import com.minestom.Utilities.BossBarManager;
+import com.minestom.Utilities.Others.GeneralListener;
 import com.minestom.Utilities.Utility;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -34,9 +32,12 @@ public class GUIListener implements Listener {
     private LangFiles lang = LangFiles.getInstance();
     private ItemsConfig items = ItemsConfig.getInstance();
     private Utility utility = new Utility(plugin);
+    private BossBarManager bossBarManager = plugin.getBossBarManager();
+    private MySQLManager sqlManager = new MySQLManager();
 
     public GUIListener() {
         FileConfiguration config = lang.getLang();
+        FileConfiguration configuration = plugin.getConfig();
         FlyGUI gui = new FlyGUI();
         new BukkitRunnable() {
             @Override
@@ -49,11 +50,17 @@ public class GUIListener implements Listener {
                             flytime.remove(entry.getKey());
                         } else {
                             flytime.remove(player.getUniqueId());
-                            if (utility.isWorldEnabled(player)) {
+                            GeneralListener.initialTime.put(player.getUniqueId(), 0);
+                            sqlManager.setInitialTime(player, 0);
+                            sqlManager.setTimeLeft(player, 0);
+                            if (utility.isWorldEnabled(player, player.getWorld())) {
+                                bossBarManager.removeBar(player);
                                 godmode.put(player.getUniqueId(), 6);
                                 player.setAllowFlight(false);
                                 player.setFlying(false);
-                                player.playSound(player.getLocation(), Sound.valueOf(config.getString("Fly.DisabledSound")), 100, 1);
+                                if (configuration.getBoolean("Sounds.Enabled")) {
+                                    player.playSound(player.getLocation(), Sound.valueOf(configuration.getString("Sounds.FlightDisabled")), 100, 1);
+                                }
                                 utility.message(player, utility.color(config.getString("Fly.Message.Disabled")));
                                 if (config.getBoolean("Fly.Titles.Disabled.Use")) {
                                     plugin.getNMS().sendTitle(player, utility.color(config.getString("Fly.Titles.Disabled.Title").replace(
@@ -63,18 +70,26 @@ public class GUIListener implements Listener {
                                 }
                             }
                         }
+                        if (configuration.getBoolean("OnFlyDisableCommands.Enabled")) {
+                            utility.clickEvent(player, configuration.getStringList("OnFlyDisableCommands.Commands"));
+                        }
                     } else {
                         flytime.put(entry.getKey(), time - 1);
                         if (player != null) {
-                            if (utility.isWorldEnabled(player)) {
-                                if (player.getOpenInventory().getTitle().equals(utility.color(plugin.getConfig().getString("Gui.DisplayName")))) {
+                            if (utility.isWorldEnabled(player, player.getWorld())) {
+                                if (player.getOpenInventory().getTitle().equals(utility.color(configuration.getString("Gui.DisplayName")))) {
                                     gui.flyGui(player);
                                 }
                                 format.setActionBar(player, config);
-                                List<String> announce = config.getStringList("Announcer.Times");
+                                bossBarManager.setBarProgress(time - 1, GeneralListener.initialTime.get(player.getUniqueId()));
+                                bossBarManager.setBarName(utility.color(config.getString("Fly.BossBar.Message")
+                                        .replace("%timeleft%", format.format(time - 1))));
+                                List<String> announce = configuration.getStringList("Announcer.Times");
                                 for (String list : announce) {
                                     if (time - 1 == Integer.parseInt(list)) {
-                                        player.playSound(player.getLocation(), Sound.valueOf(config.getString("Announcer.Sound")), 2, 1);
+                                        if (configuration.getBoolean("Sounds.Enabled")) {
+                                            player.playSound(player.getLocation(), Sound.valueOf(configuration.getString("Sounds.Announcer")), 2, 1);
+                                        }
                                         if (config.getBoolean("Announcer.Chat.Enabled")) {
                                             utility.message(player, utility.color(config.getString("Announcer.Chat.Message").replace(
                                                     "%time%", format.format(time - 1))));
@@ -93,7 +108,6 @@ public class GUIListener implements Listener {
                 }
             }
         }.runTaskTimer(plugin, 0L, 20L);
-
     }
 
     private String cooldowntime = plugin.getConfig().getString("Cooldown");
@@ -102,13 +116,14 @@ public class GUIListener implements Listener {
 
     @EventHandler
     public void flyListenerGui(InventoryClickEvent event) {
+        FileConfiguration configuration = plugin.getConfig();
         Economy economy = plugin.getEconomy();
         Player player = (Player) event.getWhoClicked();
         int slot = event.getSlot();
         FileConfiguration config = lang.getLang();
         FileConfiguration itemscf = items.getItems();
-        if (utility.isWorldEnabled(player)) {
-            if (event.getView().getTopInventory().getTitle().equals(utility.color(plugin.getConfig().getString("Gui.DisplayName")))) {
+        if (utility.isWorldEnabled(player, player.getWorld())) {
+            if (event.getView().getTopInventory().getTitle().equals(utility.color(configuration.getString("Gui.DisplayName")))) {
                 event.setCancelled(true);
                 ConfigurationSection section = itemscf.getConfigurationSection("Items");
                 for (String string : section.getKeys(false)) {
@@ -122,12 +137,13 @@ public class GUIListener implements Listener {
                         if (itemscf.getBoolean("Items." + string + ".FlyItem")) {
                             int price = itemscf.getInt("Items." + string + ".Price");
                             int time = itemscf.getInt("Items." + string + ".Time");
+                            GeneralListener.initialTime.put(player.getUniqueId(), time * 60);
                             if (!flytime.containsKey(player.getUniqueId())) {
-                                if (!player.hasPermission("timedfly.limit.bypass") && time > plugin.getConfig().getInt("LimitMaxTime")) {
+                                if (!player.hasPermission("timedfly.limit.bypass") && time > configuration.getInt("LimitMaxTime")) {
                                     utility.message(player, config.getString("Other.MaxAllowed"));
                                     return;
                                 }
-                                if (plugin.getConfig().getBoolean("UseTokenManager")) {
+                                if (configuration.getBoolean("UseTokenManager")) {
                                     if (depends.getTokens(player) >= price) {
                                         depends.removeTokens(player, price);
                                     } else {
@@ -137,7 +153,7 @@ public class GUIListener implements Listener {
                                         return;
                                     }
                                 }
-                                if (plugin.getConfig().getBoolean("UseVault")) {
+                                if (configuration.getBoolean("UseVault")) {
                                     if (economy.has(player, price)) {
                                         economy.withdrawPlayer(player, price);
                                     } else {
@@ -147,10 +163,26 @@ public class GUIListener implements Listener {
                                         return;
                                     }
                                 }
+                                if (utility.isXpCurrencyEnabled()) {
+                                    if (player.getLevel() >= price) {
+                                        player.setLevel(player.getLevel() - price);
+                                    } else {
+                                        player.closeInventory();
+                                        utility.message(player, MessageManager.NotEnoughLevels.toString().replace("%levels_needed%", Integer.toString(price))
+                                                .replace("%time%", Integer.toString(time)));
+                                        return;
+                                    }
+                                }
+                                if (!utility.isXpCurrencyEnabled() && !configuration.getBoolean("UseVault") && !configuration.getBoolean("UseTokenManager")) {
+                                    player.closeInventory();
+                                    utility.message(player, lang.getLang().getString("Other.NoCurrencyFound"));
+                                    return;
+                                }
                                 if (!player.getAllowFlight()) {
                                     player.setAllowFlight(true);
                                 }
                                 flytime.put(player.getUniqueId(), time * 60);
+                                bossBarManager.addPlayer(player);
                                 if (!player.hasPermission("timedfly.cooldown.bypass") || !player.isOp()) {
                                     if (!CooldownManager.isInCooldown(player.getUniqueId(), "fly")) {
                                         if (cooldowntime.contains("s")) {
@@ -175,7 +207,7 @@ public class GUIListener implements Listener {
                                     }
                                 }
                             } else {
-                                if (plugin.getConfig().getBoolean("UseTokenManager")) {
+                                if (configuration.getBoolean("UseTokenManager")) {
                                     if (depends.getTokens(player) >= price) {
                                         depends.removeTokens(player, price);
                                     } else {
@@ -185,7 +217,7 @@ public class GUIListener implements Listener {
                                         return;
                                     }
                                 }
-                                if (plugin.getConfig().getBoolean("UseVault")) {
+                                if (configuration.getBoolean("UseVault")) {
                                     if (economy.has(player, price)) {
                                         economy.withdrawPlayer(player, price);
                                     } else {
@@ -194,6 +226,24 @@ public class GUIListener implements Listener {
                                                 .replace("%time%", Integer.toString(time)));
                                         return;
                                     }
+                                }
+                                if (utility.isXpCurrencyEnabled()) {
+                                    if (player.getLevel() >= price) {
+                                        player.setLevel(player.getLevel() - price);
+                                    } else {
+                                        player.closeInventory();
+                                        utility.message(player, MessageManager.NotEnoughLevels.toString().replace("%levels_needed%", Integer.toString(price))
+                                                .replace("%time%", Integer.toString(time)));
+                                        return;
+                                    }
+                                }
+                                if (!utility.isXpCurrencyEnabled() && !configuration.getBoolean("UseVault") && !configuration.getBoolean("UseTokenManager")) {
+                                    player.closeInventory();
+                                    utility.message(player, lang.getLang().getString("Other.NoCurrencyFound"));
+                                    return;
+                                }
+                                if (!player.getAllowFlight()) {
+                                    player.setAllowFlight(true);
                                 }
                                 flytime.put(player.getUniqueId(), flytime.get(player.getUniqueId()) + time * 60);
                                 if (!player.hasPermission("timedfly.cooldown.bypass") || !player.isOp()) {
@@ -228,9 +278,9 @@ public class GUIListener implements Listener {
                                 plugin.getNMS().sendSubtitle(player, utility.color(config.getString("Fly.Titles.Enabled.SubTitle")
                                         .replace("%time%", format.format(time * 60))), 20, 40, 20);
                             }
-                            OnClick.clickEvent(player, string);
+                            utility.clickEvent(player, itemscf.getStringList("Items." + string + ".OnClick"));
                         } else {
-                            OnClick.clickEvent(player, string);
+                            utility.clickEvent(player, itemscf.getStringList("Items." + string + ".OnClick"));
                         }
                     }
                 }

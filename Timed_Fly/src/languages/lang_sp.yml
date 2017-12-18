@@ -1,31 +1,14 @@
 # Aqui es cuando el jugador tiene el tiempo elegido, dice algo
 Announcer:
   # Usa los sonidos corespondientes a tu version de minecraft, ahora se esta usando los de la 1.9+
-  Sound: ENTITY_EXPERIENCE_ORB_PICKUP
   Chat:
-    Enabled: false
     Message: '&aModo vuelo se desactivara en &7%time%.'
   Titles:
-    Enabled: true
     Title: '&c%time%'
     SubTitle: '&fPara desactivar el Fly'
-  Times:
-  - '120'
-  - '60'
-  - '10'
-  - '5'
-  - '4'
-  - '3'
-  - '2'
-  - '1'
-  - '0'
   
 # Esto es cuando el jugador esta volando o el modo de vuelo esta habilitado / deshabilitado
 Fly:
-  DisabledSound: ENTITY_WITHER_DEATH
-  JoinFlying:
-    Enabled: true
-    Height: 2
   Message:
     ToPlayer: '&aModo vuelo activado para &7%target% &apor &7%time% &aminutos.'
     FromPlayer: '&aModo vuelo activado desde &7%player% &apor &7%time% &aminutos.'
@@ -33,11 +16,14 @@ Fly:
     Enabled: '&aHas agregado &7%time% &aminutos a tu tiempo de vuelo por &7$%price%.'
     Disabled: ' &aModo vuelo desactivado. Compra mas tiempo si quieres seguir.'
     NoMoney: '&aNo tienes sufuciente dinero para comprar esto, trabaja.'
+    NoLevels: '&aYou don''t have enough &eLevels &ato buy this. You need &e%levels_needed%'
     SetOn: '&aModo vuelo activado.'
     SetOff: '&aModo vuelo desactivado.'
     TimeLeft: '&aTe quedan %timeleft% restantes.'
   ActionBar:
     Enabled: true
+    Message: '&aTe quedan %timeleft% restantes.'
+  BossBar:
     Message: '&aTe quedan %timeleft% restantes.'
   Titles:
     Enabled:
@@ -85,4 +71,5 @@ Other:
   MaxReached: '&eHas llegado al limite maximo de tiempo de vuelo permitido.'
   MaxAllowed: '&eNo puedes elegir mas tiempo del permitido (&c%time_allowed%&7).'
   OnCooldown: '&7No puedes usar esto por &c%cooldown%'
+  NoCurrencyFound: '&7Could not find a currency to perform this action. If you are the server admin please enable one in the configuration file.'
     

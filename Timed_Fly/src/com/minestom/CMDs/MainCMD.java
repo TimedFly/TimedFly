@@ -2,6 +2,7 @@ package com.minestom.CMDs;
 
 import com.minestom.ConfigurationFiles.ItemsConfig;
 import com.minestom.ConfigurationFiles.LangFiles;
+import com.minestom.ConfigurationFiles.UpdateConfig;
 import com.minestom.TimedFly;
 import com.minestom.Utilities.Utility;
 import mkremins.fanciful.FancyMessage;
@@ -18,6 +19,7 @@ public class MainCMD implements CommandExecutor {
     private LangFiles lang = LangFiles.getInstance();
     private ItemsConfig items = ItemsConfig.getInstance();
     private Utility utility = new Utility(plugin);
+    private UpdateConfig updateConfig = new UpdateConfig();
 
     @SuppressWarnings("deprecation")
     @Override
@@ -131,6 +133,7 @@ public class MainCMD implements CommandExecutor {
                         lang.createFiles(plugin);
                         items.createFiles(plugin);
                         items.reloadItems();
+                        updateConfig.updateConfig(plugin);
                         utility.message(sender, "&econfig.yml was succesfully reloaded.");
                         utility.message(sender, "&eitems.yml was succesfully reloaded.");
                         utility.message(sender, "&elang_" + plugin.getConfig().getString("Lang") + ".yml was succesfully reloaded.");

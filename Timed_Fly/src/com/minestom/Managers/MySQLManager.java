@@ -5,6 +5,7 @@ import com.minestom.Utilities.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +21,36 @@ public class MySQLManager {
         String sql = "CREATE TABLE IF NOT EXISTS " + table + " ("
                 + "	UUID text,"
                 + "	NAME text ,"
-                + "	TIMELEFT int"
+                + "	TIMELEFT int,"
+                + "	INITIALTIME int"
                 + ");";
         try {
             if (plugin.getConnection() != null && !plugin.getConnection().isClosed()) {
                 plugin.getConnection().createStatement().execute(sql);
+                updateTable(plugin);
             }
         } catch (SQLException e) {
-            Bukkit.getConsoleSender().sendMessage(utility.color("&cCould not create table " + table + " report this to the developer"));
-            Bukkit.getConsoleSender().sendMessage(e.getMessage());
+            Bukkit.getConsoleSender().sendMessage(utility.color("&cSQL ERROR: ") + e.getMessage());
+            Bukkit.getConsoleSender().sendMessage(utility.color("&cSQL ERROR: Could not create table " + table + " report this to the developer"));
+        }
+    }
+
+    private void updateTable(TimedFly plugin) {
+        String sql = "ALTER TABLE " + table + " ADD COLUMN INITIALTIME int(11);";
+        try {
+
+            DatabaseMetaData md = plugin.getConnection().getMetaData();
+            ResultSet rs = md.getColumns(null, null, table, "INITIALTIME");
+            if (!rs.next()) {
+                PreparedStatement statement = plugin.getConnection().prepareStatement(sql);
+                statement.executeUpdate();
+                Bukkit.getConsoleSender().sendMessage(utility.color("&cSQL ERROR: Your table is not up to date. &7Updating your SQL table..."));
+                statement.close();
+            }
+
+        } catch (SQLException e) {
+            Bukkit.getConsoleSender().sendMessage(utility.color("&cSQL ERROR: ") + e.getMessage());
+            Bukkit.getConsoleSender().sendMessage(utility.color("&cSQL ERROR: report this to the developer. (UPDATE)"));
         }
     }
 
@@ -52,11 +74,12 @@ public class MySQLManager {
         try {
             if (!playerExists(uuid)) {
                 PreparedStatement insert = plugin.getConnection().prepareStatement(
-                        "INSERT INTO `" + table + "` (UUID,NAME,TIMELEFT)" +
-                                " VALUES (?,?,?);");
+                        "INSERT INTO `" + table + "` (UUID,NAME,TIMELEFT,INITIALTIME)" +
+                                " VALUES (?,?,?,?);");
                 insert.setString(1, uuid.toString());
                 insert.setString(2, player.getName());
                 insert.setInt(3, 0);
+                insert.setInt(4, 0);
                 insert.execute();
                 insert.close();
             } else {
@@ -73,9 +96,9 @@ public class MySQLManager {
         }
     }
 
-    public int getTimeLeft(Player player){
+    public int getTimeLeft(Player player) {
         String uuid = player.getUniqueId().toString();
-        if(!playerExists(player.getUniqueId())){
+        if (!playerExists(player.getUniqueId())) {
             createPlayer(player);
         }
         try {
@@ -85,15 +108,15 @@ public class MySQLManager {
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             return resultSet.getInt(1);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return 0;
         }
     }
 
-    public void setTimeLeft(Player player, int time){
+    public void setTimeLeft(Player player, int time) {
         String uuid = player.getUniqueId().toString();
-        if(!playerExists(player.getUniqueId())){
+        if (!playerExists(player.getUniqueId())) {
             createPlayer(player);
         }
         try {
@@ -103,7 +126,42 @@ public class MySQLManager {
             statement.setString(2, uuid);
             statement.executeUpdate();
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getInitialTime(Player player) {
+        String uuid = player.getUniqueId().toString();
+        if (!playerExists(player.getUniqueId())) {
+            createPlayer(player);
+        }
+        try {
+            PreparedStatement statement = plugin.getConnection()
+                    .prepareStatement("SELECT INITIALTIME FROM `" + table + "` WHERE UUID = ?;");
+            statement.setString(1, uuid);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public void setInitialTime(Player player, int time) {
+        String uuid = player.getUniqueId().toString();
+        if (!playerExists(player.getUniqueId())) {
+            createPlayer(player);
+        }
+        try {
+            PreparedStatement statement = plugin.getConnection()
+                    .prepareStatement("UPDATE `" + table + "` SET INITIALTIME=? WHERE UUID=?;");
+            statement.setInt(1, time);
+            statement.setString(2, uuid);
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

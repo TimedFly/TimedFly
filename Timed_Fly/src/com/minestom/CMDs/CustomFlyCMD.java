@@ -26,20 +26,35 @@ public class CustomFlyCMD implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (utility.isWorldEnabled(player)) {
-            for (String command : commands) {
-                if (args[0].equalsIgnoreCase(command)) {
-                    if (!event.isCancelled()) {
-                        event.setCancelled(true);
-                    }
-                    if (plugin.getConfig().getBoolean("UsePermission.Use") && !player.hasPermission(plugin.getConfig().getString("UsePermission.Permission"))) {
-                        utility.message(player, MessageManager.NOPERM.toString());
-                        plugin.getNMS().sendTitle(player, utility.color(lang.getLang().getString("Other.NoPermission.Title")), 20, 40, 20);
-                        plugin.getNMS().sendTitle(player, utility.color(lang.getLang().getString("Other.NoPermission.SubTitle")), 20, 40, 20);
+        for (String command : commands) {
+            if (args[0].equalsIgnoreCase(command)) {
+                if (!event.isCancelled()) {
+                    event.setCancelled(true);
+                }
+                if (!utility.isWorldEnabled(player, player.getWorld())) {
+                    utility.message(player, MessageManager.DISABLEDWORLD.toString());
+                    continue;
+                }
+                if (plugin.getConfig().getBoolean("FlyModeIfHasPerm") && player.hasPermission("timedfly.fly.onof")) {
+                    if (player.getAllowFlight()) {
+                        player.setAllowFlight(false);
+                        player.setFlying(false);
+                        utility.message(player, lang.getLang().getString("Fly.Message.SetOff"));
+                        continue;
+                    } else if (!player.getAllowFlight()) {
+                        player.setAllowFlight(true);
+                        player.setFlying(true);
+                        utility.message(player, lang.getLang().getString("Fly.Message.SetOn"));
                         continue;
                     }
-                    gui.flyGui(player);
                 }
+                if (plugin.getConfig().getBoolean("UsePermission.Use") && !player.hasPermission(plugin.getConfig().getString("UsePermission.Permission"))) {
+                    utility.message(player, MessageManager.NOPERM.toString());
+                    plugin.getNMS().sendTitle(player, utility.color(lang.getLang().getString("Other.NoPermission.Title")), 20, 40, 20);
+                    plugin.getNMS().sendTitle(player, utility.color(lang.getLang().getString("Other.NoPermission.SubTitle")), 20, 40, 20);
+                    continue;
+                }
+                gui.flyGui(player);
             }
         }
     }

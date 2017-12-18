@@ -1,28 +1,13 @@
 #This is when the player has the choosen time left it says something
 Announcer:
-  Sound: ENTITY_EXPERIENCE_ORB_PICKUP
   Chat:
-    Enabled: false
     Message: '&fFliegen wird in &6%time% deaktiviert.'
   Titles:
-    Enabled: true
     Title: '&c%time%'
     SubTitle: '&fBis fliegen deaktiviert wird.'
-  Times:
-  - '120'
-  - '60'
-  - '10'
-  - '3'
-  - '2'
-  - '1'
-  - '0'
 
 #This is when the player is flying or fly mode is enabled/disabled
 Fly:
-  DisabledSound: ENTITY_WITHER_DEATH
-  JoinFlying:
-    Enabled: true
-    Height: 2
   Message:
     ToPlayer: '&6%target% &f kann nun für &6%time% &fMinuten fliegen.'
     FromPlayer: '&fFliegen wurde von &6%player% &ffür &6%time% &fMinuten aktiviert.'
@@ -31,13 +16,14 @@ Fly:
       für &6$%price%.'
     Disabled: '&fFliegen deaktiviert, du kannst weitere Zeit kaufen.'
     NoMoney: '&fDu verfügst über zu wenig Geld, um das kaufen zu können.'
+    NoLevels: '&aYou don''t have enough &eLevels &ato buy this. You need &e%levels_needed%'
     SetOn: '&fFly mode enabled.'
     SetOff: '&fFly mode disabled.'
     TimeLeft: '&fVerbleibende Zeit %timeleft%.'
-  #You need this plugin to use ActionBar messages.
-  #https://www.spigotmc.org/resources/actionbarapi-1-8-1-12-1.1315/
   ActionBar:
     Enabled: true
+    Message: '&cVerbleibende Flugzeit %timeleft%'
+  BossBar:
     Message: '&cVerbleibende Flugzeit %timeleft%'
   Titles:
     Enabled:
@@ -81,6 +67,10 @@ Other:
     Found: '&eDu hast den Preis von &6%itemid% &ezu &6$%price% geändert.'
     NotFound: '&eDie ItemId &6%itemid% konnte nicht gefunden werden. Benutz /tf list um alle Items zu sehen.'
   DisabledWorld: 'Du darfst in dieser Welt nicht fliegen.'
-  MaxReached: '&eDu hast die Maximale Flugzeit erreicht.'
+  MaxReached: '&eDu hast die maximale Flugzeit erreicht.'
   MaxAllowed: '&eDu kannst nicht mehr als deine maximale Flugzeit auswählen (&c%time_allowed%&7).'
   OnCooldown: '&fWieder bereit in &6%cooldown%'
+<<<<<<< HEAD
+  NoCurrencyFound: '&7Could not find a currency to perform this action. If you are the server admin please enable one in the configuration file.'
+=======
+>>>>>>> c399d47ef2578b37e2904fbe9242086fc0555764

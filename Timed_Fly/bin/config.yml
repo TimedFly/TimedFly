@@ -36,24 +36,65 @@ Gui:
   # Rows of the inventory (must be multiple of 9, ex: 9, 18... etc)
   Slots: 9
 
+# If true a bossbar will appear when a player buys time (only servers v1.9 and above)
+BossBarTimer:
+  Enable: false
+  Color: green
+  Style: SEGMENTED_6
+
+# If true player will join flying if the have some time left
+JoinFlying:
+  Enabled: true
+  Height: 2
+
+# Set to false if you are lazy and you are using spigot 1.8
+Sounds:
+  Enabled: true
+  Announcer: ENTITY_EXPERIENCE_ORB_PICKUP
+  FlightDisabled: ENTITY_WITHER_DEATH
+
 # If true the currency used will be from TokenManager, balance placeholder: %tokens%
 UseTokenManager: false
 
 # If true the currency used will be from Vault, balance placeholder: %balance%
 UseVault: true
 
+# If true players will be charged from their exp levels
+UseLevelsCurrency: false
+
+# If true players with timedfly.fly.onof will enable fly mode when using one of the custom cmds
+FlyModeIfHasPerm: true
+
 # If set to true players will need a permission to use the command /fly
 UsePermission:
   Use: false
   Permission: 'timedfly.flygui'
 
-# Set to true if you want to stop the fly time when the player leaves the server
-# so when he joins again it resumes the time left.
-# SaveTimeLeave: true # ignore, will be deleted.
-
 # This is the limit amount of time a player can add to his fly time (in minutes)
 # bypass this with timedfly.limit.bypass.
 LimitMaxTime: 30
+
+Announcer:
+  Chat: false
+  Titles: true
+  Times:
+  - '120'
+  - '60'
+  - '10'
+  - '5'
+  - '4'
+  - '3'
+  - '2'
+  - '1'
+  - '0'
+
+
+# If true it will execute a command when flight disables
+OnFlyDisableCommands:
+  Enabled: false
+  Commands:
+  - '[console] say %player% is using hacks D:'
+  - '[player] say i''m using hacks >:D'
 
 # A list of world in which you want the plugin to be enabled.
 World-List:
@@ -75,7 +116,3 @@ Auto-Download: true
 # Current languages es, sp, hu, de, you can create your own and send it to me so I added for default.
 # Is not recommended to use the /tf reload command, some messages will not change.
 Lang: en
-
-# Do not change if you don't want another config.yml in your folder unless I say you can :D
-# If for some reason your config keep resetting add 1 to this. Ex: 2+1 = 3
-Version: 2

@@ -1,7 +1,6 @@
 package com.minestom;
 
-import com.minestom.ConfigurationFiles.ItemsConfig;
-import com.minestom.ConfigurationFiles.LangFiles;
+import com.minestom.ConfigurationFiles.UpdateConfig;
 import com.minestom.Managers.MySQLManager;
 import com.minestom.NMS.NMS;
 import com.minestom.NMS.v_1_10.v_1_10_R1;
@@ -12,6 +11,7 @@ import com.minestom.NMS.v_1_8.v_1_8_R2;
 import com.minestom.NMS.v_1_8.v_1_8_R3;
 import com.minestom.NMS.v_1_9.v_1_9_R1;
 import com.minestom.NMS.v_1_9.v_1_9_R2;
+import com.minestom.Utilities.BossBarManager;
 import com.minestom.Utilities.GUI.GUIListener;
 import com.minestom.Utilities.Metrics;
 import com.minestom.Utilities.Setup;
@@ -36,31 +36,35 @@ public class TimedFly extends JavaPlugin {
 
     private ConsoleCommandSender log = Bukkit.getServer().getConsoleSender();
     private static TimedFly instance;
+    private BossBarManager bossBarManager;
     public static TimedFly getInstance() { return instance; }
 
     private Connection connection;
     private Economy economy = null;
-    private LangFiles lang = LangFiles.getInstance();
     private MySQLManager mySQLManager = new MySQLManager();
-    private ItemsConfig items = ItemsConfig.getInstance();
     private Setup setup = new Setup();
     private NMS nms;
-    private Utility utility = new Utility(this);
+    private Utility utility;
+    private UpdateConfig updateConfig = new UpdateConfig();
     private MySQLManager sqlManager = new MySQLManager();
 
     public Connection getConnection() { return connection; }
     private void setConnection(Connection connection) { this.connection = connection; }
     public NMS getNMS() { return nms; }
     public Economy getEconomy() { return economy; }
+    public BossBarManager getBossBarManager() { return bossBarManager; }
+    public Utility getUtility() { return utility; }
 
     @Override
     public void onEnable() {
         instance = this;
+        bossBarManager = new BossBarManager(this);
+        utility = new Utility(this);
         if (!new File(this.getDataFolder(), "config.yml").exists()) {
             this.saveDefaultConfig();
         }
-        lang.createFiles(this);
-        items.createFiles(this);
+
+        setup.createConfigFiles(this);
         setup.registerCMD(this);
         setup.registerListener(this);
         setup.registerDependencies(this);
@@ -91,6 +95,7 @@ public class TimedFly extends JavaPlugin {
         }
         setup.checkForUpdate(this);
         utility.message(log, ("&7The Plugin has been enabled and its ready to use."));
+        updateConfig.updateConfig(this);
     }
 
     @Override
@@ -105,7 +110,7 @@ public class TimedFly extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (GUIListener.flytime.containsKey(player.getUniqueId())) {
                 GUIListener.godmode.put(player.getUniqueId(), 6);
-                if (utility.isWorldEnabled(player)) {
+                if (utility.isWorldEnabled(player, player.getWorld())) {
                     if (player.getAllowFlight() || !player.isFlying()) {
                         player.setAllowFlight(false);
                         player.setFlying(false);

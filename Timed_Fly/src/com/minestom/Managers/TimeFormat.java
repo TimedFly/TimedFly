@@ -9,12 +9,6 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.TimeZone;
-import java.util.UUID;
-
 public class TimeFormat {
     private static TimeFormat instance;
     private TimedFly plugin = TimedFly.getInstance();

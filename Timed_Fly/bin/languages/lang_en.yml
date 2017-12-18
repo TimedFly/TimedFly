@@ -1,30 +1,13 @@
 # This is when the player has the choosen time left it says something
 Announcer:
-  Sound: ENTITY_EXPERIENCE_ORB_PICKUP
   Chat:
-    Enabled: false
     Message: '&aFly mode will be disabled in &7%time%'
   Titles:
-    Enabled: true
     Title: '&c%time%'
     SubTitle: '&fUntil Flight Disables'
-  Times:
-  - '120'
-  - '60'
-  - '10'
-  - '5'
-  - '4'
-  - '3'
-  - '2'
-  - '1'
-  - '0'
-  
+
 # This is when the player is flying or fly mode is enabled/disabled
 Fly:
-  DisabledSound: ENTITY_WITHER_DEATH
-  JoinFlying:
-    Enabled: true
-    Height: 2
   Message:
     ToPlayer: '&aFly mode enabled to &7%target% &afor &7%time% &aminutes.'
     FromPlayer: '&aFly mode enabled from &7%player% &afor &7%time% &aminutes.'
@@ -33,12 +16,15 @@ Fly:
       for &7$%price%.'
     Disabled: '&aFly mode disabled. You can buy another one.'
     NoMoney: '&aYou don''t have enough money to buy this.'
+    NoLevels: '&aYou don''t have enough &eLevels &ato buy this. You need &e%levels_needed%'
     SetOn: '&aFly mode enabled.'
     SetOff: '&aFly mode disabled.'
     TimeLeft: '&aYou have %timeleft% time left.'
   ActionBar:
     Enabled: true
     Message: '&cYou have %timeleft% of fly time'
+  BossBar:
+    Message: '&aYou have %timeleft% of fly time'
   Titles:
     Enabled:
       Use: true
@@ -84,3 +70,4 @@ Other:
   MaxReached: '&eYou have reached the maximum limit of your flight time allowed.'
   MaxAllowed: '&eYou can''t choose more than your max time allowed (&c%time_allowed%&7).'
   OnCooldown: '&7You can''t use this for %cooldown%'
+  NoCurrencyFound: '&7Could not find a currency to perform this action. If you are the server admin please enable one in the configuration file.'

@@ -5,17 +5,17 @@ import com.minestom.CMDs.Completitions.MainTabCompletion;
 import com.minestom.CMDs.CustomFlyCMD;
 import com.minestom.CMDs.FlyCMD;
 import com.minestom.CMDs.MainCMD;
+import com.minestom.ConfigurationFiles.ItemsConfig;
+import com.minestom.ConfigurationFiles.LangFiles;
 import com.minestom.TimedFly;
 import com.minestom.Updater.SpigotUpdater;
 import com.minestom.Utilities.GUI.GUIListener;
 import com.minestom.Utilities.Others.GeneralListener;
 import com.minestom.Utilities.Others.Placeholder;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -70,6 +70,16 @@ public class Setup {
         pm.registerEvents(new GUIListener(), plugin);
         pm.registerEvents(new GeneralListener(), plugin);
         pm.registerEvents(new CustomFlyCMD(), plugin);
+    }
+
+    public void createConfigFiles(TimedFly plugin){
+        LangFiles lang = LangFiles.getInstance();
+        ItemsConfig items = ItemsConfig.getInstance();
+        //Config configFile = Config.getInstance();
+
+        //configFile.createConfig(plugin);
+        lang.createFiles(plugin);
+        items.createFiles(plugin);
     }
 
     public void registerDependencies(TimedFly plugin) {
