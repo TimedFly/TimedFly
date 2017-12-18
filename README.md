@@ -1,4 +1,4 @@
-# Desciption
+# Description
 
 Perfect for survival servers. With this plugin you can charge players for the ability to fly over the worlds for a limited amount of time. Now all players will have the opportunity to be able to fly, your players will thank you.
 
@@ -7,6 +7,8 @@ Perfect for survival servers. With this plugin you can charge players for the ab
 - 100% customizable messages.
 - MySQL and SQLite (flat file) Support.
 - Custom items with custom actions.
+- Use levels as currency.
+- Bossbar to display time left.
 - Add as many items that you want.
 - Add time if you have some time left already. (example: I have 5 minutes left and I want more I buy a 15 minutes fly, I now have 20 minutes left)
 - Anti death when flight disables. (if a player runs out of time and is in the air he won't take damage for 6 seconds)
