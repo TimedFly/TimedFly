@@ -71,13 +71,10 @@ Other:
     Found: '&eBeállítottad az pénzt &7%itemid% &7$%price%.'
     NotFound: '&eNem találtam a tárgy ID-t &7%itemid%. Használd /tf list az összes tárgy megtekintéséhez.'
   DisabledWorld: '&eEz a világ nem engedélyezett. Ha úgy gondolod, hogy ez hiba, akkor jelentsd be a rendszergazdának.'
-<<<<<<< HEAD
   MaxReached: '&eYou have reached the maximum limit of your flight time allowed.'
   MaxAllowed: '&eYou can''t choose more than your max time allowed (&c%time_allowed%&7).'
   OnCooldown: '&7You can''t use this for %cooldown%'
   NoCurrencyFound: '&7Could not find a currency to perform this action. If you are the server admin please enable one in the configuration file.'
-=======
   MaxReached: '&eElérted a megengedett maximális repülési időt.'
   MaxAllowed: '&eNem választhat többet, mint a megengedett maximális időt (&c%time_allowed%&7).'
   OnCooldown: '&7Nem használhatod ezt %cooldown%'
->>>>>>> c399d47ef2578b37e2904fbe9242086fc0555764
