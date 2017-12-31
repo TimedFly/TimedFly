@@ -83,15 +83,11 @@ public class GeneralListener implements Listener {
         Player player = event.getPlayer();
         if (GUIListener.flytime.containsKey(player.getUniqueId())) {
             sqlManager.setTimeLeft(player, GUIListener.flytime.get(player.getUniqueId()));
-            if (initialTime.containsKey(player.getUniqueId())) {
-                sqlManager.setInitialTime(player, initialTime.get(player.getUniqueId()));
-                initialTime.remove(player.getUniqueId());
-            }
             GUIListener.flytime.remove(player.getUniqueId());
-        } else {
-            if (sqlManager.getTimeLeft(player) != 0) {
-                sqlManager.setTimeLeft(player, 0);
-            }
+        }
+        if (initialTime.containsKey(player.getUniqueId())) {
+            sqlManager.setInitialTime(player, initialTime.get(player.getUniqueId()));
+            initialTime.remove(player.getUniqueId());
         }
     }
 
@@ -119,13 +115,17 @@ public class GeneralListener implements Listener {
                 public void run() {
                     if (GUIListener.flytime.containsKey(player.getUniqueId())) {
                         player.setAllowFlight(true);
-                        bossBarManager.addPlayer(player);
+                        if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                            bossBarManager.addPlayer(player);
+                        }
                     }
                 }
             }.runTaskLater(plugin, 8L);
         } else {
             if (GUIListener.flytime.containsKey(player.getUniqueId())) {
-                bossBarManager.removeBar(player);
+                if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                    bossBarManager.removeBar(player);
+                }
                 player.setAllowFlight(false);
                 player.setFlying(false);
             }

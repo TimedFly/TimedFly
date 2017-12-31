@@ -14,7 +14,7 @@ import java.util.List;
 
 public class FlyTabCompletion implements TabCompleter {
 
-    private static final String[] COMMANDS = {"set", "timeleft", "on", "off", "add"};
+    private static final String[] COMMANDS = {"set", "timeleft", "on", "off", "add", "help", "resume", "stop"};
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {

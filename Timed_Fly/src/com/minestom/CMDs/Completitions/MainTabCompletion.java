@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MainTabCompletion implements TabCompleter {
 
-    private static final String[] COMMANDS = {"help", "help2", "list", "setTime", "setPrice", "setItem", "reload", "permission"};
+    private static final String[] COMMANDS = {"help", "help2","help3", "list", "setTime", "setPrice", "setItem", "reload", "permission"};
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {

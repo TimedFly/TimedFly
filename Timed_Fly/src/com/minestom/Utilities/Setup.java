@@ -36,7 +36,7 @@ public class Setup {
                     }
                 }
             }
-        }.runTaskTimer(plugin, 20L, 34500L);
+        }.runTaskTimer(plugin, 20L, 15 * 34500L);
     }
 
     // not used any more
@@ -72,7 +72,7 @@ public class Setup {
         pm.registerEvents(new CustomFlyCMD(), plugin);
     }
 
-    public void createConfigFiles(TimedFly plugin){
+    public void createConfigFiles(TimedFly plugin) {
         LangFiles lang = LangFiles.getInstance();
         ItemsConfig items = ItemsConfig.getInstance();
         //Config configFile = Config.getInstance();

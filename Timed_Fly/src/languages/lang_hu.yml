@@ -23,6 +23,11 @@ Fly:
     SetOn: '&aRepülés mód engedélyezve.'
     SetOff: '&aRepülés mód letiltva.'
     TimeLeft: '&aVan %timeleft% idő maradt.'
+    StopAndResume:
+      Stop: '&7Megállította a repülési időt!'
+      Resume: '&7Ön folytatta a repülési időt!'
+      NoTime: '&7Nincs ideje rá!'
+      Already: '&7Már megtette ezt!'
   ActionBar:
     Enabled: true
     Message: '&cVan %timeleft% a repülési idő'
@@ -75,6 +80,3 @@ Other:
   MaxAllowed: '&eYou can''t choose more than your max time allowed (&c%time_allowed%&7).'
   OnCooldown: '&7You can''t use this for %cooldown%'
   NoCurrencyFound: '&7Could not find a currency to perform this action. If you are the server admin please enable one in the configuration file.'
-  MaxReached: '&eElérted a megengedett maximális repülési időt.'
-  MaxAllowed: '&eNem választhat többet, mint a megengedett maximális időt (&c%time_allowed%&7).'
-  OnCooldown: '&7Nem használhatod ezt %cooldown%'

@@ -36,6 +36,7 @@ Gui:
   # Rows of the inventory (must be multiple of 9, ex: 9, 18... etc)
   Slots: 9
 
+# Att: This is still on beta
 # If true a bossbar will appear when a player buys time (only servers v1.9 and above)
 BossBarTimer:
   Enable: false

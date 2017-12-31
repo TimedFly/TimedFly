@@ -126,7 +126,7 @@ public class SpigotUpdater extends Thread {
                     }
                 }
                 if(plugin.getConfig().getBoolean("Auto-Download")) {
-                    download.autoDownload(Integer.parseInt(this.plugin.getDescription().getVersion()), 48668);
+                    download.autoDownload(48668);
                 } else {
                     utility.message(logger, "Found new version: " + currentVersion + "! (Your version is " + this.plugin.getDescription().getVersion() + ")");
                     utility.message(logger, "Download here: http://www.spigotmc.org/resources/" + this.id);

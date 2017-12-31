@@ -20,6 +20,11 @@ Fly:
     SetOn: '&fFly mode enabled.'
     SetOff: '&fFly mode disabled.'
     TimeLeft: '&fVerbleibende Zeit %timeleft%.'
+    StopAndResume:
+      Stop: '&7Du hast die Flugzeit &cgestoppt&7!'
+      Resume: '&7Du hast die Flugzeit &afortgesetzt&7!'
+      NoTime: '&7Du hast keine Zeit mehr übrig um dies auszuführen!'
+      Already: '&7Du hast das bereits gemacht!'
   ActionBar:
     Enabled: true
     Message: '&cVerbleibende Flugzeit %timeleft%'
@@ -67,7 +72,7 @@ Other:
     Found: '&eDu hast den Preis von &6%itemid% &ezu &6$%price% geändert.'
     NotFound: '&eDie ItemId &6%itemid% konnte nicht gefunden werden. Benutz /tf list um alle Items zu sehen.'
   DisabledWorld: 'Du darfst in dieser Welt nicht fliegen.'
-  MaxReached: '&eDu hast die maximale Flugzeit erreicht.'
+  MaxReached: '&eDu hast die Maximale Flugzeit erreicht.'
   MaxAllowed: '&eDu kannst nicht mehr als deine maximale Flugzeit auswählen (&c%time_allowed%&7).'
   OnCooldown: '&fWieder bereit in &6%cooldown%'
   NoCurrencyFound: '&7Could not find a currency to perform this action. If you are the server admin please enable one in the configuration file.'

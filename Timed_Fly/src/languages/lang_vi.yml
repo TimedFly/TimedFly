@@ -26,6 +26,11 @@ Fly:
     SetOn: '&aChế độ bay bật.'
     SetOff: '&cChế độ bay tắt.'
     TimeLeft: '&aBạn có %timeleft% thời gian còn lại.'
+    StopAndResume:
+      Stop: '&7Bạn đã Ngừng thời gian bay!'
+      Resume: '&7Bạn đã Tiếp tục thời gian bay!'
+      NoTime: '&7Bạn không có thời gian để làm điều này!'
+      Already: '&7Bạn đã làm điều này đã!'
   ActionBar:
     Enabled: true
     Message: '&cBạn có %timeleft% thời gian bay'

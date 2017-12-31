@@ -42,6 +42,9 @@ public class GUIListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if (flytime.isEmpty()){
+                    return;
+                }
                 for (Map.Entry<UUID, Integer> entry : flytime.entrySet()) {
                     Player player = Bukkit.getPlayer(entry.getKey());
                     Integer time = entry.getValue();
@@ -54,7 +57,9 @@ public class GUIListener implements Listener {
                             sqlManager.setInitialTime(player, 0);
                             sqlManager.setTimeLeft(player, 0);
                             if (utility.isWorldEnabled(player, player.getWorld())) {
-                                bossBarManager.removeBar(player);
+                                if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                                    bossBarManager.removeBar(player);
+                                }
                                 godmode.put(player.getUniqueId(), 6);
                                 player.setAllowFlight(false);
                                 player.setFlying(false);
@@ -81,9 +86,11 @@ public class GUIListener implements Listener {
                                     gui.flyGui(player);
                                 }
                                 format.setActionBar(player, config);
-                                bossBarManager.setBarProgress(time - 1, GeneralListener.initialTime.get(player.getUniqueId()));
-                                bossBarManager.setBarName(utility.color(config.getString("Fly.BossBar.Message")
-                                        .replace("%timeleft%", format.format(time - 1))));
+                                if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                                    bossBarManager.setBarProgress(time - 1, GeneralListener.initialTime.get(player.getUniqueId()));
+                                    bossBarManager.setBarName(utility.color(config.getString("Fly.BossBar.Message")
+                                            .replace("%timeleft%", format.format(time - 1))));
+                                }
                                 List<String> announce = configuration.getStringList("Announcer.Times");
                                 for (String list : announce) {
                                     if (time - 1 == Integer.parseInt(list)) {
@@ -138,6 +145,7 @@ public class GUIListener implements Listener {
                             int price = itemscf.getInt("Items." + string + ".Price");
                             int time = itemscf.getInt("Items." + string + ".Time");
                             GeneralListener.initialTime.put(player.getUniqueId(), time * 60);
+                            sqlManager.setInitialTime(player, time * 60);
                             if (!flytime.containsKey(player.getUniqueId())) {
                                 if (!player.hasPermission("timedfly.limit.bypass") && time > configuration.getInt("LimitMaxTime")) {
                                     utility.message(player, config.getString("Other.MaxAllowed"));
@@ -182,7 +190,9 @@ public class GUIListener implements Listener {
                                     player.setAllowFlight(true);
                                 }
                                 flytime.put(player.getUniqueId(), time * 60);
-                                bossBarManager.addPlayer(player);
+                                if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                                    bossBarManager.addPlayer(player);
+                                }
                                 if (!player.hasPermission("timedfly.cooldown.bypass") || !player.isOp()) {
                                     if (!CooldownManager.isInCooldown(player.getUniqueId(), "fly")) {
                                         if (cooldowntime.contains("s")) {

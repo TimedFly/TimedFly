@@ -20,6 +20,11 @@ Fly:
     SetOn: '&aFly mode enabled.'
     SetOff: '&aFly mode disabled.'
     TimeLeft: '&aYou have %timeleft% time left.'
+    StopAndResume:
+      Stop: '&7You have &cStopped &7the flight time!'
+      Resume: '&7You have &aResumed &7the flight time!'
+      NoTime: '&7You don''t have any time left to do this!'
+      Already: '&7You have done this already!'
   ActionBar:
     Enabled: true
     Message: '&cYou have %timeleft% of fly time'

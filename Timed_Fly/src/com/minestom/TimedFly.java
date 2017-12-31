@@ -58,7 +58,9 @@ public class TimedFly extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        bossBarManager = new BossBarManager(this);
+        if (getConfig().getBoolean("BossBarTimer.Enabled")) {
+            bossBarManager = new BossBarManager(this);
+        }
         utility = new Utility(this);
         if (!new File(this.getDataFolder(), "config.yml").exists()) {
             this.saveDefaultConfig();

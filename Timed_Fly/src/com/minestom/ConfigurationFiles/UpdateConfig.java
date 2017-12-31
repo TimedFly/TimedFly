@@ -64,6 +64,7 @@ public class UpdateConfig {
             utility.message(Bukkit.getConsoleSender(), "&cYour Configuration file has some sections missing. Updating...");
             plugin.saveConfig();
         }
+
         if (!path.contains("BossBarTimer")) {
             configuration.set("BossBarTimer.Enabled", false);
             configuration.set("BossBarTimer.Color", "RED");
@@ -83,6 +84,14 @@ public class UpdateConfig {
         }
         if (language.getString("Fly.BossBar.Message") == null) {
             language.set("Fly.BossBar.Message", "&aYou have %timeleft% of fly time");
+            utility.message(Bukkit.getConsoleSender(), "&cYour Language file has some sections missing. Updating...");
+            lang.saveLang();
+        }
+        if (language.getString("Fly.Message.StopAndResume") == null) {
+            language.set("Fly.Message.StopAndResume.Stop", "&7You have &cStopped &7the flight time!");
+            language.set("Fly.Message.StopAndResume.Resume", "&7You have &aResumed &7the flight time!");
+            language.set("Fly.Message.StopAndResume.NoTime", "&7You don't have any time left to do this!");
+            language.set("Fly.Message.StopAndResume.Already", "&7You have done this already!");
             utility.message(Bukkit.getConsoleSender(), "&cYour Language file has some sections missing. Updating...");
             lang.saveLang();
         }

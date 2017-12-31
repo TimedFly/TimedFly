@@ -18,6 +18,9 @@ public class BossBarManager {
     private BossBar bar;
 
     public void addPlayer(Player player) {
+        if (!plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+            return;
+        }
         if (bar == null) {
             bar = Bukkit.createBossBar(null,
                     BarColor.valueOf(plugin.getConfig().getString("BossBarTimer.Color").toUpperCase()),
@@ -28,14 +31,12 @@ public class BossBarManager {
         }
         if (!bar.getPlayers().contains(player) && bar != null) {
             bar.addPlayer(player);
-        } else {
-            removeBar(player);
         }
     }
 
 
     public void setBarProgress(double progress, double initialTime) {
-        if (!plugin.getConfig().getBoolean("BossBarTimer.Enabled") && bar == null) {
+        if (!plugin.getConfig().getBoolean("BossBarTimer.Enabled") || bar == null) {
             return;
         }
         double barProgress = initialTime / progress;
@@ -43,7 +44,7 @@ public class BossBarManager {
     }
 
     public void removeBar(Player player) {
-        if (!plugin.getConfig().getBoolean("BossBarTimer.Enabled") && bar == null) {
+        if (!plugin.getConfig().getBoolean("BossBarTimer.Enabled") || bar == null) {
             return;
         }
         if (bar.getPlayers().contains(player))

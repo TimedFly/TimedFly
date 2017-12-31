@@ -13,15 +13,15 @@ public class AutoDownload {
 
     private TimedFly plugin = TimedFly.getInstance();
     private Utility utility = new Utility(plugin);
-    ConsoleCommandSender sender = Bukkit.getServer().getConsoleSender();
 
-    public void autoDownload(int version, int id) {
+    public void autoDownload(int id) {
+        ConsoleCommandSender sender = Bukkit.getServer().getConsoleSender();
         utility.message(sender, "&7Getting the latest version of &c&lTimedFly&7...");
         utility.message(sender, "&7Downloading...");
 
         String downloadURL = "https://api.spiget.org/v2/resources/" + id + "/download";
         File dir = new File(plugin.getDataFolder().getAbsolutePath());
-        String pluginFolder = dir.getParentFile().getAbsolutePath() + "/TimedFly-v" + version + ".jar";
+        String pluginFolder = dir.getParentFile().getAbsolutePath() + "/TimedFly.jar";
 
         try {
             FileUtils.copyURLToFile(new URL(downloadURL), new File(pluginFolder), 10000, 10000);
