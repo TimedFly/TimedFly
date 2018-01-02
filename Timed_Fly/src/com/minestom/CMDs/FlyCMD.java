@@ -63,32 +63,33 @@ public class FlyCMD implements CommandExecutor {
                 }
                 if (args[0].equalsIgnoreCase("add")) {
                     if (sender.hasPermission("timedfly.admin") || sender.hasPermission("timedfly.fly.add")) {
-                        try {
-                            Player player = Bukkit.getPlayer(args[1]);
-                            double time = Double.parseDouble(args[2]);
-                            if (player == null) {
-                                utility.message(sender, "&cTimedFly >> &aThe player &7" + args[1] + " &ais not online.");
-                                return true;
-                            }
-                            if (utility.isWorldEnabled(player, player.getWorld())) {
-                                if (!player.getAllowFlight()) {
-                                    player.setAllowFlight(true);
-                                }
-                                if (!GUIListener.flytime.containsKey(player.getUniqueId())) {
-                                    GeneralListener.initialTime.put(player.getUniqueId(), (int) time * 60);
-                                    GUIListener.flytime.put(player.getUniqueId(), (int) time * 60);
-                                    utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
-                                } else {
-                                    GeneralListener.initialTime.put(player.getUniqueId(), GeneralListener.initialTime.get(player.getUniqueId()) + (int) (time * 60));
-                                    GUIListener.flytime.put(player.getUniqueId(), GUIListener.flytime.get(player.getUniqueId()) + (int) time * 60);
-                                    utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
-                                }
-                                return true;
-                            }
-                            utility.message(sender, MessageManager.DISABLEDWORLD.toString());
-                        } catch (Exception e) {
+                        if (args.length == 1 || args.length == 2) {
                             utility.message(sender, "&7Usage: /tfly add <player> <minutes>");
+                            return true;
                         }
+                        Player player = Bukkit.getPlayer(args[1]);
+                        double time = Double.parseDouble(args[2]);
+                        if (player == null) {
+                            utility.message(sender, "&cTimedFly >> &aThe player &7" + args[1] + " &ais not online.");
+                            return true;
+                        }
+                        if (utility.isWorldEnabled(player, player.getWorld())) {
+                            if (!player.getAllowFlight()) {
+                                player.setAllowFlight(true);
+                            }
+                            if (!GUIListener.flytime.containsKey(player.getUniqueId())) {
+                                GeneralListener.initialTime.put(player.getUniqueId(), (int) time * 60);
+                                GUIListener.flytime.put(player.getUniqueId(), (int) time * 60);
+                                utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
+                            } else {
+                                GeneralListener.initialTime.put(player.getUniqueId(), GeneralListener.initialTime.get(player.getUniqueId()) + (int) (time * 60));
+                                GUIListener.flytime.put(player.getUniqueId(), GUIListener.flytime.get(player.getUniqueId()) + (int) time * 60);
+                                utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
+                            }
+                            return true;
+                        }
+                        utility.message(sender, MessageManager.DISABLEDWORLD.toString());
+
                     } else {
                         utility.message(sender, MessageManager.NOPERM.toString());
                         if (sender instanceof Player) {
@@ -101,33 +102,33 @@ public class FlyCMD implements CommandExecutor {
                 }
                 if (args[0].equalsIgnoreCase("set")) {
                     if (sender.hasPermission("timedfly.admin") || sender.hasPermission("timedfly.fly.set")) {
-                        try {
-                            Player player = Bukkit.getPlayer(args[1]);
-                            double time = Double.parseDouble(args[2]);
-                            if (player == null) {
-                                utility.message(sender, "&cTimedFly >> &aThe player &7" + args[1] + " &ais not online.");
-                                return true;
-                            }
-                            if (utility.isWorldEnabled(player, player.getWorld())) {
-                                if (!player.getAllowFlight()) {
-                                    player.setAllowFlight(true);
-                                    player.setFlying(true);
-                                }
-                                GeneralListener.initialTime.put(player.getUniqueId(), (int) time * 60);
-                                GUIListener.flytime.put(player.getUniqueId(), (int) time * 60);
-                                if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
-                                    bossBarManager.addPlayer(player);
-                                }
-                                utility.message(sender, config.getString("Fly.Message.ToPlayer")
-                                        .replace("%target%", player.getDisplayName()).replace("%time%", "" + time));
-                                utility.message(player, config.getString("Fly.Message.FromPlayer")
-                                        .replace("%player%", sender.getName()).replace("%time%", "" + time));
-                                return true;
-                            } else utility.message(sender, MessageManager.DISABLEDWORLD.toString());
-                        } catch (Exception e) {
-                            utility.message(sender,
-                                    "&7Usage: /tfly set <player> <minutes>");
+                        if (args.length == 1 || args.length == 2) {
+                            utility.message(sender, "&7Usage: /tfly set <player> <minutes>");
+                            return true;
                         }
+                        Player player = Bukkit.getPlayer(args[1]);
+                        double time = Double.parseDouble(args[2]);
+                        if (player == null) {
+                            utility.message(sender, "&cTimedFly >> &aThe player &7" + args[1] + " &ais not online.");
+                            return true;
+                        }
+                        if (utility.isWorldEnabled(player, player.getWorld())) {
+                            if (!player.getAllowFlight()) {
+                                player.setAllowFlight(true);
+                                player.setFlying(true);
+                            }
+                            GeneralListener.initialTime.put(player.getUniqueId(), (int) time * 60);
+                            GUIListener.flytime.put(player.getUniqueId(), (int) time * 60);
+                            if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                                bossBarManager.addPlayer(player);
+                            }
+                            utility.message(sender, config.getString("Fly.Message.ToPlayer")
+                                    .replace("%target%", player.getDisplayName()).replace("%time%", "" + time));
+                            utility.message(player, config.getString("Fly.Message.FromPlayer")
+                                    .replace("%player%", sender.getName()).replace("%time%", "" + time));
+                            return true;
+                        } else utility.message(sender, MessageManager.DISABLEDWORLD.toString());
+
                     } else {
                         utility.message(sender, MessageManager.NOPERM.toString());
                         if (sender instanceof Player) {
@@ -200,24 +201,25 @@ public class FlyCMD implements CommandExecutor {
                         return true;
                     }
                     Player player = (Player) sender;
-                    if (!sender.hasPermission("timedfly.admin") || !sender.hasPermission("timedfly.fly.stopresume")) {
+                    if (player.hasPermission("timedfly.admin") || player.hasPermission("timedfly.fly.stopresume")) {
+                        if (GUIListener.flytime.containsKey(player.getUniqueId())) {
+                            if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                                bossBarManager.removeBar(player);
+                            }
+                            sqlManager.setTimeLeft(player, GUIListener.flytime.get(player.getUniqueId()));
+                            GUIListener.flytime.remove(player.getUniqueId());
+                            utility.message(player, config.getString("Fly.Message.StopAndResume.Stop"));
+                            if (player.getAllowFlight() || player.isFlying()) {
+                                player.setAllowFlight(false);
+                                player.setFlying(false);
+                            }
+                        } else utility.message(player, config.getString("Fly.Message.StopAndResume.NoTime"));
+                    } else {
                         utility.message(sender, config.getString("Other.NoPermission.Message"));
                         plugin.getNMS().sendTitle(player, utility.color(config.getString("Other.NoPermission.Title")), 10, 40, 10);
                         plugin.getNMS().sendTitle(player, utility.color(config.getString("Other.NoPermission.SubTitle")), 10, 40, 10);
                         return true;
                     }
-                    if (GUIListener.flytime.containsKey(player.getUniqueId())) {
-                        if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
-                            bossBarManager.removeBar(player);
-                        }
-                        sqlManager.setTimeLeft(player, GUIListener.flytime.get(player.getUniqueId()));
-                        GUIListener.flytime.remove(player.getUniqueId());
-                        utility.message(player, config.getString("Fly.Message.StopAndResume.Stop"));
-                        if (player.getAllowFlight() || player.isFlying()) {
-                            player.setAllowFlight(false);
-                            player.setFlying(false);
-                        }
-                    } else utility.message(player, config.getString("Fly.Message.StopAndResume.NoTime"));
                 }
                 if (args[0].equalsIgnoreCase("resume")) {
                     if (!(sender instanceof Player)) {
@@ -225,28 +227,29 @@ public class FlyCMD implements CommandExecutor {
                         return true;
                     }
                     Player player = (Player) sender;
-                    if (!sender.hasPermission("timedfly.admin") || !sender.hasPermission("timedfly.fly.stopresume")) {
+                    if (player.hasPermission("timedfly.admin") || player.hasPermission("timedfly.fly.stopresume")) {
+                        if (sqlManager.getTimeLeft(player) == 0) {
+                            utility.message(player, config.getString("Fly.Message.StopAndResume.NoTime"));
+                            return true;
+                        }
+                        if (GUIListener.flytime.containsKey(player.getUniqueId())) {
+                            utility.message(player, config.getString("Fly.Message.StopAndResume.Already"));
+                            return true;
+                        }
+                        GUIListener.flytime.put(player.getUniqueId(), sqlManager.getTimeLeft(player));
+                        if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                            bossBarManager.addPlayer(player);
+                        }
+                        utility.message(player, config.getString("Fly.Message.StopAndResume.Resume"));
+                        if (!player.getAllowFlight()) {
+                            player.setAllowFlight(true);
+                            player.setFlying(true);
+                        }
+                    } else {
                         utility.message(sender, config.getString("Other.NoPermission.Message"));
                         plugin.getNMS().sendTitle(player, utility.color(config.getString("Other.NoPermission.Title")), 10, 40, 10);
                         plugin.getNMS().sendTitle(player, utility.color(config.getString("Other.NoPermission.SubTitle")), 10, 40, 10);
                         return true;
-                    }
-                    if (sqlManager.getTimeLeft(player) == 0) {
-                        utility.message(player, config.getString("Fly.Message.StopAndResume.NoTime"));
-                        return true;
-                    }
-                    if (GUIListener.flytime.containsKey(player.getUniqueId())) {
-                        utility.message(player, config.getString("Fly.Message.StopAndResume.Already"));
-                        return true;
-                    }
-                    GUIListener.flytime.put(player.getUniqueId(), sqlManager.getTimeLeft(player));
-                    if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
-                        bossBarManager.addPlayer(player);
-                    }
-                    utility.message(player, config.getString("Fly.Message.StopAndResume.Resume"));
-                    if (!player.getAllowFlight()) {
-                        player.setAllowFlight(true);
-                        player.setFlying(true);
                     }
                 }
             }

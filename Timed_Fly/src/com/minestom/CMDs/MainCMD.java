@@ -37,9 +37,6 @@ public class MainCMD implements CommandExecutor {
                 sender.sendMessage(utility.color("&8&m----------------------------------------"));
                 return true;
             }
-            if (!sender.hasPermission("timedfly.help") || !sender.hasPermission("timedfly.admin")) {
-                return true;
-            }
             if (args[0].equalsIgnoreCase("help")) {
                 sender.sendMessage(utility.color("&8&m----------------------------------------"));
                 sender.sendMessage(utility.color("&c&l                   TimedFly"));
@@ -198,7 +195,7 @@ public class MainCMD implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("setTime")) {
                 if (sender.hasPermission("timedfly.admin")) {
-                    if (args.length == 1 || args.length == 2) {
+                    if (args.length == 1|| args.length == 2) {
                         utility.message(sender, config.getString("Other.SetTime.Usage"));
                         return true;
                     }
@@ -272,7 +269,7 @@ public class MainCMD implements CommandExecutor {
                 }
                 if (sender.hasPermission("timedfly.admin")) {
                     Player player = (Player) sender;
-                    if (args.length == 1 || args.length == 2) {
+                    if (args.length == 1) {
                         utility.message(sender, config.getString("Other.SetItem.Usage"));
                         return true;
                     }
