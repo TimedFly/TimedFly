@@ -6,8 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class UpdateConfig {
 
@@ -18,60 +18,44 @@ public class UpdateConfig {
         FileConfiguration configuration = plugin.getConfig();
         FileConfiguration language = lang.getLang();
 
-        Set<String> path = configuration.getKeys(false);
+        configuration.addDefault("Prefix", "&cTimedFly > ");
+        configuration.addDefault("Cooldown", "1h");
+        configuration.addDefault("Type", "sqlite");
+        configuration.addDefault("MySQL.Database", "database");
+        configuration.addDefault("MySQL.Host", "localhost");
+        configuration.addDefault("MySQL.Port", "3306");
+        configuration.addDefault("MySQL.Username", "user");
+        configuration.addDefault("MySQL.Password", "pass");
+        configuration.addDefault("OpenMenuCommand", "fly;flymenu");
+        configuration.addDefault("Gui.DisplayName", "TimedFly");
+        configuration.addDefault("Gui.Slots", 9);
+        configuration.addDefault("BossBarTimer.Enabled", false);
+        configuration.addDefault("BossBarTimer.Color", "GREEN");
+        configuration.addDefault("BossBarTimer.Style", "SOLID");
+        configuration.addDefault("JoinFlying.Enabled", true);
+        configuration.addDefault("JoinFlying.Height", 2);
+        configuration.addDefault("Sounds.Enabled", true);
+        configuration.addDefault("Sounds.Announcer", "ENTITY_EXPERIENCE_ORB_PICKUP");
+        configuration.addDefault("Sounds.FlightDisabled", "ENTITY_WITHER_DEATH");
+        configuration.addDefault("UseTokenManager", false);
+        configuration.addDefault("UseVault", true);
+        configuration.addDefault("UseLevelsCurrency", false);
+        configuration.addDefault("FlyModeIfHasPerm", true);
+        configuration.addDefault("UsePermission.Use", false);
+        configuration.addDefault("UsePermission.Permission", "timedfly.flygui");
+        configuration.addDefault("LimitMaxTime", 30);
+        configuration.addDefault("Announcer.Chat", false);
+        configuration.addDefault("Announcer.Titles", true);
+        configuration.addDefault("Announcer.Times", Arrays.asList("120", "60", "30", "15", "10", "5", "4", "3", "2", "1"));
+        configuration.addDefault("OnFlyDisableCommands.Enabled", false);
+        configuration.addDefault("OnFlyDisableCommands.Commands", Arrays.asList("[console] say %player% is using hacks D:", "[player] say i'm using hacks >:D"));
+        configuration.addDefault("World-List.Type", "all");
+        configuration.addDefault("World-List.Worlds", Arrays.asList("world", "survival"));
+        configuration.addDefault("Check-For-Updates", true);
+        configuration.addDefault("Auto-Download", false);
+        configuration.addDefault("Lang", "en");
+        configuration.options().copyDefaults(true);
 
-        if (!path.contains("OnFlyDisableCommands")) {
-            List<String> commands = new ArrayList<>();
-            commands.add("[console] say %player% is using hacks D:");
-            commands.add("[player] say i'm using hacks >:D");
-            configuration.set("OnFlyDisableCommands.Enabled", false);
-            configuration.set("OnFlyDisableCommands.Commands", commands);
-            utility.message(Bukkit.getConsoleSender(), "&cYour Configuration file has some sections missing. Updating...");
-            plugin.saveConfig();
-        }
-        if (!path.contains("UseLevelsCurrency")) {
-            configuration.set("UseLevelsCurrency", false);
-            utility.message(Bukkit.getConsoleSender(), "&cYour Configuration file has some sections missing. Updating...");
-            plugin.saveConfig();
-        }
-        if (!path.contains("FlyModeIfHasPerm")) {
-            configuration.set("FlyModeIfHasPerm", true);
-            utility.message(Bukkit.getConsoleSender(), "&cYour Configuration file has some sections missing. Updating...");
-            plugin.saveConfig();
-        }
-        if (!path.contains("Sounds")) {
-            configuration.set("Sounds.Enabled", true);
-            configuration.set("Sounds.Announcer", "ENTITY_EXPERIENCE_ORB_PICKUP");
-            configuration.set("Sounds.FlightDisabled", "ENTITY_WITHER_DEATH");
-            utility.message(Bukkit.getConsoleSender(), "&cYour Configuration file has some sections missing. Updating...");
-            plugin.saveConfig();
-        }
-        if (!path.contains("Announcer")) {
-            List<String> times = new ArrayList<>();
-            times.add("120");
-            times.add("60");
-            times.add("30");
-            times.add("10");
-            times.add("5");
-            times.add("4");
-            times.add("3");
-            times.add("2");
-            times.add("1");
-            times.add("0");
-            configuration.set("Announcer.Chat", false);
-            configuration.set("Announcer.Titles", true);
-            configuration.set("Announcer.Times", times);
-            utility.message(Bukkit.getConsoleSender(), "&cYour Configuration file has some sections missing. Updating...");
-            plugin.saveConfig();
-        }
-
-        if (!path.contains("BossBarTimer")) {
-            configuration.set("BossBarTimer.Enabled", false);
-            configuration.set("BossBarTimer.Color", "RED");
-            configuration.set("BossBarTimer.Style", "SOLID");
-            utility.message(Bukkit.getConsoleSender(), "&cYour Configuration file has some sections missing. Updating...");
-            plugin.saveConfig();
-        }
         if (language.getString("Fly.Message.NoLevels") == null) {
             language.set("Fly.Message.NoLevels", "&aYou don't have enough &eLevels &ato buy this. You need &e%levels_needed%");
             utility.message(Bukkit.getConsoleSender(), "&cYour Language file has some sections missing. Updating...");

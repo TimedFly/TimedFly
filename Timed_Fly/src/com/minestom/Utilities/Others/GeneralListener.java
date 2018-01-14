@@ -48,7 +48,6 @@ public class GeneralListener implements Listener {
                 }
             }
         }.runTaskTimer(plugin, 0, 20L);
-
     }
 
     @EventHandler

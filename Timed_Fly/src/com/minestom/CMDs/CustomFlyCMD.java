@@ -35,6 +35,18 @@ public class CustomFlyCMD implements Listener {
                     utility.message(player, MessageManager.DISABLEDWORLD.toString());
                     continue;
                 }
+                if (args.length == 2) {
+                    switch (args[1]) {
+                        case "stop":
+                            player.performCommand("timedfly:tfly stop");
+                            continue;
+                        case "resume":
+                            player.performCommand("timedfly:tfly stop");
+                            continue;
+                        default:
+                            continue;
+                    }
+                }
                 if (plugin.getConfig().getBoolean("FlyModeIfHasPerm") && player.hasPermission("timedfly.fly.onof")) {
                     if (player.getAllowFlight()) {
                         player.setAllowFlight(false);

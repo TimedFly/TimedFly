@@ -74,18 +74,22 @@ public class FlyCMD implements CommandExecutor {
                             return true;
                         }
                         if (utility.isWorldEnabled(player, player.getWorld())) {
+                            if (sqlManager.isTimeStopped(player)) {
+                                sqlManager.setTimeLeft(player, sqlManager.getTimeLeft(player) + (int) time * 60);
+                                utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
+                                return true;
+                            }
                             if (!player.getAllowFlight()) {
                                 player.setAllowFlight(true);
                             }
                             if (!GUIListener.flytime.containsKey(player.getUniqueId())) {
                                 GeneralListener.initialTime.put(player.getUniqueId(), (int) time * 60);
                                 GUIListener.flytime.put(player.getUniqueId(), (int) time * 60);
-                                utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
                             } else {
                                 GeneralListener.initialTime.put(player.getUniqueId(), GeneralListener.initialTime.get(player.getUniqueId()) + (int) (time * 60));
                                 GUIListener.flytime.put(player.getUniqueId(), GUIListener.flytime.get(player.getUniqueId()) + (int) time * 60);
-                                utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
                             }
+                            utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
                             return true;
                         }
                         utility.message(sender, MessageManager.DISABLEDWORLD.toString());
@@ -113,6 +117,14 @@ public class FlyCMD implements CommandExecutor {
                             return true;
                         }
                         if (utility.isWorldEnabled(player, player.getWorld())) {
+                            if (sqlManager.isTimeStopped(player)) {
+                                sqlManager.setTimeLeft(player, (int) time * 60);
+                                utility.message(sender, config.getString("Fly.Message.ToPlayer")
+                                        .replace("%target%", player.getDisplayName()).replace("%time%", "" + time));
+                                utility.message(player, config.getString("Fly.Message.FromPlayer")
+                                        .replace("%player%", sender.getName()).replace("%time%", "" + time));
+                                return true;
+                            }
                             if (!player.getAllowFlight()) {
                                 player.setAllowFlight(true);
                                 player.setFlying(true);
@@ -201,18 +213,24 @@ public class FlyCMD implements CommandExecutor {
                         return true;
                     }
                     Player player = (Player) sender;
+                    if (!utility.isWorldEnabled(player, player.getWorld())) {
+                        utility.message(player, config.getString("Other.DisabledWorld"));
+                        return true;
+                    }
                     if (player.hasPermission("timedfly.admin") || player.hasPermission("timedfly.fly.stopresume")) {
                         if (GUIListener.flytime.containsKey(player.getUniqueId())) {
                             if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
                                 bossBarManager.removeBar(player);
                             }
                             sqlManager.setTimeLeft(player, GUIListener.flytime.get(player.getUniqueId()));
+                            sqlManager.setTimeStopped(player, true);
                             GUIListener.flytime.remove(player.getUniqueId());
-                            utility.message(player, config.getString("Fly.Message.StopAndResume.Stop"));
+                            GUIListener.godmode.put(player.getUniqueId(), 6);
                             if (player.getAllowFlight() || player.isFlying()) {
                                 player.setAllowFlight(false);
                                 player.setFlying(false);
                             }
+                            utility.message(player, config.getString("Fly.Message.StopAndResume.Stop"));
                         } else utility.message(player, config.getString("Fly.Message.StopAndResume.NoTime"));
                     } else {
                         utility.message(sender, config.getString("Other.NoPermission.Message"));
@@ -227,6 +245,10 @@ public class FlyCMD implements CommandExecutor {
                         return true;
                     }
                     Player player = (Player) sender;
+                    if (!utility.isWorldEnabled(player, player.getWorld())) {
+                        utility.message(player, config.getString("Other.DisabledWorld"));
+                        return true;
+                    }
                     if (player.hasPermission("timedfly.admin") || player.hasPermission("timedfly.fly.stopresume")) {
                         if (sqlManager.getTimeLeft(player) == 0) {
                             utility.message(player, config.getString("Fly.Message.StopAndResume.NoTime"));
@@ -237,14 +259,12 @@ public class FlyCMD implements CommandExecutor {
                             return true;
                         }
                         GUIListener.flytime.put(player.getUniqueId(), sqlManager.getTimeLeft(player));
-                        if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
-                            bossBarManager.addPlayer(player);
-                        }
-                        utility.message(player, config.getString("Fly.Message.StopAndResume.Resume"));
+                        sqlManager.setTimeStopped(player, false);
                         if (!player.getAllowFlight()) {
                             player.setAllowFlight(true);
                             player.setFlying(true);
                         }
+                        utility.message(player, config.getString("Fly.Message.StopAndResume.Resume"));
                     } else {
                         utility.message(sender, config.getString("Other.NoPermission.Message"));
                         plugin.getNMS().sendTitle(player, utility.color(config.getString("Other.NoPermission.Title")), 10, 40, 10);

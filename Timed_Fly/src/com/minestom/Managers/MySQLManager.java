@@ -22,7 +22,8 @@ public class MySQLManager {
                 + "	UUID text,"
                 + "	NAME text ,"
                 + "	TIMELEFT int,"
-                + "	INITIALTIME int"
+                + "	INITIALTIME int,"
+                + " TimeStopped boolean"
                 + ");";
         try {
             if (plugin.getConnection() != null && !plugin.getConnection().isClosed()) {
@@ -36,11 +37,19 @@ public class MySQLManager {
     }
 
     private void updateTable(TimedFly plugin) {
-        String sql = "ALTER TABLE " + table + " ADD COLUMN INITIALTIME int(11);";
+        String sql = "ALTER TABLE " + table + " ADD COLUMN INITIALTIME int(11) NOT NULL DEFAULT 0;";
+        String sql2 = "ALTER TABLE " + table + " ADD COLUMN TimeStopped boolean NOT NULL DEFAULT 0";
         try {
 
             DatabaseMetaData md = plugin.getConnection().getMetaData();
             ResultSet rs = md.getColumns(null, null, table, "INITIALTIME");
+            ResultSet rs2 = md.getColumns(null, null, table, "TimeStopped");
+            if (!rs2.next()) {
+                PreparedStatement statement2 = plugin.getConnection().prepareStatement(sql2);
+                statement2.executeUpdate();
+                Bukkit.getConsoleSender().sendMessage(utility.color("&cSQL ERROR: Your table is not up to date. Updating your SQL table..."));
+                statement2.close();
+            }
             if (!rs.next()) {
                 PreparedStatement statement = plugin.getConnection().prepareStatement(sql);
                 statement.executeUpdate();
@@ -74,12 +83,13 @@ public class MySQLManager {
         try {
             if (!playerExists(uuid)) {
                 PreparedStatement insert = plugin.getConnection().prepareStatement(
-                        "INSERT INTO `" + table + "` (UUID,NAME,TIMELEFT,INITIALTIME)" +
-                                " VALUES (?,?,?,?);");
+                        "INSERT INTO `" + table + "` (UUID,NAME,TIMELEFT,INITIALTIME,TimeStopped)" +
+                                " VALUES (?,?,?,?,?);");
                 insert.setString(1, uuid.toString());
                 insert.setString(2, player.getName());
                 insert.setInt(3, 0);
                 insert.setInt(4, 0);
+                insert.setBoolean(5, false);
                 insert.execute();
                 insert.close();
             } else {
@@ -158,6 +168,41 @@ public class MySQLManager {
             PreparedStatement statement = plugin.getConnection()
                     .prepareStatement("UPDATE `" + table + "` SET INITIALTIME=? WHERE UUID=?;");
             statement.setInt(1, time);
+            statement.setString(2, uuid);
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isTimeStopped(Player player) {
+        String uuid = player.getUniqueId().toString();
+        if (!playerExists(player.getUniqueId())) {
+            createPlayer(player);
+        }
+        try {
+            PreparedStatement statement = plugin.getConnection()
+                    .prepareStatement("SELECT TimeStopped FROM `" + table + "` WHERE UUID = ?;");
+            statement.setString(1, uuid);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return resultSet.getBoolean(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void setTimeStopped(Player player, boolean b) {
+        String uuid = player.getUniqueId().toString();
+        if (!playerExists(player.getUniqueId())) {
+            createPlayer(player);
+        }
+        try {
+            PreparedStatement statement = plugin.getConnection()
+                    .prepareStatement("UPDATE `" + table + "` SET TimeStopped=? WHERE UUID=?;");
+            statement.setBoolean(1, b);
             statement.setString(2, uuid);
             statement.executeUpdate();
             statement.close();

@@ -7,11 +7,12 @@ import com.minestom.CMDs.FlyCMD;
 import com.minestom.CMDs.MainCMD;
 import com.minestom.ConfigurationFiles.ItemsConfig;
 import com.minestom.ConfigurationFiles.LangFiles;
+import com.minestom.Hooks.aSkyblock;
 import com.minestom.TimedFly;
 import com.minestom.Updater.SpigotUpdater;
 import com.minestom.Utilities.GUI.GUIListener;
 import com.minestom.Utilities.Others.GeneralListener;
-import com.minestom.Utilities.Others.Placeholder;
+import com.minestom.Hooks.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public class Setup {
         }.runTaskTimer(plugin, 20L, 15 * 34500L);
     }
 
-    // not used any more
+    /* not used any more
     public void renameConfig(TimedFly plugin) {
         Random random = new Random();
         int i = random.nextInt(99999) + 11111;
@@ -56,7 +57,7 @@ public class Setup {
         } else {
             Bukkit.getConsoleSender().sendMessage("§cTimedFly >> Could not backup the config.yml");
         }
-    }
+    }*/
 
     public void registerCMD(TimedFly plugin) {
         plugin.getCommand("timedfly").setExecutor(new MainCMD());
@@ -70,21 +71,22 @@ public class Setup {
         pm.registerEvents(new GUIListener(), plugin);
         pm.registerEvents(new GeneralListener(), plugin);
         pm.registerEvents(new CustomFlyCMD(), plugin);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("ASkyBlock"))
+            pm.registerEvents(new aSkyblock(), plugin);
     }
 
     public void createConfigFiles(TimedFly plugin) {
         LangFiles lang = LangFiles.getInstance();
         ItemsConfig items = ItemsConfig.getInstance();
-        //Config configFile = Config.getInstance();
 
-        //configFile.createConfig(plugin);
         lang.createFiles(plugin);
         items.createFiles(plugin);
     }
 
     public void registerDependencies(TimedFly plugin) {
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new Placeholder(plugin).hook();
+            new PlaceholderAPI(plugin).hook();
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&cTimedFly >> &7PlaceholderAPI found, using it for item's lore and name."));
         } else {

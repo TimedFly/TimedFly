@@ -42,7 +42,7 @@ public class GUIListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (flytime.isEmpty()){
+                if (flytime.isEmpty()) {
                     return;
                 }
                 for (Map.Entry<UUID, Integer> entry : flytime.entrySet()) {
@@ -80,33 +80,31 @@ public class GUIListener implements Listener {
                         }
                     } else {
                         flytime.put(entry.getKey(), time - 1);
-                        if (player != null) {
-                            if (utility.isWorldEnabled(player, player.getWorld())) {
-                                if (player.getOpenInventory().getTitle().equals(utility.color(configuration.getString("Gui.DisplayName")))) {
-                                    gui.flyGui(player);
-                                }
-                                format.setActionBar(player, config);
-                                if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
-                                    bossBarManager.setBarProgress(time - 1, GeneralListener.initialTime.get(player.getUniqueId()));
-                                    bossBarManager.setBarName(utility.color(config.getString("Fly.BossBar.Message")
-                                            .replace("%timeleft%", format.format(time - 1))));
-                                }
-                                List<String> announce = configuration.getStringList("Announcer.Times");
-                                for (String list : announce) {
-                                    if (time - 1 == Integer.parseInt(list)) {
-                                        if (configuration.getBoolean("Sounds.Enabled")) {
-                                            player.playSound(player.getLocation(), Sound.valueOf(configuration.getString("Sounds.Announcer")), 2, 1);
-                                        }
-                                        if (config.getBoolean("Announcer.Chat.Enabled")) {
-                                            utility.message(player, utility.color(config.getString("Announcer.Chat.Message").replace(
-                                                    "%time%", format.format(time - 1))));
-                                        }
-                                        if (config.getBoolean("Announcer.Titles.Enabled")) {
-                                            plugin.getNMS().sendTitle(player, utility.color(config.getString("Announcer.Titles.Title")
-                                                    .replace("%time%", format.format(time - 1))), 0, 30, 0);
-                                            plugin.getNMS().sendSubtitle(player, utility.color(config.getString("Announcer.Titles.SubTitle")
-                                                    .replace("%time%", format.format(time - 1))), 0, 30, 0);
-                                        }
+                        if (player != null && utility.isWorldEnabled(player, player.getWorld())) {
+                            if (player.getOpenInventory().getTitle().equals(utility.color(configuration.getString("Gui.DisplayName")))) {
+                                gui.flyGui(player);
+                            }
+                            format.setActionBar(player, config);
+                            if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
+                                bossBarManager.setBarProgress(time - 1, GeneralListener.initialTime.get(player.getUniqueId()));
+                                bossBarManager.setBarName(utility.color(config.getString("Fly.BossBar.Message")
+                                        .replace("%timeleft%", format.format(time - 1))));
+                            }
+                            List<String> announce = configuration.getStringList("Announcer.Times");
+                            for (String list : announce) {
+                                if (time - 1 == Integer.parseInt(list)) {
+                                    if (configuration.getBoolean("Sounds.Enabled")) {
+                                        player.playSound(player.getLocation(), Sound.valueOf(configuration.getString("Sounds.Announcer")), 2, 1);
+                                    }
+                                    if (config.getBoolean("Announcer.Chat.Enabled")) {
+                                        utility.message(player, utility.color(config.getString("Announcer.Chat.Message").replace(
+                                                "%time%", format.format(time - 1))));
+                                    }
+                                    if (config.getBoolean("Announcer.Titles.Enabled")) {
+                                        plugin.getNMS().sendTitle(player, utility.color(config.getString("Announcer.Titles.Title")
+                                                .replace("%time%", format.format(time - 1))), 0, 30, 0);
+                                        plugin.getNMS().sendSubtitle(player, utility.color(config.getString("Announcer.Titles.SubTitle")
+                                                .replace("%time%", format.format(time - 1))), 0, 30, 0);
                                     }
                                 }
                             }

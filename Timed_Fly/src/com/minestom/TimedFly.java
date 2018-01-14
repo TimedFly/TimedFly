@@ -71,6 +71,7 @@ public class TimedFly extends JavaPlugin {
         setup.registerListener(this);
         setup.registerDependencies(this);
         setupBStats();
+
         if (!setupEconomy()) {
             utility.message(log, ("&cDisabled due to no Vault dependency found!"));
             getServer().getPluginManager().disablePlugin(this);
@@ -78,11 +79,13 @@ public class TimedFly extends JavaPlugin {
         } else {
             utility.message(log, ("&7Hooked to Vault."));
         }
+
         if (utility.isTokenManagerEnabled()) {
             utility.message(log, ("&7Hooked to TokenManager."));
         } else {
             utility.message(log, ("&7TokenManager not found disabling tokens currency."));
         }
+
         if (setupNMS()) {
             utility.message(log, ("&7Actionbar, Titles, Subtitles support was successfully enabled!"));
         } else {
@@ -90,11 +93,13 @@ public class TimedFly extends JavaPlugin {
             utility.message(log, ("&cYour server version is not compatible with this instance!"));
             utility.message(log, ("&cThe instance will not function correctly!"));
         }
+
         if (!mysqlSetup()) {
             utility.message(log, ("&cDisabled due to MySQL error!"));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
         setup.checkForUpdate(this);
         utility.message(log, ("&7The Plugin has been enabled and its ready to use."));
         updateConfig.updateConfig(this);
