@@ -5,9 +5,7 @@ import com.minestom.Utilities.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class UpdateConfig {
 
@@ -29,6 +27,7 @@ public class UpdateConfig {
         configuration.addDefault("OpenMenuCommand", "fly;flymenu");
         configuration.addDefault("Gui.DisplayName", "TimedFly");
         configuration.addDefault("Gui.Slots", 9);
+        configuration.addDefault("StopTimerOnLeave", true);
         configuration.addDefault("BossBarTimer.Enabled", false);
         configuration.addDefault("BossBarTimer.Color", "GREEN");
         configuration.addDefault("BossBarTimer.Style", "SOLID");
@@ -37,6 +36,7 @@ public class UpdateConfig {
         configuration.addDefault("Sounds.Enabled", true);
         configuration.addDefault("Sounds.Announcer", "ENTITY_EXPERIENCE_ORB_PICKUP");
         configuration.addDefault("Sounds.FlightDisabled", "ENTITY_WITHER_DEATH");
+        configuration.addDefault("ASkyblockIntegration", true);
         configuration.addDefault("UseTokenManager", false);
         configuration.addDefault("UseVault", true);
         configuration.addDefault("UseLevelsCurrency", false);
@@ -55,9 +55,15 @@ public class UpdateConfig {
         configuration.addDefault("Auto-Download", false);
         configuration.addDefault("Lang", "en");
         configuration.options().copyDefaults(true);
+        plugin.saveConfig();
 
         if (language.getString("Fly.Message.NoLevels") == null) {
             language.set("Fly.Message.NoLevels", "&aYou don't have enough &eLevels &ato buy this. You need &e%levels_needed%");
+            utility.message(Bukkit.getConsoleSender(), "&cYour Language file has some sections missing. Updating...");
+            lang.saveLang();
+        }
+        if (language.getString("Fly.Message.AddTimeToPlayer") == null) {
+            language.set("Fly.Message.AddTimeToPlayer", "&aYou have been added &7%time% &aminutes to your flight time.");
             utility.message(Bukkit.getConsoleSender(), "&cYour Language file has some sections missing. Updating...");
             lang.saveLang();
         }

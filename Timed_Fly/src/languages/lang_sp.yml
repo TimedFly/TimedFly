@@ -13,6 +13,7 @@ Fly:
     ToPlayer: '&aModo vuelo activado para &7%target% &apor &7%time% &aminutos.'
     FromPlayer: '&aModo vuelo activado desde &7%player% &apor &7%time% &aminutos.'
     AddTime: '&aHas agregado &7%time% &aminutos al jugador &7%player%'
+    AddTimeToPlayer: '&aYou have been added &7%time% &aminutes to your flight time.'
     Enabled: '&aHas agregado &7%time% &aminutos a tu tiempo de vuelo por &7$%price%.'
     Disabled: ' &aModo vuelo desactivado. Compra mas tiempo si quieres seguir.'
     NoMoney: '&aNo tienes sufuciente dinero para comprar esto, trabaja.'

@@ -1,6 +1,7 @@
 package com.minestom.Utilities;
 
 import com.minestom.TimedFly;
+import com.minestom.Utilities.Others.PlayerCache;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,11 +11,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Utility {
 
     private TimedFly plugin;
+    private Map<Player, PlayerCache> playerCacheMap = new HashMap<>();
+
     public Utility(TimedFly plugin) {
         this.plugin = plugin;
     }
@@ -108,5 +113,9 @@ public class Utility {
     public boolean isXpCurrencyEnabled() {
         FileConfiguration configuration = plugin.getConfig();
         return configuration.getBoolean("UseLevelsCurrency");
+    }
+
+    public Map<Player, PlayerCache> getPlayerCacheMap() {
+        return playerCacheMap;
     }
 }

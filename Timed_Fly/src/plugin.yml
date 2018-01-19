@@ -1,6 +1,6 @@
 main: com.minestom.TimedFly
 name: TimedFly
-version: 2.3.0
+version: 2.3.2
 author: By_Jack
 depend: [Vault]
 softdepend: [PlaceholderAPI, TokenManager, ASkyBlock]

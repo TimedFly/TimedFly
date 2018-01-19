@@ -13,11 +13,16 @@ import java.util.UUID;
 
 public class MySQLManager {
 
-    private TimedFly plugin = TimedFly.getInstance();
+    private TimedFly plugin;
     private String table = "timedfly_fly_time";
-    private Utility utility = new Utility(plugin);
+    private Utility utility;
 
-    public void createTable(TimedFly plugin) {
+    public MySQLManager(TimedFly plugin) {
+        this.plugin = plugin;
+        utility = plugin.getUtility();
+    }
+
+    public void createTable() {
         String sql = "CREATE TABLE IF NOT EXISTS " + table + " ("
                 + "	UUID text,"
                 + "	NAME text ,"
@@ -28,7 +33,7 @@ public class MySQLManager {
         try {
             if (plugin.getConnection() != null && !plugin.getConnection().isClosed()) {
                 plugin.getConnection().createStatement().execute(sql);
-                updateTable(plugin);
+                updateTable();
             }
         } catch (SQLException e) {
             Bukkit.getConsoleSender().sendMessage(utility.color("&cSQL ERROR: ") + e.getMessage());
@@ -36,7 +41,7 @@ public class MySQLManager {
         }
     }
 
-    private void updateTable(TimedFly plugin) {
+    private void updateTable() {
         String sql = "ALTER TABLE " + table + " ADD COLUMN INITIALTIME int(11) NOT NULL DEFAULT 0;";
         String sql2 = "ALTER TABLE " + table + " ADD COLUMN TimeStopped boolean NOT NULL DEFAULT 0";
         try {

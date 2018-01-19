@@ -12,6 +12,7 @@ Fly:
     ToPlayer: '&aFly mode enabled to &7%target% &afor &7%time% &aminutes.'
     FromPlayer: '&aFly mode enabled from &7%player% &afor &7%time% &aminutes.'
     AddTime: '&aYou have added &7%time% &aminutes to &7%player%'
+    AddTimeToPlayer: '&aYou have been added &7%time% &aminutes to your flight time.'
     Enabled: '&aYou have added &7%time% &aminutes to your flight time
       for &7$%price%.'
     Disabled: '&aFly mode disabled. You can buy another one.'

@@ -41,7 +41,7 @@ public class CustomFlyCMD implements Listener {
                             player.performCommand("timedfly:tfly stop");
                             continue;
                         case "resume":
-                            player.performCommand("timedfly:tfly stop");
+                            player.performCommand("timedfly:tfly resume");
                             continue;
                         default:
                             continue;

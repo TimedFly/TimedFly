@@ -18,6 +18,7 @@ Fly:
     ToPlayer: '&aChế độ bay được kích hoạt để &7%target% &acho &7%time% &aphút.'
     FromPlayer: '&aChế độ bay được kích hoạt từ &7%player% &acho &7%time% &aphút.'
     AddTime: '&aBạn đã thêm &7%time% &aphút đến &7%player%'
+    AddTimeToPlayer: '&aYou have been added &7%time% &aminutes to your flight time.'
     Enabled: '&aBạn đã thêm &7%time% &aphút đến thời gian bay của bạn
        cho &7$%price%.'
     Disabled: '&aĐã tắt chế độ lướt. Bạn có thể mua thêm thời gian.'

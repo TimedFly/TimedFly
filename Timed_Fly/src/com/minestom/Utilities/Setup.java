@@ -7,21 +7,19 @@ import com.minestom.CMDs.FlyCMD;
 import com.minestom.CMDs.MainCMD;
 import com.minestom.ConfigurationFiles.ItemsConfig;
 import com.minestom.ConfigurationFiles.LangFiles;
+import com.minestom.Hooks.PlaceholderAPI;
 import com.minestom.Hooks.aSkyblock;
+import com.minestom.Managers.MySQLManager;
 import com.minestom.TimedFly;
 import com.minestom.Updater.SpigotUpdater;
 import com.minestom.Utilities.GUI.GUIListener;
 import com.minestom.Utilities.Others.GeneralListener;
-import com.minestom.Hooks.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 public class Setup {
 
@@ -59,21 +57,24 @@ public class Setup {
         }
     }*/
 
-    public void registerCMD(TimedFly plugin) {
+    public void registerCMD(TimedFly plugin, Utility utility) {
         plugin.getCommand("timedfly").setExecutor(new MainCMD());
-        plugin.getCommand("tfly").setExecutor(new FlyCMD());
+        plugin.getCommand("tfly").setExecutor(new FlyCMD(utility));
         plugin.getCommand("timedfly").setTabCompleter(new MainTabCompletion());
         plugin.getCommand("tfly").setTabCompleter(new FlyTabCompletion());
     }
 
-    public void registerListener(TimedFly plugin) {
+    public void registerListener(TimedFly plugin, MySQLManager sqlManager, Utility utility) {
         PluginManager pm = Bukkit.getServer().getPluginManager();
-        pm.registerEvents(new GUIListener(), plugin);
-        pm.registerEvents(new GeneralListener(), plugin);
+        pm.registerEvents(new GUIListener(plugin, utility), plugin);
+        pm.registerEvents(new GeneralListener(plugin,sqlManager, utility), plugin);
         pm.registerEvents(new CustomFlyCMD(), plugin);
 
-        if (Bukkit.getPluginManager().isPluginEnabled("ASkyBlock"))
+        if (Bukkit.getPluginManager().isPluginEnabled("ASkyBlock") && plugin.getConfig().getBoolean("ASkyblockIntegration")) {
             pm.registerEvents(new aSkyblock(), plugin);
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&cTimedFly >> &7ASkyBlock found, enabling the hook."));
+        }
     }
 
     public void createConfigFiles(TimedFly plugin) {

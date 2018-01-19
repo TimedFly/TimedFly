@@ -15,6 +15,7 @@ Fly:
     ToPlayer: '&aRepülés mód engedélyezve &7%target% &7%time% &apercre.'
     FromPlayer: '&aRepülés mód engedélyezve van &7%player%&a-nak/-nek &7%time% &apercre.'
     AddTime: '&aHozzáadtad &7%time% &apercet &7%player%&a játékoshoz'
+    AddTimeToPlayer: '&aYou have been added &7%time% &aminutes to your flight time.'
     Enabled: '&aHozzáadtál &7%time% &apercet a repülési időhöz
       ára &7$%price%.'
     Disabled: '&aRepülés mód letiltva. Vásárolj egyet.'

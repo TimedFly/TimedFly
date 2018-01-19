@@ -3,13 +3,13 @@ package com.minestom.CMDs;
 import com.minestom.ConfigurationFiles.LangFiles;
 import com.minestom.Managers.CooldownManager;
 import com.minestom.Managers.MessageManager;
-import com.minestom.Managers.MySQLManager;
 import com.minestom.Managers.TimeFormat;
 import com.minestom.TimedFly;
 import com.minestom.Utilities.BossBarManager;
 import com.minestom.Utilities.GUI.FlyGUI;
 import com.minestom.Utilities.GUI.GUIListener;
 import com.minestom.Utilities.Others.GeneralListener;
+import com.minestom.Utilities.Others.PlayerCache;
 import com.minestom.Utilities.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -23,14 +23,18 @@ public class FlyCMD implements CommandExecutor {
     private TimedFly plugin = TimedFly.getInstance();
     private TimeFormat format = new TimeFormat();
     private LangFiles lang = LangFiles.getInstance();
-    private Utility utility = new Utility(plugin);
+    private Utility utility;
     private BossBarManager bossBarManager = plugin.getBossBarManager();
-    private MySQLManager sqlManager = new MySQLManager();
+
+    public FlyCMD(Utility utility) {
+        this.utility = utility;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String string, String[] args) {
         FileConfiguration config = lang.getLang();
         FlyGUI gui = new FlyGUI();
+
         if (cmd.getName().equalsIgnoreCase("tfly")) {
             if (args.length == 0) {
                 if (!(sender instanceof Player)) {
@@ -45,6 +49,7 @@ public class FlyCMD implements CommandExecutor {
                     return true;
                 }
                 Player player = (Player) sender;
+
                 if (CooldownManager.isInCooldown(player.getUniqueId(), "fly")) {
                     utility.message(player, config.getString("Other.OnCooldown").replace("%cooldown%",
                             format.format(CooldownManager.getTimeLeft(player.getUniqueId(), "fly"))));
@@ -69,13 +74,15 @@ public class FlyCMD implements CommandExecutor {
                         }
                         Player player = Bukkit.getPlayer(args[1]);
                         double time = Double.parseDouble(args[2]);
+                        PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
                         if (player == null) {
                             utility.message(sender, "&cTimedFly >> &aThe player &7" + args[1] + " &ais not online.");
                             return true;
                         }
                         if (utility.isWorldEnabled(player, player.getWorld())) {
-                            if (sqlManager.isTimeStopped(player)) {
-                                sqlManager.setTimeLeft(player, sqlManager.getTimeLeft(player) + (int) time * 60);
+                            if (playerCache.isTimeStopped()) {
+                                playerCache.setTimeLeft(playerCache.getTimeLeft() + (int) time * 60);
                                 utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
                                 return true;
                             }
@@ -90,6 +97,7 @@ public class FlyCMD implements CommandExecutor {
                                 GUIListener.flytime.put(player.getUniqueId(), GUIListener.flytime.get(player.getUniqueId()) + (int) time * 60);
                             }
                             utility.message(sender, config.getString("Fly.Message.AddTime").replace("%time%", time + "").replace("%player%", player.getDisplayName()));
+                            utility.message(player, config.getString("Fly.Message.AddTimeToPlayer").replace("%time%", time + "").replace("%player%", sender.getName()));
                             return true;
                         }
                         utility.message(sender, MessageManager.DISABLEDWORLD.toString());
@@ -112,13 +120,15 @@ public class FlyCMD implements CommandExecutor {
                         }
                         Player player = Bukkit.getPlayer(args[1]);
                         double time = Double.parseDouble(args[2]);
+                        PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
                         if (player == null) {
                             utility.message(sender, "&cTimedFly >> &aThe player &7" + args[1] + " &ais not online.");
                             return true;
                         }
                         if (utility.isWorldEnabled(player, player.getWorld())) {
-                            if (sqlManager.isTimeStopped(player)) {
-                                sqlManager.setTimeLeft(player, (int) time * 60);
+                            if (playerCache.isTimeStopped()) {
+                                playerCache.setTimeLeft((int) time * 60);
                                 utility.message(sender, config.getString("Fly.Message.ToPlayer")
                                         .replace("%target%", player.getDisplayName()).replace("%time%", "" + time));
                                 utility.message(player, config.getString("Fly.Message.FromPlayer")
@@ -193,16 +203,19 @@ public class FlyCMD implements CommandExecutor {
                         return true;
                     }
                     Player player = (Player) sender;
+                    PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
                     if (GUIListener.flytime.containsKey(player.getUniqueId())) {
+                        long timeLeft = GUIListener.flytime.get(player.getUniqueId());
                         if (utility.isWorldEnabled(player, player.getWorld())) {
-                            utility.message(player, config.getString("Fly.Message.TimeLeft").replace("%timeleft%",
-                                    format.format(GUIListener.flytime.get(player.getUniqueId()))));
+                            utility.message(player, config.getString("Fly.Message.TimeLeft").replace("%timeleft%", format.format(timeLeft)));
                             return true;
                         } else utility.message(player, MessageManager.DISABLEDWORLD.toString());
                     } else {
                         if (utility.isWorldEnabled(player, player.getWorld())) {
                             utility.message(player, config.getString("Fly.Message.TimeLeft")
-                                    .replace("%timeleft%", config.getString("Format.NoTimeLeft")));
+                                    .replace("%timeleft%", playerCache.getTimeLeft() != 0 && playerCache.isTimeStopped()
+                                            ? format.format(playerCache.getTimeLeft()) + "" : config.getString("Format.NoTimeLeft")));
                             return true;
                         } else utility.message(player, config.getString("Other.DisabledWorld"));
                     }
@@ -213,6 +226,8 @@ public class FlyCMD implements CommandExecutor {
                         return true;
                     }
                     Player player = (Player) sender;
+                    PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
                     if (!utility.isWorldEnabled(player, player.getWorld())) {
                         utility.message(player, config.getString("Other.DisabledWorld"));
                         return true;
@@ -222,8 +237,8 @@ public class FlyCMD implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
                                 bossBarManager.removeBar(player);
                             }
-                            sqlManager.setTimeLeft(player, GUIListener.flytime.get(player.getUniqueId()));
-                            sqlManager.setTimeStopped(player, true);
+                            playerCache.setTimeLeft(GUIListener.flytime.get(player.getUniqueId()));
+                            playerCache.setTimeStopped(true);
                             GUIListener.flytime.remove(player.getUniqueId());
                             GUIListener.godmode.put(player.getUniqueId(), 6);
                             if (player.getAllowFlight() || player.isFlying()) {
@@ -245,12 +260,14 @@ public class FlyCMD implements CommandExecutor {
                         return true;
                     }
                     Player player = (Player) sender;
+                    PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
                     if (!utility.isWorldEnabled(player, player.getWorld())) {
                         utility.message(player, config.getString("Other.DisabledWorld"));
                         return true;
                     }
                     if (player.hasPermission("timedfly.admin") || player.hasPermission("timedfly.fly.stopresume")) {
-                        if (sqlManager.getTimeLeft(player) == 0) {
+                        if (playerCache.getTimeLeft() == 0) {
                             utility.message(player, config.getString("Fly.Message.StopAndResume.NoTime"));
                             return true;
                         }
@@ -258,8 +275,8 @@ public class FlyCMD implements CommandExecutor {
                             utility.message(player, config.getString("Fly.Message.StopAndResume.Already"));
                             return true;
                         }
-                        GUIListener.flytime.put(player.getUniqueId(), sqlManager.getTimeLeft(player));
-                        sqlManager.setTimeStopped(player, false);
+                        GUIListener.flytime.put(player.getUniqueId(), playerCache.getTimeLeft());
+                        playerCache.setTimeStopped(false);
                         if (!player.getAllowFlight()) {
                             player.setAllowFlight(true);
                             player.setFlying(true);

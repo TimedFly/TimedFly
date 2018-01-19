@@ -14,6 +14,7 @@ import com.minestom.NMS.v_1_9.v_1_9_R2;
 import com.minestom.Utilities.BossBarManager;
 import com.minestom.Utilities.GUI.GUIListener;
 import com.minestom.Utilities.Metrics;
+import com.minestom.Utilities.Others.PlayerCache;
 import com.minestom.Utilities.Setup;
 import com.minestom.Utilities.Utility;
 import net.milkbowl.vault.economy.Economy;
@@ -37,26 +38,46 @@ public class TimedFly extends JavaPlugin {
     private ConsoleCommandSender log = Bukkit.getServer().getConsoleSender();
     private static TimedFly instance;
     private BossBarManager bossBarManager;
-    public static TimedFly getInstance() { return instance; }
+
+    public static TimedFly getInstance() {
+        return instance;
+    }
 
     private Connection connection;
     private Economy economy = null;
-    private MySQLManager mySQLManager = new MySQLManager();
     private Setup setup = new Setup();
     private NMS nms;
     private Utility utility;
     private UpdateConfig updateConfig = new UpdateConfig();
-    private MySQLManager sqlManager = new MySQLManager();
+    private MySQLManager sqlManager;
 
-    public Connection getConnection() { return connection; }
-    private void setConnection(Connection connection) { this.connection = connection; }
-    public NMS getNMS() { return nms; }
-    public Economy getEconomy() { return economy; }
-    public BossBarManager getBossBarManager() { return bossBarManager; }
-    public Utility getUtility() { return utility; }
+    public Connection getConnection() {
+        return connection;
+    }
+
+    private void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    public NMS getNMS() {
+        return nms;
+    }
+
+    public Economy getEconomy() {
+        return economy;
+    }
+
+    public BossBarManager getBossBarManager() {
+        return bossBarManager;
+    }
+
+    public Utility getUtility() {
+        return utility;
+    }
 
     @Override
     public void onEnable() {
+        sqlManager = new MySQLManager(this);
         instance = this;
         if (getConfig().getBoolean("BossBarTimer.Enabled")) {
             bossBarManager = new BossBarManager(this);
@@ -67,8 +88,8 @@ public class TimedFly extends JavaPlugin {
         }
 
         setup.createConfigFiles(this);
-        setup.registerCMD(this);
-        setup.registerListener(this);
+        setup.registerCMD(this, utility);
+        setup.registerListener(this, sqlManager, utility);
         setup.registerDependencies(this);
         setupBStats();
 
@@ -101,35 +122,36 @@ public class TimedFly extends JavaPlugin {
         }
 
         setup.checkForUpdate(this);
-        utility.message(log, ("&7The Plugin has been enabled and its ready to use."));
         updateConfig.updateConfig(this);
+
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            utility.getPlayerCacheMap().put(player, new PlayerCache(sqlManager, player));
+            PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
+            int time = playerCache.getTimeLeft();
+            if (!(time <= 0)) GUIListener.flytime.put(player.getUniqueId(), time);
+
+            if (GUIListener.flytime.containsKey(player.getUniqueId())) player.setAllowFlight(true);
+        });
+        utility.message(log, ("&7The Plugin has been enabled and its ready to use."));
     }
 
     @Override
     public void onDisable() {
-        try {
-            if (getConnection() != null && !getConnection().isClosed()) {
-                getConnection().close();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+            if (GUIListener.flytime.containsKey(player.getUniqueId()) && (utility.isWorldEnabled(player, player.getWorld()) && player.getAllowFlight())) {
+                player.setAllowFlight(false);
+                player.setFlying(false);
             }
+            sqlManager.setTimeLeft(player, playerCache.getTimeLeft());
+            if (player.getOpenInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&',
+                    getConfig().getString("Gui.DisplayName")))) player.closeInventory();
+        }
+        try {
+            if (getConnection() != null && !getConnection().isClosed()) getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (GUIListener.flytime.containsKey(player.getUniqueId())) {
-                GUIListener.godmode.put(player.getUniqueId(), 6);
-                if (utility.isWorldEnabled(player, player.getWorld())) {
-                    if (player.getAllowFlight() || !player.isFlying()) {
-                        player.setAllowFlight(false);
-                        player.setFlying(false);
-                    }
-                }
-                sqlManager.setTimeLeft(player, GUIListener.flytime.get(player.getUniqueId()));
-                GUIListener.flytime.remove(player.getUniqueId());
-            }
-            if (player.getOpenInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&',
-                    getConfig().getString("Gui.DisplayName")))) {
-                player.closeInventory();
-            }
         }
         utility.message(log, "&7The Plugin has been disabled with success");
     }
@@ -206,14 +228,14 @@ public class TimedFly extends JavaPlugin {
                     String url = "jdbc:sqlite:" + getDataFolder() + "/SQLite.db";
                     setConnection(DriverManager.getConnection(url));
                     utility.message(log, "&7Successfully connected to &cSQLite &7database.");
-                    mySQLManager.createTable(this);
+                    sqlManager.createTable();
                     return true;
                 } else {
                     if (getConfig().getString("Type").equalsIgnoreCase("mysql")) {
                         Class.forName("com.mysql.jdbc.Driver");
                         setConnection(DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true", username, password));
                         utility.message(log, "&7Successfully connected to &cMySQL &7database.");
-                        mySQLManager.createTable(this);
+                        sqlManager.createTable();
                         return true;
                     } else {
                         utility.message(log, "&4Could not connect to any database. Please use sqlite or mysql in your MySQL file.");

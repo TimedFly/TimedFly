@@ -12,6 +12,7 @@ Fly:
     ToPlayer: '&6%target% &f kann nun für &6%time% &fMinuten fliegen.'
     FromPlayer: '&fFliegen wurde von &6%player% &ffür &6%time% &fMinuten aktiviert.'
     AddTime: '&fDu hast &6%player% &6%time% &fMinuten Flug dazu geschenkt.'
+    AddTimeToPlayer: '&aYou have been added &7%time% &aminutes to your flight time.'
     Enabled: '&fDu hast &6%time% &fMinuten Flugzeit hinzugefügt
       für &6$%price%.'
     Disabled: '&fFliegen deaktiviert, du kannst weitere Zeit kaufen.'

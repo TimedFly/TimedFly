@@ -23,13 +23,16 @@ import java.util.UUID;
 
 public class GeneralListener implements Listener {
 
-    public TimedFly plugin = TimedFly.getInstance();
-    private MySQLManager sqlManager = new MySQLManager();
-    private Utility utility = new Utility(plugin);
-    private BossBarManager bossBarManager = plugin.getBossBarManager();
+    public TimedFly plugin;
+    private MySQLManager sqlManager;
+    private Utility utility;
     public static Map<UUID, Integer> initialTime = new HashMap<>();
 
-    public GeneralListener() {
+
+    public GeneralListener(TimedFly plugin, MySQLManager sqlManager, Utility utility) {
+        this.plugin = plugin;
+        this.utility = utility;
+        this.sqlManager = sqlManager;
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -54,12 +57,18 @@ public class GeneralListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         FileConfiguration config = plugin.getConfig();
         Player player = event.getPlayer();
+
+        if (!utility.getPlayerCacheMap().containsKey(player)) utility.getPlayerCacheMap().put(player, new PlayerCache(sqlManager, player));
+        PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
         sqlManager.createPlayer(player);
-        initialTime.put(player.getUniqueId(), sqlManager.getInitialTime(player));
-        int time = sqlManager.getTimeLeft(player);
-        if (time != 0) {
-            GUIListener.flytime.put(player.getUniqueId(), time);
-        }
+
+        if (!plugin.getConfig().getBoolean("StopTimerOnLeave")) return;
+        if (playerCache.isTimeStopped()) return;
+
+        int time = playerCache.getTimeLeft();
+        if (time != 0) GUIListener.flytime.put(player.getUniqueId(), time);
+
         if (GUIListener.flytime.containsKey(player.getUniqueId())) {
             int x = player.getLocation().getBlockX();
             int y = player.getLocation().getBlockY();
@@ -70,9 +79,7 @@ public class GeneralListener implements Listener {
             player.setAllowFlight(true);
             if (config.getBoolean("JoinFlying.Enabled") && !player.isFlying()) {
                 player.teleport(new Location(player.getLocation().getWorld(), x + 0.5, y + height, z + 0.5, yaw, pitch));
-                if (player.getAllowFlight()) {
-                    player.setFlying(true);
-                }
+                if (player.getAllowFlight() && player.isOnGround()) player.setFlying(true);
             }
         }
     }
@@ -80,14 +87,18 @@ public class GeneralListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (GUIListener.flytime.containsKey(player.getUniqueId())) {
-            sqlManager.setTimeLeft(player, GUIListener.flytime.get(player.getUniqueId()));
+        PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
+        if (GUIListener.flytime.containsKey(player.getUniqueId()) && plugin.getConfig().getBoolean("StopTimerOnLeave")) {
+            playerCache.setTimeLeft(GUIListener.flytime.get(player.getUniqueId()));
             GUIListener.flytime.remove(player.getUniqueId());
         }
-        if (initialTime.containsKey(player.getUniqueId())) {
-            sqlManager.setInitialTime(player, initialTime.get(player.getUniqueId()));
-            initialTime.remove(player.getUniqueId());
-        }
+
+        sqlManager.setTimeStopped(player, playerCache.isTimeStopped());
+        sqlManager.setTimeLeft(player, playerCache.getTimeLeft());
+        sqlManager.setInitialTime(player, playerCache.getInitialTime());
+
+        utility.getPlayerCacheMap().remove(player);
     }
 
     @EventHandler
@@ -104,6 +115,7 @@ public class GeneralListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler
     public void onChangeWorld(PlayerTeleportEvent event) {
+        BossBarManager bossBarManager = plugin.getBossBarManager();
         Player player = event.getPlayer();
         if (player == null) {
             return;

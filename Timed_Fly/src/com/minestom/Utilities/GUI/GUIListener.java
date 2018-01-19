@@ -2,10 +2,14 @@ package com.minestom.Utilities.GUI;
 
 import com.minestom.ConfigurationFiles.ItemsConfig;
 import com.minestom.ConfigurationFiles.LangFiles;
-import com.minestom.Managers.*;
+import com.minestom.Managers.CooldownManager;
+import com.minestom.Managers.DependenciesManager;
+import com.minestom.Managers.MessageManager;
+import com.minestom.Managers.TimeFormat;
 import com.minestom.TimedFly;
 import com.minestom.Utilities.BossBarManager;
 import com.minestom.Utilities.Others.GeneralListener;
+import com.minestom.Utilities.Others.PlayerCache;
 import com.minestom.Utilities.Utility;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -25,20 +29,23 @@ import java.util.UUID;
 
 public class GUIListener implements Listener {
 
-    private TimedFly plugin = TimedFly.getInstance();
+    private TimedFly plugin;
     private TimeFormat format = new TimeFormat();
     public static HashMap<UUID, Integer> flytime = new HashMap<>();
     public static HashMap<UUID, Integer> godmode = new HashMap<>();
     private LangFiles lang = LangFiles.getInstance();
     private ItemsConfig items = ItemsConfig.getInstance();
-    private Utility utility = new Utility(plugin);
-    private BossBarManager bossBarManager = plugin.getBossBarManager();
-    private MySQLManager sqlManager = new MySQLManager();
+    private Utility utility;
 
-    public GUIListener() {
+    public GUIListener(TimedFly plugin, Utility utility) {
+        this.plugin = plugin;
+        this.utility = utility;
+        BossBarManager bossBarManager = plugin.getBossBarManager();
+
         FileConfiguration config = lang.getLang();
         FileConfiguration configuration = plugin.getConfig();
         FlyGUI gui = new FlyGUI();
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -46,16 +53,18 @@ public class GUIListener implements Listener {
                     return;
                 }
                 for (Map.Entry<UUID, Integer> entry : flytime.entrySet()) {
+
                     Player player = Bukkit.getPlayer(entry.getKey());
+                    PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
                     Integer time = entry.getValue();
+
                     if (time == 0) {
                         if (player == null) {
                             flytime.remove(entry.getKey());
                         } else {
                             flytime.remove(player.getUniqueId());
-                            GeneralListener.initialTime.put(player.getUniqueId(), 0);
-                            sqlManager.setInitialTime(player, 0);
-                            sqlManager.setTimeLeft(player, 0);
+                            playerCache.setInitialTime(0);
+                            playerCache.setTimeLeft(0);
                             if (utility.isWorldEnabled(player, player.getWorld())) {
                                 if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
                                     bossBarManager.removeBar(player);
@@ -115,18 +124,21 @@ public class GUIListener implements Listener {
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
-    private String cooldowntime = plugin.getConfig().getString("Cooldown");
-    private int t = Integer.parseInt(cooldowntime.replaceAll("[a-zA-Z]", ""));
-    private static DependenciesManager depends = new DependenciesManager(TimedFly.getInstance());
+    private DependenciesManager depends = new DependenciesManager(TimedFly.getInstance());
 
     @EventHandler
     public void flyListenerGui(InventoryClickEvent event) {
+        String cooldowntime = plugin.getConfig().getString("Cooldown");
+        int t = Integer.parseInt(cooldowntime.replaceAll("[a-zA-Z]", ""));
+
         FileConfiguration configuration = plugin.getConfig();
         Economy economy = plugin.getEconomy();
         Player player = (Player) event.getWhoClicked();
         int slot = event.getSlot();
         FileConfiguration config = lang.getLang();
         FileConfiguration itemscf = items.getItems();
+        PlayerCache playerCache = utility.getPlayerCacheMap().get(player);
+
         if (utility.isWorldEnabled(player, player.getWorld())) {
             if (event.getView().getTopInventory().getTitle().equals(utility.color(configuration.getString("Gui.DisplayName")))) {
                 event.setCancelled(true);
@@ -142,8 +154,8 @@ public class GUIListener implements Listener {
                         if (itemscf.getBoolean("Items." + string + ".FlyItem")) {
                             int price = itemscf.getInt("Items." + string + ".Price");
                             int time = itemscf.getInt("Items." + string + ".Time");
-                            GeneralListener.initialTime.put(player.getUniqueId(), time * 60);
-                            sqlManager.setInitialTime(player, time * 60);
+                            playerCache.setInitialTime(time * 60);
+                            playerCache.setInitialTime(time * 60);
                             if (!flytime.containsKey(player.getUniqueId())) {
                                 if (!player.hasPermission("timedfly.limit.bypass") && time > configuration.getInt("LimitMaxTime")) {
                                     utility.message(player, config.getString("Other.MaxAllowed"));
@@ -189,7 +201,7 @@ public class GUIListener implements Listener {
                                 }
                                 flytime.put(player.getUniqueId(), time * 60);
                                 if (plugin.getConfig().getBoolean("BossBarTimer.Enabled")) {
-                                    bossBarManager.addPlayer(player);
+                                    //bossBarManager.addPlayer(player);
                                 }
                                 if (!player.hasPermission("timedfly.cooldown.bypass") || !player.isOp()) {
                                     if (!CooldownManager.isInCooldown(player.getUniqueId(), "fly")) {
