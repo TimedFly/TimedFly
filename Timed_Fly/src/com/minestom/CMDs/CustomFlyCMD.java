@@ -47,7 +47,7 @@ public class CustomFlyCMD implements Listener {
                             continue;
                     }
                 }
-                if (plugin.getConfig().getBoolean("FlyModeIfHasPerm") && player.hasPermission("timedfly.fly.onof")) {
+                if (plugin.getConfig().getBoolean("FlyModeIfHasPerm") && player.hasPermission("timedfly.fly.onoff")) {
                     if (player.getAllowFlight()) {
                         player.setAllowFlight(false);
                         player.setFlying(false);
