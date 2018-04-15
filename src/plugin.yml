@@ -1,0 +1,13 @@
+main: com.timedfly.TimedFly
+name: TimedFly
+version: 2.5.0
+author: By_Jack
+softdepend: [PlaceholderAPI, TokenManager, ASkyBlock, Vault]
+commands:
+  timedfly:
+    aliases: [tf, timedf]
+    usage: /<command>
+    description: The main command of TimedFly
+  tfly:
+    usage: /<command>
+    description: Open the fly GUI

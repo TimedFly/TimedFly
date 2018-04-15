@@ -1,5 +1,5 @@
-.project
+bin/
+META-INF/
+.settings/
 .classpath
-.settings
-
-Timed_Fly/bin/
+.project
