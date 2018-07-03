@@ -1,0 +1,80 @@
+# Aqui es cuando el jugador tiene el tiempo elegido, dice algo
+Announcer:
+  # Usa los sonidos corespondientes a tu version de minecraft, ahora se esta usando los de la 1.9+
+  Chat:
+    Message: '&aModo vuelo se desactivara en &7%time%.'
+  Titles:
+    Title: '&c%time%'
+    SubTitle: '&fPara desactivar el Fly'
+  
+# Esto es cuando el jugador esta volando o el modo de vuelo esta habilitado / deshabilitado
+Fly:
+  Message:
+    ToPlayer: '&aModo vuelo activado para &7%target% &apor &7%time% &aminutos.'
+    FromPlayer: '&aModo vuelo activado desde &7%player% &apor &7%time% &aminutos.'
+    AddTime: '&aHas agregado &7%time% &aminutos al jugador &7%player%'
+    AddTimeToPlayer: '&aYou have been added &7%time% &aminutes to your flight time.'
+    Enabled: '&aHas agregado &7%time% &aminutos a tu tiempo de vuelo por &7$%price%.'
+    Disabled: ' &aModo vuelo desactivado. Compra mas tiempo si quieres seguir.'
+    NoMoney: '&aNo tienes sufuciente dinero para comprar esto, trabaja.'
+    NoExp: '&aYou don''t have enough &eExp &ato buy this. You need &e%exp_needed%'
+    NoLevels: '&aYou don''t have enough &eLevels &ato buy this. You need &e%levels_needed%'
+    SetOn: '&aModo vuelo activado.'
+    SetOff: '&aModo vuelo desactivado.'
+    TimeLeft: '&aTe quedan &7%timeleft% &arestantes.'
+    OthersTimeLeft: '&a%player% has &7%timeleft% &atime left.'
+    StopAndResume:
+      Stop: '&7Has &cParado &7el tiempo de tu vuelo!'
+      Resume: '&7Has &aResumido &7el tiempo de tu vuelo!'
+      NoTime: '&7No tienes tiempo restante para hacer esto!'
+      Already: '&7Ya has hecho esta accion!'
+  ActionBar: '&aTe quedan %timeleft% restantes.'
+  BossBar: '&aTe quedan %timeleft% restantes.'
+  Titles:
+    Enabled:
+      Title: '&cHas agregado'
+      SubTitle: '&f%time% a tu vuelo'
+    Disabled:
+      Title: '&cModo vuelo desactivado'
+      SubTitle: '&fPuedes agregar mas tiempo'
+
+Format:
+  Singular:
+    Day: 'dia'
+    Hour: 'hora'
+    Minute: 'minuto'
+    Second: 'segundo'
+  Plural:
+    Days: 'dias'
+    Hours: 'horas'
+    Minutes: 'minutos'
+    Seconds: 'segundos'
+  NoTimeLeft: 'Sin tiempo restante'
+
+# Estos son otros mensajes
+Other:
+  NoPermission:
+    Message: '&cNo tienes permiso para usar este comando, creo que no eres Admin.'
+    Title: '&cSin permisos'
+    SubTitle: '&7Eres un Admin?'
+  SetItem:
+    Usage: '&eUso: &7/tf setItem <itemID>'
+    Found: '&eHas cambiado el item de &7%itemid%.'
+    NotFound: '&eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
+  SetTime:
+    Usage: '&eUso: &7/tf setTime <itemID> <minutos>'
+    Found: '&eHas puesto el tiempo de &7%itemid% &ea &7%time% minutos.'
+    NotFound: '&eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
+  SetPrice:
+    Usage: '&eUso: &7/tf setPrice <itemID> <price>'
+    Found: '&eHas puesto el precio de &7%itemid% &ea &7$%price%.'
+    NotFound: '&eNo pude encontrar el ItemID &7%itemid%. Use /tf list para ver todos los items.'
+  DisabledWorld: '&eEste mundo no esta habilitado. Si usted cree que es un error por favor reportalo a un Admin'
+  LimitReached: 'Has alcanzado el tiempo maximo de vuelo permitido.'
+  MaxReached: '&eHas llegado al limite maximo de tiempo de vuelo permitido.'
+  MaxAllowed: '&eNo puedes elegir mas tiempo del permitido (&c%time_allowed%&7).'
+  OnCooldown: '&7No puedes usar esto por &c%cooldown%'
+  NoCurrencyFound: '&7Could not find a currency to perform this action. If you are the server admin please enable one in the configuration file.'
+  PlayerNotFound: '&7Could not find that player... Make sure the player is online.'
+  OnCombat: '&aYou have entered in combat. Disabling flight.'
+    

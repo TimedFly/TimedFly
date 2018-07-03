@@ -1,0 +1,217 @@
+#Items:
+#  This can be a name or a number, that's on you
+#  '1':
+#    Name to display in the item
+#    Name: '&7%time% &eMinutes Fly'
+#    Slot where the item is gonna be numbers must be 0-53
+#    Slot: 0
+#    Id of the item if you don't know what the id of your item is use '/tf setitem 1' with the item in your hand.
+#    Material: 340
+#    This is if you are using items like dyes, instead of using 358:10 you put the 380 in Material and 10 in Data
+#    Data: 0
+#    Amount of item to show
+#    Amount: 1
+#    Mm, the message under the item...
+#    Lore:
+#    - ' '
+#    - '&eBalance: &7%balance%'
+#    - ' '
+#    - '&eGet access to fly'
+#    - '&efor %time% minutes'
+#    - ' '
+#    - '&eCost: &a$%price%'
+#    - ' '
+#    - '&7You will hide flying'
+#    - '&7after the %time% minutes'
+#    - ' '
+#    - '&eTime Left: %timeleft%'
+#    - ' '
+#    If is set to true this item will be use to buy fly time.
+#    If is set to false this items will be use as a custom item.
+#    FlyItem: false
+#    Perform an action when the player click the item.
+#    OnClick:
+#    - '[player] say Hi! this is a test'
+#    - '[console] tell %player% you clicked me'
+#    - '[message] &9I'm a message that supports &cc&ao&bl&do&er &9codes.'
+#    - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
+#    - '[close]'
+#    Hide_Attributes: false
+#    Hide_Enchants: true
+#    Hide_Place_On: false
+#    Hide_Potion_Effects: false
+#    Hide_Unbreakable: false
+#    This will make your item glow
+#    Glow: false
+#    Custom permission so the player can use this item
+#    UsePermission: true
+#    Permission: something.here
+#    No permission message
+#    PermissionMSG: '&cTimedFly >> You don''t have permission to use this item. Try
+#      buying a rank'
+#    Price of the item
+#    Price: 2000
+#    Time in minutes of flight time
+#    Time: 15
+#
+#   Some Placeholders you could use are:
+#   %player% - player executing the command.
+#   %timeleft% - flight time left.
+#   %time% - time bought or given
+#   %itemid% - name given to the item in the config.
+#   %seconds% - seconds left in announce.
+#   %price% - price for enabling flight.
+#   %balance% - displays the balance of the player (only in the item lore)
+#   Not all of then can be use anywhere you want
+#   PlaceholderAPI support.
+#   
+#   [player] - makes the player perform a command
+#   [console] - makes the console perform a command
+#   [sound] - play a sound to the player
+#   [message] - send a message to player
+#   [close] - close the GUI on click
+
+Items:
+  '1':
+    Name: '&7%time% &eMinutes Fly'
+    Slot: 0
+    Material: 340
+    Data: 0
+    Amount: 1
+    Lore:
+    - ' '
+    - '&eBalance: &7%balance%'
+    - ' '
+    - '&eGet access to fly'
+    - '&efor %time% minutes'
+    - ' '
+    - '&eCost: &a$%price%'
+    - ' '
+    - '&7You will hide flying'
+    - '&7after the %time% minutes'
+    - ' '
+    - '&eTime Left: %timeleft%'
+    - ' '
+    Hide_Attributes: false
+    Hide_Enchants: true
+    Hide_Place_On: false
+    Hide_Potion_Effects: false
+    Hide_Unbreakable: false
+    Glow: false
+    UsePermission: true
+    Permission: something.here
+    PermissionMSG: 'You don''t have permission to use this item. Try
+      buying a rank'
+    FlyItem: true
+    OnClick:
+    - '[close]'
+    - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
+    Price: 2000
+    Time: 15
+  '2':
+    Name: '&7%time% &eMinutes Fly'
+    Slot: 1
+    Material: 340
+    Data: 0
+    Amount: 1
+    Lore:
+    - ' '
+    - '&eBalance: &7%balance%'
+    - ' '
+    - '&eGet access to fly'
+    - '&efor %time% minutes'
+    - ' '
+    - '&eCost: &a$%price%'
+    - ' '
+    - '&7You will hide flying'
+    - '&7after the %time% minutes'
+    - ' '
+    - '&eTime Left: %timeleft%'
+    - ' '
+    Hide_Attributes: false
+    Hide_Enchants: true
+    Hide_Place_On: false
+    Hide_Potion_Effects: false
+    Hide_Unbreakable: false
+    Glow: false
+    UsePermission: true
+    Permission: something.here
+    PermissionMSG: 'You don''t have permission to use this item. Try
+      buying a rank'
+    FlyItem: true
+    OnClick:
+    - '[close]' 
+    - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
+    Price: 5000
+    Time: 20
+  '3':
+    Name: '&7%time% &eMinutes Fly'
+    Slot: 2
+    Material: 340
+    Data: 0
+    Amount: 1
+    Lore:
+    - ' '
+    - '&eBalance: &7%balance%'
+    - ' '
+    - '&eGet access to fly'
+    - '&efor %time% minutes'
+    - ' '
+    - '&eCost: &a$%price%'
+    - ' '
+    - '&7You will hide flying'
+    - '&7after the %time% minutes'
+    - ' '
+    - '&7Rank Needed: &eVIP'
+    - ' '
+    - '&eTime Left: %timeleft%'
+    - ' '
+    Hide_Attributes: false
+    Hide_Enchants: true
+    Hide_Place_On: false
+    Hide_Potion_Effects: false
+    Hide_Unbreakable: false
+    Glow: true
+    UsePermission: true
+    Permission: something.here
+    PermissionMSG: 'You don''t have permission to use this item. Try
+      buying a rank'
+    FlyItem: true
+    OnClick:
+    - '[close]'
+    - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
+    Price: 10000
+    Time: 60
+
+# remove the # to use
+#  '4':
+#    Name: '&7Click me :D'
+#    Slot: 8
+#    Material: 341
+#    Data: 0
+#    Amount: 1
+#    Lore:
+#    - ' '
+#    - '&cThis is a custom item'
+#    - '&7Don''t forget to add more'
+#    - '&7Slots in the &econfig.yml &7if'
+#    - '&7You want more items'
+#    - ' '
+#    Hide_Attributes: false
+#    Hide_Enchants: true
+#    Hide_Place_On: false
+#    Hide_Potion_Effects: false
+#    Hide_Unbreakable: false
+#    Glow: true
+#    UsePermission: true
+#    Permission: something.here
+#    PermissionMSG: 'You don''t have permission to use this item. Try
+#      buying a rank'
+#    FlyItem: false
+#    OnClick:
+#    - '[player] say Hi! this is a test and I''m a player'
+#    - '[console] tell %player% you clicked me and I''m a console'
+#    - '[message] &9I''m a message that supports &cc&ao&bl&do&er &9codes.'
+#    - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
+#    - '[close]'
+      

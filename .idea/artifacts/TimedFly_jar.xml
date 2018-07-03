@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TimedFly:jar">
+    <output-path>$USER_HOME$/Desktop/Other Folders/Premade Bungeecord Server Thrisboss/testing/plugins/</output-path>
+    <root id="archive" name="TimedFly.jar">
+      <element id="module-output" name="TimedFly" />
+    </root>
+  </artifact>
+</component>
