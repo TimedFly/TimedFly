@@ -43,7 +43,7 @@ public class Message {
     }
 
     public static void sendNoMoney(Player player, FileConfiguration languageConfig, int price, int time) {
-        sendMessage(player, languageConfig.getString("Fly.NoMoney").replace("%price%", Integer.toString(price))
+        sendMessage(player, languageConfig.getString("Fly.Message.NoMoney").replace("%price%", Integer.toString(price))
                 .replace("%time%", Integer.toString(time)));
     }
 

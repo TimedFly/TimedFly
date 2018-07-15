@@ -52,6 +52,7 @@ public class ConfigCache {
     private  FileConfiguration configuration;
     private static boolean disableFlyOnGround;
     private static boolean stopFlyOnAttack;
+    private static boolean stopFlyOnGround;
     private static boolean debug;
 
     public ConfigCache(TimedFly plugin) {
@@ -105,6 +106,7 @@ public class ConfigCache {
         ConfigCache.checkForUpdates = configuration.getBoolean("Check-For-Updates");
         ConfigCache.autoDownload = configuration.getBoolean("Auto-Download");
         ConfigCache.stopFlyOnAttack = configuration.getBoolean("StopFlyOnAttack");
+        ConfigCache.stopFlyOnAttack = configuration.getBoolean("StopFlyOnGround");
         ConfigCache.languge = configuration.getString("Lang");
         ConfigCache.debug = configuration.getBoolean("Debug");
     }
@@ -287,6 +289,10 @@ public class ConfigCache {
 
     public static boolean isStopFlyOnAttack() {
         return stopFlyOnAttack;
+    }
+
+    public static boolean isStopFlyOnGround() {
+        return stopFlyOnGround;
     }
 
     public static boolean isDebug() {

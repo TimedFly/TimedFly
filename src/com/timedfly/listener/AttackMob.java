@@ -27,6 +27,7 @@ public class AttackMob implements Listener {
 
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
         if (!ConfigCache.isStopFlyOnAttack()) return;
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();

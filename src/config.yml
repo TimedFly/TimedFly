@@ -43,6 +43,9 @@ StopTimerOnLeave: true
 # If true flight will be disabled for 10 seconds if the player attacks a mob/player.
 StopFlyOnAttack: true
 
+# If true flight will be disabled if the player is on the ground.
+StopFlyOnGround: false
+
 # If true the players time will be saved with the player enters one of the blacklisted worlds
 # Do not use if you are running the plugin with multiple servers liked via MySQL
 StopTimerOnBlackListedWorld: false

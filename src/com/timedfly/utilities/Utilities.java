@@ -1,7 +1,7 @@
 package com.timedfly.utilities;
 
+import com.timedfly.TimedFly;
 import com.timedfly.configurations.ConfigCache;
-import com.timedfly.managers.MySQLManager;
 import com.timedfly.managers.PlayerManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -68,18 +68,20 @@ public class Utilities {
     }
 
     public PlayerManager getPlayerManager(UUID uuid) {
-        return this.playerManagerMap.get(uuid);
+        PlayerManager playerManager = this.playerManagerMap.get(uuid);
+        if (playerManager == null) addPlayerManager(uuid, TimedFly.getPlugin(TimedFly.class));
+        return playerManager;
     }
 
-    public PlayerManager addPlayerManager(UUID uuid, Plugin plugin, MySQLManager sqlManager, int initialTime, int timeLeft) {
-        PlayerManager playerManager = new PlayerManager(plugin, uuid, initialTime, timeLeft, sqlManager);
+    public PlayerManager addPlayerManager(UUID uuid, Plugin plugin, int initialTime, int timeLeft) {
+        PlayerManager playerManager = new PlayerManager(plugin, uuid, initialTime, timeLeft);
         playerManager.setInServer(true);
         this.playerManagerMap.put(uuid, playerManager);
         return this.playerManagerMap.get(uuid);
     }
 
-    public PlayerManager addPlayerManager(UUID uuid, Plugin plugin, MySQLManager sqlManager) {
-        return addPlayerManager(uuid, plugin, sqlManager, 0, 0);
+    public PlayerManager addPlayerManager(UUID uuid, Plugin plugin) {
+        return addPlayerManager(uuid, plugin, 0, 0);
     }
 
     public long getPlayersTimeLeft() {

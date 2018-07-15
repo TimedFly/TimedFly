@@ -35,7 +35,7 @@ public class TimedFly extends JavaPlugin {
 
     private TokenManager tokensManager;
     private UpdateConfig updateConfig;
-    private MySQLManager sqlManager;
+    private static MySQLManager sqlManager;
     private ItemsConfig itemsConfig;
     private Languages languages;
     private Utilities utility;
@@ -77,7 +77,7 @@ public class TimedFly extends JavaPlugin {
         registerListeners();
         Bukkit.getOnlinePlayers().forEach(player -> {
             sqlManager.createPlayer(player);
-            utility.addPlayerManager(player.getUniqueId(), this, sqlManager);
+            utility.addPlayerManager(player.getUniqueId(), this);
 
             PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
             playerManager.setInServer(true).setInitialTime(sqlManager.getInitialTime(player)).setTimeLeft(sqlManager.getTimeLeft(player));
@@ -104,7 +104,7 @@ public class TimedFly extends JavaPlugin {
         this.itemsConfig = new ItemsConfig();
         loadConfigs();
         this.sqlSetup = new SqlSetup(this);
-        this.sqlManager = new MySQLManager(sqlSetup);
+        sqlManager = new MySQLManager(sqlSetup);
         this.tokensManager = new TokenManager();
         this.updater = new Updater(this);
         this.flyGUI = new FlyGUI(itemsConfig, languages, this, utility);
@@ -129,6 +129,8 @@ public class TimedFly extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new CustomFlyCMD(utility, languages, flyGUI, nms), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinLeave(utility, sqlManager, this, updater), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ChangeWorld(utility, this), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new Respawn(utility, this), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerOnGround(utility), this);
         if (version.equals("v1_12_R1"))
             Bukkit.getServer().getPluginManager().registerEvents(new AttackMob(this, utility, languages), this);
     }
@@ -192,4 +194,7 @@ public class TimedFly extends JavaPlugin {
         return economy;
     }
 
+    public static MySQLManager getMySqlManager() {
+        return sqlManager;
+    }
 }

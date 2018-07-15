@@ -32,7 +32,7 @@ public class JoinLeave implements Listener {
         Player player = event.getPlayer();
 
         sqlManager.createPlayer(player);
-        utilities.addPlayerManager(player.getUniqueId(), plugin, sqlManager);
+        utilities.addPlayerManager(player.getUniqueId(), plugin);
 
         PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
 

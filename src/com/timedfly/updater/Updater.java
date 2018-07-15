@@ -89,11 +89,11 @@ public class Updater {
             InputStream inputStream = connection.getInputStream();
             InputStreamReader reader = new InputStreamReader(inputStream);
 
-            JsonElement element = new JsonParser().parse(reader).getAsJsonArray().get(1);
+            JsonElement element = new JsonParser().parse(reader).getAsJsonObject().get(plugin.getName());
 
-            String newVersion = element.getAsJsonObject().get("TimedFly").getAsJsonObject().get("version").getAsString();
-            int resourceId = element.getAsJsonObject().get("TimedFly").getAsJsonObject().get("resource-id").getAsInt();
-            boolean checkForUpdates = element.getAsJsonObject().get("TimedFly").getAsJsonObject().get("check-for-updates").getAsBoolean();
+            String newVersion = element.getAsJsonObject().get("version").getAsString();
+            int resourceId = element.getAsJsonObject().get("resource-id").getAsInt();
+            boolean checkForUpdates = element.getAsJsonObject().get("check-for-updates").getAsBoolean();
 
             this.newVersion = newVersion;
             this.resourceId = resourceId;

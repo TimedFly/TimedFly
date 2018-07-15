@@ -139,7 +139,10 @@ public class BossBarManager {
             return this;
         }
 
-        bar.setProgress(1 / barProgress);
+        double progr = 1 / barProgress;
+        if (progr > 1) return this;
+
+        bar.setProgress(progr);
         return this;
     }
 
@@ -152,7 +155,10 @@ public class BossBarManager {
             return this;
         }
 
-        bar.setProgress(1 / barProgress);
+        double progr = 1 / barProgress;
+        if (progr > 1) return this;
+
+        bar.setProgress(progr);
         return this;
     }
 

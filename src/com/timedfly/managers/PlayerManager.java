@@ -1,5 +1,6 @@
 package com.timedfly.managers;
 
+import com.timedfly.TimedFly;
 import com.timedfly.configurations.ConfigCache;
 import com.timedfly.customevents.FlightTimeEndEvent;
 import com.timedfly.customevents.FlightTimeStartEvent;
@@ -27,12 +28,12 @@ public class PlayerManager {
     private MySQLManager sqlManager;
     private int taskId;
 
-    public PlayerManager(Plugin plugin, UUID uuid, int initialTime, int timeLeft, MySQLManager sqlManager) {
+    public PlayerManager(Plugin plugin, UUID uuid, int initialTime, int timeLeft) {
         this.plugin = plugin;
         this.uuid = uuid;
         this.initialTime = initialTime;
         this.timeLeft = timeLeft;
-        this.sqlManager = sqlManager;
+        this.sqlManager = TimedFly.getMySqlManager();
         this.bossBarManager = new BossBarManager(uuid, initialTime, timeLeft);
         this.timePaused = false;
         this.flying = false;
@@ -96,7 +97,9 @@ public class PlayerManager {
             this.setFlying(false);
         }
 
-        this.setTimeEnded(true).setTimePaused(timePaused);
+        this.setTimeEnded(true);
+        this.setTimePaused(timePaused);
+
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:stopTimedFly: &7TimeLeft: " + getTimeLeft() + ", Initial: " + getInitialTime(), 1);
 
         FlightTimeEndEvent event = new FlightTimeEndEvent(this.player, this.uuid, this.initialTime, this.timeLeft, timePaused, this);
