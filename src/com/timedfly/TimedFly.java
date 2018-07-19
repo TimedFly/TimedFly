@@ -25,7 +25,10 @@ import com.timedfly.managers.HooksManager;
 import com.timedfly.managers.MySQLManager;
 import com.timedfly.managers.PlayerManager;
 import com.timedfly.updater.Updater;
-import com.timedfly.utilities.*;
+import com.timedfly.utilities.FlyGUI;
+import com.timedfly.utilities.Message;
+import com.timedfly.utilities.SqlSetup;
+import com.timedfly.utilities.Utilities;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -42,7 +45,7 @@ public class TimedFly extends JavaPlugin {
     private SqlSetup sqlSetup;
     private Economy economy;
     private Updater updater;
-    private String version;
+    private static String version;
     private FlyGUI flyGUI;
     private NMS nms;
 
@@ -52,7 +55,7 @@ public class TimedFly extends JavaPlugin {
 
         Message.sendConsoleMessage("&7Enabling TimedFly &6v" + this.getDescription().getVersion());
         if (!setupNMS()) {
-            Message.sendConsoleMessage("&cDisabling due to unsupported Minecraft version!");
+            Message.sendConsoleMessage("&cUnsupported Minecraft version! It's possible that the plugin fail to work correctly!");
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -196,5 +199,9 @@ public class TimedFly extends JavaPlugin {
 
     public static MySQLManager getMySqlManager() {
         return sqlManager;
+    }
+
+    public static String getVersion() {
+        return version;
     }
 }

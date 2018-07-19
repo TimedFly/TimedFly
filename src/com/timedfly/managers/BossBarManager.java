@@ -1,11 +1,10 @@
 package com.timedfly.managers;
 
+import com.timedfly.TimedFly;
 import com.timedfly.configurations.ConfigCache;
+import com.timedfly.utilities.Bossbars;
+import com.timedfly.utilities.Message;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -20,7 +19,7 @@ public class BossBarManager {
     private boolean running;
     private Player player;
     private UUID uuid;
-    private BossBar bar;
+    private Bossbars bar;
 
     public BossBarManager(UUID uuid, String title, String color, String style, long initialTime, long currentTime) {
         this.uuid = uuid;
@@ -30,7 +29,7 @@ public class BossBarManager {
         this.style = style.toUpperCase();
         this.initialTime = initialTime;
         this.currentTime = currentTime;
-        this.bar = Bukkit.createBossBar(title, BarColor.valueOf(color.toUpperCase()), BarStyle.valueOf(style.toUpperCase()));
+        if (!TimedFly.getVersion().startsWith("v1_8")) this.bar = new Bossbars(title, color, style);
         this.running = false;
     }
 
@@ -41,12 +40,23 @@ public class BossBarManager {
         this.style = "SEGMENTED_20";
         this.initialTime = initialTime;
         this.currentTime = currentTime;
-        this.bar = Bukkit.createBossBar("", BarColor.WHITE, BarStyle.SEGMENTED_20);
+        if (!TimedFly.getVersion().startsWith("v1_8")) this.bar = new Bossbars("", "white", "SEGMENTED_20");
+        this.running = false;
+    }
+
+    public BossBarManager(UUID uuid, long initialTime, long currentTime, String color, String style) {
+        this.uuid = uuid;
+        this.player = getPlayerFromUUID();
+        this.color = color;
+        this.style = style;
+        this.initialTime = initialTime;
+        this.currentTime = currentTime;
+        if (!TimedFly.getVersion().startsWith("v1_8")) this.bar = new Bossbars(title, color, style);
         this.running = false;
     }
 
     public void show() {
-        if (!ConfigCache.isBossBarTimerEnabled() || isRunning()) return;
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled() || isRunning()) return;
         setRunning(true);
 
         setBarColor(getColor());
@@ -57,7 +67,7 @@ public class BossBarManager {
     }
 
     public void hide() {
-        if (!ConfigCache.isBossBarTimerEnabled() || !isRunning()) return;
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled() || !isRunning()) return;
         setRunning(false);
         setBarProgress(1, 1);
         removeBar(player);
@@ -68,6 +78,7 @@ public class BossBarManager {
     }
 
     public BossBarManager setTitle(String title) {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
         this.title = title;
         bar.setTitle(title);
         return this;
@@ -78,6 +89,7 @@ public class BossBarManager {
     }
 
     public BossBarManager setColor(String color) {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
         this.color = color;
         return this;
     }
@@ -87,6 +99,7 @@ public class BossBarManager {
     }
 
     public BossBarManager setStyle(String style) {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
         this.style = style;
         return this;
     }
@@ -96,6 +109,7 @@ public class BossBarManager {
     }
 
     public BossBarManager setInitialTime(long initialTime) {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
         this.initialTime = initialTime;
         return this;
     }
@@ -105,6 +119,7 @@ public class BossBarManager {
     }
 
     public BossBarManager setCurrentTime(long currentTime) {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
         this.currentTime = currentTime;
         return this;
     }
@@ -118,12 +133,13 @@ public class BossBarManager {
     }
 
     public BossBarManager createBar(String color, String style) {
-        bar = Bukkit.createBossBar(ChatColor.translateAlternateColorCodes('&', title),
-                BarColor.valueOf(color.toUpperCase()), BarStyle.valueOf(style.toUpperCase()));
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
+        this.bar = new Bossbars(Message.color(title), color, style);
         return this;
     }
 
     public BossBarManager addPlayer(Player player) {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
         if (!bar.getPlayers().contains(player) && bar != null) {
             bar.addPlayer(player);
         }
@@ -131,7 +147,7 @@ public class BossBarManager {
     }
 
     public BossBarManager setBarProgress(double progress, double initialTime) {
-        if (!ConfigCache.isBossBarTimerEnabled()) return this;
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
         double barProgress = initialTime / progress;
 
         if (Double.isInfinite(barProgress) || Double.isNaN(barProgress) || progress <= 0 || barProgress <= 0) {
@@ -147,7 +163,7 @@ public class BossBarManager {
     }
 
     public BossBarManager setBarProgress(double progress) {
-        if (!ConfigCache.isBossBarTimerEnabled()) return this;
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
         double barProgress = getInitialTime() / progress;
 
         if (Double.isInfinite(barProgress) || Double.isNaN(barProgress) || progress <= 0 || barProgress <= 0) {
@@ -163,37 +179,45 @@ public class BossBarManager {
     }
 
     public boolean containsBar(Player player) {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return false;
         return bar.getPlayers().contains(player);
     }
 
     public void removeBar(Player player) {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return;
         if (containsBar(player)) bar.removePlayer(player);
     }
 
     public String getBarColor() {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return color;
         return bar.getColor().name();
     }
 
     public BossBarManager setBarColor(String color) {
-        bar.setColor(BarColor.valueOf(color.toUpperCase()));
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
+        bar.setColor(color.toUpperCase());
         return this;
     }
 
     public String getBarStyle() {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return style;
         return bar.getStyle().name().replace("_", "");
     }
 
     public BossBarManager setBarStyle(String style) {
-        bar.setStyle(BarStyle.valueOf(style.toUpperCase()));
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
+        bar.setStyle(style);
         return this;
     }
 
     public String getBarName() {
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return title;
         return bar.getTitle();
     }
 
     public BossBarManager setBarName(String text) {
-        bar.setTitle(ChatColor.translateAlternateColorCodes('&', text));
+        if (TimedFly.getVersion().startsWith("v1_8") || !ConfigCache.isBossBarTimerEnabled()) return this;
+        bar.setTitle(Message.color(text));
         return this;
     }
 

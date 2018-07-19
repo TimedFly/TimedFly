@@ -106,7 +106,7 @@ public class ConfigCache {
         ConfigCache.checkForUpdates = configuration.getBoolean("Check-For-Updates");
         ConfigCache.autoDownload = configuration.getBoolean("Auto-Download");
         ConfigCache.stopFlyOnAttack = configuration.getBoolean("StopFlyOnAttack");
-        ConfigCache.stopFlyOnAttack = configuration.getBoolean("StopFlyOnGround");
+        ConfigCache.stopFlyOnGround = configuration.getBoolean("StopFlyOnGround");
         ConfigCache.languge = configuration.getString("Lang");
         ConfigCache.debug = configuration.getBoolean("Debug");
     }

@@ -34,13 +34,11 @@ public class PlayerManager {
         this.initialTime = initialTime;
         this.timeLeft = timeLeft;
         this.sqlManager = TimedFly.getMySqlManager();
-        this.bossBarManager = new BossBarManager(uuid, initialTime, timeLeft);
+        this.bossBarManager = new BossBarManager(uuid, initialTime, timeLeft, ConfigCache.getBossBarTimerColor(), ConfigCache.getBossBarTimerStyle());
         this.timePaused = false;
         this.flying = false;
         this.timeEnded = true;
         this.player = getPlayerFromUUID();
-
-        bossBarManager.setBarColor(ConfigCache.getBossBarTimerColor()).setBarStyle(ConfigCache.getBossBarTimerStyle());
     }
 
     public void startTimedFly() {
