@@ -48,7 +48,7 @@ public class ConfigCache {
     private static boolean aSkyblockIntegration;
     private static boolean checkForUpdates;
     private static boolean autoDownload;
-    private static String languge;
+    private static String language;
     private  FileConfiguration configuration;
     private static boolean disableFlyOnGround;
     private static boolean stopFlyOnAttack;
@@ -107,7 +107,7 @@ public class ConfigCache {
         ConfigCache.autoDownload = configuration.getBoolean("Auto-Download");
         ConfigCache.stopFlyOnAttack = configuration.getBoolean("StopFlyOnAttack");
         ConfigCache.stopFlyOnGround = configuration.getBoolean("StopFlyOnGround");
-        ConfigCache.languge = configuration.getString("Lang");
+        ConfigCache.language = configuration.getString("Lang");
         ConfigCache.debug = configuration.getBoolean("Debug");
     }
 
@@ -279,8 +279,8 @@ public class ConfigCache {
         return autoDownload;
     }
 
-    public static String getLanguge() {
-        return languge;
+    public static String getLanguage() {
+        return language;
     }
 
     public static boolean isDisableFlyOnGround() {

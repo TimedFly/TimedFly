@@ -27,14 +27,19 @@ public class PlaceholderAPI extends EZPlaceholderHook {
         FileConfiguration languageConfig = languages.getLanguageFile();
         PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
 
-
         switch (identifier) {
+            case "timeleft_oneworded":
+                if (playerManager.getTimeLeft() < 0) return languageConfig.getString("Format.NoTimeLeft");
+                return TimeFormat.formatOneWorded(playerManager.getTimeLeft());
+            case "timeleft_oneworded_short":
+                if (playerManager.getTimeLeft() < 0) return languageConfig.getString("Format.NoTimeLeft");
+                return TimeFormat.formatShort(playerManager.getTimeLeft(), true);
             case "timeleft_formatted":
                 if (playerManager.getTimeLeft() < 0) return languageConfig.getString("Format.NoTimeLeft");
                 return TimeFormat.formatLong(playerManager.getTimeLeft());
             case "timeleft_formatted_short":
                 if (playerManager.getTimeLeft() < 0) return languageConfig.getString("Format.NoTimeLeft");
-                return TimeFormat.formatShort(playerManager.getTimeLeft());
+                return TimeFormat.formatShort(playerManager.getTimeLeft(), false);
             case "timeleft_seconds":
                 if (playerManager.getTimeLeft() < 0) return languageConfig.getString("Format.NoTimeLeft");
                 return Integer.toString(playerManager.getTimeLeft());
@@ -46,7 +51,7 @@ public class PlaceholderAPI extends EZPlaceholderHook {
             case "players_timeleft":
                 return TimeFormat.formatLong(utilities.getPlayersTimeLeft());
             case "players_timeleft_short":
-                return TimeFormat.formatShort(utilities.getPlayersTimeLeft());
+                return TimeFormat.formatShort(utilities.getPlayersTimeLeft(), false);
         }
         return null;
     }

@@ -1,70 +1,63 @@
 package com.timedfly.utilities;
 
-import com.timedfly.TimedFly;
 import com.timedfly.configurations.Languages;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.util.concurrent.TimeUnit;
 
 public class TimeFormat {
 
-    private TimedFly plugin;
-
-    public TimeFormat(TimedFly plugin) {
-        this.plugin = plugin;
-    }
-
-    public void setActionBar(Player player, FileConfiguration config, int millis) {
-        plugin.getNMS().sendActionbar(player, Message.color(config.getString("Fly.ActionBar")
-                .replace("%timeleft%", formatLong(millis))));
-    }
-
     public static String formatLong(long input) {
-        return formatDurationWords(input * 1000);
+        return formatDurationWords(input * 1000, false);
     }
 
-    public static String formatShort(long duration) {
-        duration *= 1000;
+    public static String formatShort(long input, boolean oneWord) {
+        input *= 1000;
 
-        long days = TimeUnit.MILLISECONDS.toDays(duration);
-        long hours = TimeUnit.MILLISECONDS.toHours(duration);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration);
+        long days = TimeUnit.MILLISECONDS.toDays(input);
+        long hours = TimeUnit.MILLISECONDS.toHours(input);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(input);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(input);
 
-        if (days > 0) return formatDurationWords(TimeUnit.DAYS.toMillis(days));
-        else if (hours > 0) return formatDurationWords(TimeUnit.HOURS.toMillis(hours));
-        else if (minutes > 0) return formatDurationWords(TimeUnit.MINUTES.toMillis(minutes));
-        else if (seconds > 0) return formatDurationWords(TimeUnit.SECONDS.toMillis(seconds));
-        else return formatDurationWords(0);
+        if (days > 0) return formatDurationWords(TimeUnit.DAYS.toMillis(days), oneWord);
+        else if (hours > 0) return formatDurationWords(TimeUnit.HOURS.toMillis(hours), oneWord);
+        else if (minutes > 0) return formatDurationWords(TimeUnit.MINUTES.toMillis(minutes), oneWord);
+        else if (seconds > 0) return formatDurationWords(TimeUnit.SECONDS.toMillis(seconds), oneWord);
+        else return formatDurationWords(0, false);
     }
 
-    private static String formatDurationWords(long durationMillis) {
+    public static String formatOneWorded(long input) {
+        return formatDurationWords(input * 1000, true);
+    }
 
-        String days = Languages.getFormat("Format.Plural.Days");
-        String hours = Languages.getFormat("Format.Plural.Hours");
-        String minutes = Languages.getFormat("Format.Plural.Minutes");
-        String seconds = Languages.getFormat("Format.Plural.Seconds");
-        String day = Languages.getFormat("Format.Singular.Day");
-        String hour = Languages.getFormat("Format.Singular.Hour");
-        String minute = Languages.getFormat("Format.Singular.Minute");
-        String second = Languages.getFormat("Format.Singular.Second");
+    private static String formatDurationWords(long durationMillis, boolean oneWord) {
 
-        String duration = DurationFormatUtils.formatDuration(durationMillis, "d' " + days + " 'H' " + hours + " 'm' " + minutes + " 's' " + seconds + "'");
+        String days = !oneWord ? Languages.getFormat("Format.Plural.Days") : "d";
+        String hours = !oneWord ? Languages.getFormat("Format.Plural.Hours") : "h";
+        String minutes = !oneWord ? Languages.getFormat("Format.Plural.Minutes") : "m";
+        String seconds = !oneWord ? Languages.getFormat("Format.Plural.Seconds") : "s";
+        String day = !oneWord ? Languages.getFormat("Format.Singular.Day") : "d";
+        String hour = !oneWord ? Languages.getFormat("Format.Singular.Hour") : "h";
+        String minute = !oneWord ? Languages.getFormat("Format.Singular.Minute") : "m";
+        String second = !oneWord ? Languages.getFormat("Format.Singular.Second") : "s";
+
+        String duration = !oneWord ? DurationFormatUtils.formatDuration(durationMillis, "d' " + days + " 'H' " + hours + " 'm' " + minutes + " 's' " + seconds + "'") :
+                DurationFormatUtils.formatDuration(durationMillis, "d'" + days + " 'H'" + hours + " 'm'" + minutes + " 's'" + seconds + "'");
         String tmp;
+        String zero = !oneWord ? " 0 " : " 0";
+        String one = !oneWord ? " 1 " : " 1";
 
         duration = " " + duration;
-        tmp = StringUtils.replaceOnce(duration, " 0 " + days, "");
+        tmp = StringUtils.replaceOnce(duration, zero + days, "");
         if (tmp.length() != duration.length()) {
             duration = tmp;
-            tmp = StringUtils.replaceOnce(tmp, " 0 " + hours, "");
+            tmp = StringUtils.replaceOnce(tmp, zero + hours, "");
             if (tmp.length() != duration.length()) {
-                tmp = StringUtils.replaceOnce(tmp, " 0 " + minutes, "");
+                tmp = StringUtils.replaceOnce(tmp, zero + minutes, "");
                 duration = tmp;
                 if (tmp.length() != tmp.length()) {
-                    duration = StringUtils.replaceOnce(tmp, " 0 " + seconds, "");
+                    duration = StringUtils.replaceOnce(tmp, zero + seconds, "");
                 }
             }
         }
@@ -73,24 +66,24 @@ public class TimeFormat {
             duration = duration.substring(1);
         }
 
-        tmp = StringUtils.replaceOnce(duration, " 0 " + seconds, "");
+        tmp = StringUtils.replaceOnce(duration, zero + seconds, "");
         if (tmp.length() != duration.length()) {
             duration = tmp;
-            tmp = StringUtils.replaceOnce(tmp, " 0 " + minutes, "");
+            tmp = StringUtils.replaceOnce(tmp, zero + minutes, "");
             if (tmp.length() != duration.length()) {
                 duration = tmp;
-                tmp = StringUtils.replaceOnce(tmp, " 0 " + hours, "");
+                tmp = StringUtils.replaceOnce(tmp, zero + hours, "");
                 if (tmp.length() != duration.length()) {
-                    duration = StringUtils.replaceOnce(tmp, " 0 " + days, "");
+                    duration = StringUtils.replaceOnce(tmp, zero + days, "");
                 }
             }
         }
 
         duration = " " + duration;
-        duration = StringUtils.replaceOnce(duration, " 1 " + seconds, " 1 " + second);
-        duration = StringUtils.replaceOnce(duration, " 1 " + minutes, " 1 " + minute);
-        duration = StringUtils.replaceOnce(duration, " 1 " + hours, " 1 " + hour);
-        duration = StringUtils.replaceOnce(duration, " 1 " + days, " 1 " + day);
+        duration = StringUtils.replaceOnce(duration, one + seconds, one + second);
+        duration = StringUtils.replaceOnce(duration, one + minutes, one + minute);
+        duration = StringUtils.replaceOnce(duration, one + hours, one + hour);
+        duration = StringUtils.replaceOnce(duration, one + days, one + day);
         return duration.trim();
     }
 

@@ -56,8 +56,6 @@ public class TimedFly extends JavaPlugin {
         Message.sendConsoleMessage("&7Enabling TimedFly &6v" + this.getDescription().getVersion());
         if (!setupNMS()) {
             Message.sendConsoleMessage("&cUnsupported Minecraft version! It's possible that the plugin fail to work correctly!");
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
         }
 
         initializeClasses();
@@ -134,6 +132,8 @@ public class TimedFly extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ChangeWorld(utility, this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Respawn(utility, this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerOnGround(utility), this);
+
+        if (version.startsWith("v1_8")) Bukkit.getServer().getPluginManager().registerEvents(new FallDamage(), this);
         if (version.equals("v1_12_R1"))
             Bukkit.getServer().getPluginManager().registerEvents(new AttackMob(this, utility, languages), this);
     }

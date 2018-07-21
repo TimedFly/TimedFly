@@ -150,7 +150,7 @@ public class MainCommand implements CommandExecutor {
                     reloadFiles();
                     Message.sendMessage(sender, "&econfig.yml was succesfully reloaded.");
                     Message.sendMessage(sender, "&eitems.yml was succesfully reloaded.");
-                    Message.sendMessage(sender, "&elang_" + ConfigCache.getLanguge() + ".yml was succesfully reloaded.");
+                    Message.sendMessage(sender, "&elang_" + ConfigCache.getLanguage() + ".yml was succesfully reloaded.");
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
                         plugin.getNMS().sendTitle(player, Message.color("All files reloaded"), 20, 40, 20);

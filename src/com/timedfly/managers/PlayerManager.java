@@ -5,6 +5,7 @@ import com.timedfly.configurations.ConfigCache;
 import com.timedfly.customevents.FlightTimeEndEvent;
 import com.timedfly.customevents.FlightTimeStartEvent;
 import com.timedfly.customevents.FlightTimeSubtractEvent;
+import com.timedfly.listener.FallDamage;
 import com.timedfly.utilities.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -89,23 +90,23 @@ public class PlayerManager {
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:stopTimedFly: &7stopping fly", 1);
         Bukkit.getScheduler().cancelTask(taskId);
 
-        if (this.isInServer()) {
-            getPlayerFromUUID().setInvulnerable(true);
-            Bukkit.getScheduler().runTaskLater(plugin, () -> getPlayerFromUUID().setInvulnerable(false), 6 * 20);
-            this.setFlying(false);
-        }
-
         this.setTimeEnded(true);
         this.setTimePaused(timePaused);
+
+        if (this.isInServer()) {
+            if (TimedFly.getVersion().startsWith("v1_8")) FallDamage.setInvulnerable(true);
+            else getPlayerFromUUID().setInvulnerable(true);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                if (TimedFly.getVersion().startsWith("v1_8")) FallDamage.setInvulnerable(false);
+                else getPlayerFromUUID().setInvulnerable(false);
+            }, 6 * 20);
+            this.setFlying(false);
+        }
 
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:stopTimedFly: &7TimeLeft: " + getTimeLeft() + ", Initial: " + getInitialTime(), 1);
 
         FlightTimeEndEvent event = new FlightTimeEndEvent(this.player, this.uuid, this.initialTime, this.timeLeft, timePaused, this);
         Bukkit.getServer().getPluginManager().callEvent(event);
-    }
-
-    public void stopTimedFly() {
-        stopTimedFly(false, false);
     }
 
     public PlayerManager addTime(int time) {
