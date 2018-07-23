@@ -110,6 +110,7 @@ public class PlayerManager {
     }
 
     public PlayerManager addTime(int time) {
+        if (this.getPlayerFromUUID().hasPermission("timedfly.fly.onoff")) return this;
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:addTime: &7Adding time method", 1);
         if (this.getTimeLeft() > 0) {
             Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:AddTime: &7Adding time because > 0", 1);
@@ -130,6 +131,7 @@ public class PlayerManager {
     }
 
     public PlayerManager setTime(int time) {
+        if (this.getPlayerFromUUID().hasPermission("timedfly.fly.onoff")) return this;
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:SetTime: &7setting time", 2);
         this.setTimeLeft(time);
         this.setInitialTime(time);
