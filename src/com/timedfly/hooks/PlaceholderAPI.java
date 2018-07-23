@@ -52,6 +52,10 @@ public class PlaceholderAPI extends EZPlaceholderHook {
                 return TimeFormat.formatLong(utilities.getPlayersTimeLeft());
             case "players_timeleft_short":
                 return TimeFormat.formatShort(utilities.getPlayersTimeLeft(), false);
+            case "players_timeleft_oneworded":
+                return TimeFormat.formatOneWorded(utilities.getPlayersTimeLeft());
+            case "players_timeleft_oneworded_short":
+                return TimeFormat.formatShort(utilities.getPlayersTimeLeft(), true);
         }
         return null;
     }
