@@ -78,3 +78,4 @@ Other:
   NoCurrencyFound: '&7Nem sikerült megtalálni a pénznemet a művelet végrehajtásához. Ha a szerver adminisztrátora vagy, kérjük engedélyezd az egyiket a konfigurációs fájlban.'
   PlayerNotFound: '&7Nem sikerült megtalálni a játékost... Győződj meg róla, hogy a játékos online.'
   OnCombat: '&aBeléptél a harcba. Repülés letiltva.'
+  CannotDo: '&cYou cannot do this.'

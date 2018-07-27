@@ -64,7 +64,7 @@ public class FlyGUI {
 
             for (String lines : stringList) {
                 lore.add(HooksManager.setPlaceHolders(lines, player).replace("%time%", time)
-                        .replace("%price%", pformat).replace("%timeleft%", playerManager.isTimeEnded() ?
+                        .replace("%price%", pformat).replace("%timeleft%", playerManager.isTimeEnded() && !playerManager.isTimePaused() ?
                                 languageConfig.getString("Format.NoTimeLeft") : TimeFormat.formatLong(playerManager.getTimeLeft()))
                         .replace("%balance%", format).replace("%tokens%", tokensManager.tokens(player)));
             }

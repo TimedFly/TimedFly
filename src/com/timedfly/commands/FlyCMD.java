@@ -58,7 +58,7 @@ public class FlyCMD implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help2")) Bukkit.getServer().dispatchCommand(sender, "tf help2");
                 if (args[0].equalsIgnoreCase("help3")) Bukkit.getServer().dispatchCommand(sender, "tf help3");
                 if (args[0].equalsIgnoreCase("add")) {
-                    if (!sender.hasPermission("timedfly.admin") || !sender.hasPermission("timedfly.fly.add")) {
+                    if (!sender.hasPermission("timedfly.fly.add")||!sender.hasPermission("timedfly.admin")) {
                         if (sender instanceof Player) Message.sendNoPermission((Player) sender, languageConfig, nms);
                         return true;
                     }
@@ -107,9 +107,10 @@ public class FlyCMD implements CommandExecutor {
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("set")) {
-                    if (!sender.hasPermission("timedfly.admin") || !sender.hasPermission("timedfly.fly.set")) {
+                    if (!sender.hasPermission("timedfly.fly.set") || !sender.hasPermission("timedfly.admin")) {
                         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:SetCmd: &7No permission", 1);
                         if (sender instanceof Player) Message.sendNoPermission((Player) sender, languageConfig, nms);
+                        return true;
                     }
                     if (args.length == 1 || args.length == 2) {
                         Message.sendMessage(sender, "&7Usage: /tfly set <player> <minutes>");
@@ -167,13 +168,13 @@ public class FlyCMD implements CommandExecutor {
                     }
                     Player player = (Player) sender;
 
-                    if (!utility.isWorldEnabled(player.getWorld())) {
-                        Message.sendDisabledWorld(sender, languageConfig);
+                    if (!player.hasPermission("timedfly.fly.onoff") || !player.hasPermission("timedfly.admin")) {
+                        Message.sendNoPermission(player, languageConfig, nms);
                         return true;
                     }
 
-                    if (!player.hasPermission("timedfly.admin") || !player.hasPermission("timedfly.fly.onoff")) {
-                        Message.sendNoPermission(player, languageConfig, nms);
+                    if (!utility.isWorldEnabled(player.getWorld())) {
+                        Message.sendDisabledWorld(sender, languageConfig);
                         return true;
                     }
 
@@ -188,13 +189,13 @@ public class FlyCMD implements CommandExecutor {
                     }
                     Player player = (Player) sender;
 
-                    if (!utility.isWorldEnabled(player.getWorld())) {
-                        Message.sendDisabledWorld(sender, languageConfig);
+                    if (!player.hasPermission("timedfly.fly.onoff") || !player.hasPermission("timedfly.admin")) {
+                        Message.sendNoPermission(player, languageConfig, nms);
                         return true;
                     }
 
-                    if (!player.hasPermission("timedfly.admin") || !player.hasPermission("timedfly.fly.onoff")) {
-                        Message.sendNoPermission(player, languageConfig, nms);
+                    if (!utility.isWorldEnabled(player.getWorld())) {
+                        Message.sendDisabledWorld(sender, languageConfig);
                         return true;
                     }
 
@@ -231,17 +232,20 @@ public class FlyCMD implements CommandExecutor {
                         Message.sendMessage(sender, "&cOnly players can do this");
                         return true;
                     }
+
                     Player player = (Player) sender;
                     PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
 
-                    if (!utility.isWorldEnabled(player.getWorld())) {
-                        Message.sendMessage(player, languageConfig.getString("Other.DisabledWorld"));
-                        return true;
-                    }
-                    if (!player.hasPermission("timedfly.admin") || !player.hasPermission("timedfly.fly.stopresume")) {
+                    if (!player.hasPermission("timedfly.fly.stopresume") || !player.hasPermission("timedfly.admin")) {
                         Message.sendNoPermission(player, languageConfig, nms);
                         return true;
                     }
+
+                    if (!utility.isWorldEnabled(player.getWorld())) {
+                        Message.sendDisabledWorld(sender, languageConfig);
+                        return true;
+                    }
+
                     if (playerManager.isTimeEnded()) {
                         Message.sendMessage(player, languageConfig.getString("Fly.Message.StopAndResume.NoTime"));
                         return true;
@@ -264,11 +268,12 @@ public class FlyCMD implements CommandExecutor {
                     Player player = (Player) sender;
                     PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
 
-                    if (!utility.isWorldEnabled(player.getWorld())) {
-                        Message.sendMessage(player, languageConfig.getString("Other.DisabledWorld"));
+                    if (!player.hasPermission("timedfly.fly.stopresume") || !player.hasPermission("timedfly.admin")) {
+                        Message.sendNoPermission(player, languageConfig, nms);
                         return true;
                     }
-                    if (!player.hasPermission("timedfly.admin") || !player.hasPermission("timedfly.fly.stopresume")) {
+
+                    if (!utility.isWorldEnabled(player.getWorld())) {
                         Message.sendMessage(player, languageConfig.getString("Other.DisabledWorld"));
                         return true;
                     }
@@ -277,6 +282,7 @@ public class FlyCMD implements CommandExecutor {
                         Message.sendMessage(player, languageConfig.getString("Fly.Message.StopAndResume.NoTime"));
                         return true;
                     }
+
                     if (!playerManager.isTimePaused()) {
                         Message.sendMessage(player, languageConfig.getString("Fly.Message.StopAndResume.Already"));
                         return true;

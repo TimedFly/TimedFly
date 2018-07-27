@@ -52,6 +52,11 @@ public class Inventory implements Listener {
             ConfigurationSection section = itemsConfig.getConfigurationSection("Items");
             for (String string : section.getKeys(false)) {
                 if (slot == itemsConfig.getInt("Items." + string + ".Slot") && event.getCurrentItem().hasItemMeta()) {
+                    if (player.hasPermission("timedfly.fly.onoff")) {
+                        Message.sendMessage(player, Message.color(languageConfig.getString("Other.CannotDo")));
+                        player.closeInventory();
+                        return;
+                    }
                     if (itemsConfig.getBoolean("Items." + string + ".UsePermission") && !player.hasPermission(itemsConfig.getString("Items." + string + ".Permission"))) {
                         player.closeInventory();
                         Message.sendMessage(player, Message.color(itemsConfig.getString("Items." + string + ".PermissionMSG")));
@@ -64,11 +69,9 @@ public class Inventory implements Listener {
                     if (!player.hasPermission("timedfly.limit.bypass") && time > ConfigCache.getLimitMaxTime()) {
                         Message.sendMessage(player, languageConfig.getString("Other.MaxAllowed")
                                 .replace("%time_allowed%", ConfigCache.getLimitMaxTime() + Languages.getFormat("Format.Plural.Minutes")));
+                        player.closeInventory();
                         return;
                     }
-
-                    if (!currencyManager.noCurrencyFound(player, languageConfig)) return;
-                    if (!currencyManager.withdraw(player, price, time)) return;
 
                     if (startCooldown(player, cooldowntime)) {
                         Message.sendMessage(player, languageConfig.getString("Other.OnCooldown")
@@ -76,6 +79,9 @@ public class Inventory implements Listener {
                         player.closeInventory();
                         return;
                     }
+
+                    if (!currencyManager.noCurrencyFound(player, languageConfig)) return;
+                    if (!currencyManager.withdraw(player, price, time)) return;
 
                     playerCache.addTime(time * 60);
                     utility.runCommands(player, itemsConfig.getStringList("Items." + string + ".OnClick"));

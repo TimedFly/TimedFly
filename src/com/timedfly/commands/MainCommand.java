@@ -36,7 +36,7 @@ public class MainCommand implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("timedfly")) {
             if (args.length == 0) {
                 sender.sendMessage(Message.color("&8&m----------------------------------------"));
-                sender.sendMessage(Message.color("&c&lTimedFly &7created by &cBy_Jack"));
+                sender.sendMessage(Message.color("&c&lTimedFly 3 &7created by &cBy_Jack"));
                 new FancyMessage(Message.color("&7To see all commands available use "))
                         .then(Message.color("&c/tf help"))
                         .tooltip(Message.color("&aClick here to get help"))
@@ -46,7 +46,7 @@ public class MainCommand implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("help")) {
                 sender.sendMessage(Message.color("&8&m----------------------------------------"));
-                sender.sendMessage(Message.color("&c&l                   TimedFly"));
+                sender.sendMessage(Message.color("&c&l                  TimedFly 3"));
                 sender.sendMessage("");
                 new FancyMessage(Message.color("&6» &a/tf help &7- show this help page"))
                         .tooltip("§aClick to execute /tf help").command("/tf help").send(sender);
@@ -69,6 +69,8 @@ public class MainCommand implements CommandExecutor {
                         .send(sender);
                 new FancyMessage(Message.color("&6» &a/tf list &7- see all the ItemID"))
                         .tooltip("§aClick to execute /tf list").command("/tf list").send(sender);
+                new FancyMessage(Message.color("&6» &a/tf help 2 &7- show next help page"))
+                        .tooltip("§aClick to execute /tf help 2").command("/tf help2").send(sender);
                 sender.sendMessage("");
                 sender.sendMessage(Message.color("&7Pro Tip: You can hover over the commands and click them"));
                 sender.sendMessage("");
@@ -81,10 +83,8 @@ public class MainCommand implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("help2")) {
                 sender.sendMessage(Message.color("&8&m----------------------------------------"));
-                sender.sendMessage(Message.color("&c&l                   TimedFly"));
+                sender.sendMessage(Message.color("&c&l                  TimedFly 3"));
                 sender.sendMessage(Message.color(""));
-                new FancyMessage(Message.color("&6» &a/tf help 2 &7- show this help page"))
-                        .tooltip("§aClick to execute /tf help 2").command("/tf help2").send(sender);
                 new FancyMessage(Message.color(
                         "&6» &a/tfly &7- opens the fly menu"))
                         .tooltip("§aClick to execute /tfly")
@@ -114,6 +114,8 @@ public class MainCommand implements CommandExecutor {
                         .tooltip("§aClick to execute /tfly timeleft")
                         .command("/tfly timeleft")
                         .send(sender);
+                new FancyMessage(Message.color("&6» &a/tf help 3 &7- show next help page"))
+                        .tooltip("§aClick to execute /tf help 3").command("/tf help3").send(sender);
                 sender.sendMessage(Message.color(""));
                 sender.sendMessage(Message.color("&7Pro Tip: You can hover over the commands and click them"));
                 sender.sendMessage(Message.color(""));
@@ -126,12 +128,12 @@ public class MainCommand implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("help3")) {
                 sender.sendMessage(Message.color("&8&m----------------------------------------"));
-                sender.sendMessage(Message.color("&c&l                   TimedFly"));
+                sender.sendMessage(Message.color("&c&l                  TimedFly 3"));
                 sender.sendMessage(Message.color(""));
                 new FancyMessage(Message.color(
-                        "&6» &a/tfly hide &7- hide and save your time left"))
-                        .tooltip("§aClick to execute /tfly hide")
-                        .command("/tfly hide").send(sender);
+                        "&6» &a/tfly stop &7- stop and save your time left"))
+                        .tooltip("§aClick to execute /tfly stop")
+                        .command("/tfly stop").send(sender);
                 new FancyMessage(Message.color(
                         "&6» &a/tfly resume &7- resume your time left"))
                         .tooltip("§aClick to execute /tfly resume")
@@ -187,7 +189,7 @@ public class MainCommand implements CommandExecutor {
                     int i = 0;
                     sender.sendMessage(Message.color("&8&m----------------------------------------"));
                     sender.sendMessage(
-                            Message.color("&c         TimedFly ItemID List"));
+                            Message.color("&c                  TimedFly 3 ItemID List"));
                     sender.sendMessage(Message.color(""));
                     for (String list : section.getKeys(false)) {
                         i++;
@@ -261,7 +263,7 @@ public class MainCommand implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("permissions")) {
                 sender.sendMessage(Message.color("&8&m----------------------------------------"));
-                sender.sendMessage(Message.color("&c&l             TimedFly Permissions"));
+                sender.sendMessage(Message.color("&c&l                  TimedFly 3 Permissions"));
                 sender.sendMessage(Message.color(""));
                 sender.sendMessage(Message.color("&6» &atimedfly.admin &7- access to all commands"));
                 sender.sendMessage(Message.color("&6» &atimedfly.help &7- access to see the help of the plugin"));

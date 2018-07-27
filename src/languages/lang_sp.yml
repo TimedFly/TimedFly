@@ -77,4 +77,5 @@ Other:
   NoCurrencyFound: '&7Could not find a currency to perform this action. If you are the server admin please enable one in the configuration file.'
   PlayerNotFound: '&7Could not find that player... Make sure the player is online.'
   OnCombat: '&aYou have entered in combat. Disabling flight.'
+  CannotDo: '&cYou cannot do this.'
     

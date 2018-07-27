@@ -45,10 +45,11 @@ public class FlightTime implements Listener {
         int timeLeft = event.getTimeLeft();
         BossBarManager bossBarManager = event.getPlayerManager().getBossBarManager();
 
-        nms.sendActionbar(player, Message.color(languageConfig.getString("Fly.ActionBar")
-                .replace("%timeleft%", TimeFormat.formatLong(event.getTimeLeft()))));
+        if (ConfigCache.isMessagesActionBar())
+            nms.sendActionbar(player, Message.color(languageConfig.getString("Fly.ActionBar")
+                    .replace("%timeleft%", TimeFormat.formatLong(event.getTimeLeft()))));
 
-        bossBarManager.setBarName(Languages.getFormat("Fly.BossBar")
+        if (ConfigCache.isBossBarTimerEnabled()) bossBarManager.setBarName(Languages.getFormat("Fly.BossBar")
                 .replace("%timeleft%", TimeFormat.formatLong(timeLeft))).setBarProgress(timeLeft);
 
         List<String> announce = ConfigCache.getAnnouncerTitleTimes();
@@ -77,10 +78,10 @@ public class FlightTime implements Listener {
 
     @EventHandler
     public void flightTimeEndEvent(FlightTimeEndEvent event) {
+        if (!utility.isWorldEnabled(event.getPlayer().getWorld())) return;
         Player player = event.getPlayer();
 
         if (event.isTimePaused()) return;
-        if (!utility.isWorldEnabled(player.getWorld())) return;
 
         if (ConfigCache.isSoundsEnabled())
             player.playSound(player.getLocation(), Sound.valueOf(ConfigCache.getSoundsFlightDisabled()), 100, 1);
