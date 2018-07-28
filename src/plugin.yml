@@ -1,6 +1,6 @@
 main: com.timedfly.TimedFly
 name: TimedFly
-version: 3.2.0
+version: 3.2.1
 author: By_Jack
 softdepend: [WorldGuard, PlaceholderAPI, TokenManager, ASkyBlock, Vault]
 commands:

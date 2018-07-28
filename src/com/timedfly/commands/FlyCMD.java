@@ -58,7 +58,7 @@ public class FlyCMD implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help2")) Bukkit.getServer().dispatchCommand(sender, "tf help2");
                 if (args[0].equalsIgnoreCase("help3")) Bukkit.getServer().dispatchCommand(sender, "tf help3");
                 if (args[0].equalsIgnoreCase("add")) {
-                    if (!sender.hasPermission("timedfly.fly.add")||!sender.hasPermission("timedfly.admin")) {
+                    if (!(sender.hasPermission("timedfly.fly.add") || sender.hasPermission("timedfly.admin"))) {
                         if (sender instanceof Player) Message.sendNoPermission((Player) sender, languageConfig, nms);
                         return true;
                     }
@@ -107,7 +107,7 @@ public class FlyCMD implements CommandExecutor {
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("set")) {
-                    if (!sender.hasPermission("timedfly.fly.set") || !sender.hasPermission("timedfly.admin")) {
+                    if (!(sender.hasPermission("timedfly.fly.set") || sender.hasPermission("timedfly.admin"))) {
                         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:SetCmd: &7No permission", 1);
                         if (sender instanceof Player) Message.sendNoPermission((Player) sender, languageConfig, nms);
                         return true;
@@ -168,7 +168,7 @@ public class FlyCMD implements CommandExecutor {
                     }
                     Player player = (Player) sender;
 
-                    if (!player.hasPermission("timedfly.fly.onoff") || !player.hasPermission("timedfly.admin")) {
+                    if (!(player.hasPermission("timedfly.fly.onoff") || player.hasPermission("timedfly.admin"))) {
                         Message.sendNoPermission(player, languageConfig, nms);
                         return true;
                     }
@@ -189,7 +189,7 @@ public class FlyCMD implements CommandExecutor {
                     }
                     Player player = (Player) sender;
 
-                    if (!player.hasPermission("timedfly.fly.onoff") || !player.hasPermission("timedfly.admin")) {
+                    if (!(player.hasPermission("timedfly.fly.onoff") || player.hasPermission("timedfly.admin"))) {
                         Message.sendNoPermission(player, languageConfig, nms);
                         return true;
                     }
@@ -236,7 +236,7 @@ public class FlyCMD implements CommandExecutor {
                     Player player = (Player) sender;
                     PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
 
-                    if (!player.hasPermission("timedfly.fly.stopresume") || !player.hasPermission("timedfly.admin")) {
+                    if (!(player.hasPermission("timedfly.fly.stopresume") || player.hasPermission("timedfly.admin"))) {
                         Message.sendNoPermission(player, languageConfig, nms);
                         return true;
                     }
@@ -268,7 +268,7 @@ public class FlyCMD implements CommandExecutor {
                     Player player = (Player) sender;
                     PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
 
-                    if (!player.hasPermission("timedfly.fly.stopresume") || !player.hasPermission("timedfly.admin")) {
+                    if (!(player.hasPermission("timedfly.fly.stopresume") || player.hasPermission("timedfly.admin"))) {
                         Message.sendNoPermission(player, languageConfig, nms);
                         return true;
                     }

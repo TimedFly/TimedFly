@@ -69,8 +69,8 @@ public class MainCommand implements CommandExecutor {
                         .send(sender);
                 new FancyMessage(Message.color("&6» &a/tf list &7- see all the ItemID"))
                         .tooltip("§aClick to execute /tf list").command("/tf list").send(sender);
-                new FancyMessage(Message.color("&6» &a/tf help 2 &7- show next help page"))
-                        .tooltip("§aClick to execute /tf help 2").command("/tf help2").send(sender);
+                new FancyMessage(Message.color("&6» &a/tf help2 &7- show next help page"))
+                        .tooltip("§aClick to execute /tf help2").command("/tf help2").send(sender);
                 sender.sendMessage("");
                 sender.sendMessage(Message.color("&7Pro Tip: You can hover over the commands and click them"));
                 sender.sendMessage("");
@@ -114,8 +114,8 @@ public class MainCommand implements CommandExecutor {
                         .tooltip("§aClick to execute /tfly timeleft")
                         .command("/tfly timeleft")
                         .send(sender);
-                new FancyMessage(Message.color("&6» &a/tf help 3 &7- show next help page"))
-                        .tooltip("§aClick to execute /tf help 3").command("/tf help3").send(sender);
+                new FancyMessage(Message.color("&6» &a/tf help3 &7- show next help page"))
+                        .tooltip("§aClick to execute /tf help3").command("/tf help3").send(sender);
                 sender.sendMessage(Message.color(""));
                 sender.sendMessage(Message.color("&7Pro Tip: You can hover over the commands and click them"));
                 sender.sendMessage(Message.color(""));
