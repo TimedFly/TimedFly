@@ -52,7 +52,7 @@ public class Inventory implements Listener {
             ConfigurationSection section = itemsConfig.getConfigurationSection("Items");
             for (String string : section.getKeys(false)) {
                 if (slot == itemsConfig.getInt("Items." + string + ".Slot") && event.getCurrentItem().hasItemMeta()) {
-                    if (player.hasPermission("timedfly.fly.onoff")) {
+                    if (ConfigCache.isSkipFlightTimeIfHasPerm() && player.hasPermission("timedfly.fly.onoff")) {
                         Message.sendMessage(player, Message.color(languageConfig.getString("Other.CannotDo")));
                         player.closeInventory();
                         return;

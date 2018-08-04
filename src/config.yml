@@ -50,7 +50,10 @@ StopFlyOnGround: false
 # Do not use if you are running the plugin with multiple servers liked via MySQL
 StopTimerOnBlackListedWorld: false
 
-# Att: This is still on beta (currently not working)
+# If true players with "timedfly.fly.onoff" will not be able to get/buy time.
+SkipFlightTimeIfHasPerm: true
+
+# Att: This is still on beta
 # If true a bossbar will appear when a player buys time (only servers v1.9 and above)
 BossBarTimer:
   Enabled: false
