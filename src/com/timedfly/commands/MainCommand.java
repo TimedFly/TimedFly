@@ -292,9 +292,9 @@ public class MainCommand implements CommandExecutor {
                     int itemid = Integer.parseInt(args[1]);
                     int data = player.getItemInHand().getDurability();
                     int ammount = player.getItemInHand().getAmount();
-                    int id = player.getItemInHand().getTypeId();
+                    String material = player.getItemInHand().getType().name();
                     if (itemsConfig.contains("Items." + itemid)) {
-                        itemsConfig.set("Items." + itemid + ".Material", id);
+                        itemsConfig.set("Items." + itemid + ".Material", material);
                         itemsConfig.set("Items." + itemid + ".Data", data);
                         itemsConfig.set("Items." + itemid + ".Ammount", ammount);
                         this.itemsConfig.saveItemsConfig();

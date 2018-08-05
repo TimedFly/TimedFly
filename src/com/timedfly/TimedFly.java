@@ -4,6 +4,7 @@ import com.timedfly.NMS.NMS;
 import com.timedfly.NMS.v_1_10.v_1_10_R1;
 import com.timedfly.NMS.v_1_11.v_1_11_R1;
 import com.timedfly.NMS.v_1_12.v_1_12_R1;
+import com.timedfly.NMS.v_1_13.v_1_13_R1;
 import com.timedfly.NMS.v_1_8.v_1_8_R1;
 import com.timedfly.NMS.v_1_8.v_1_8_R2;
 import com.timedfly.NMS.v_1_8.v_1_8_R3;
@@ -184,6 +185,9 @@ public class TimedFly extends JavaPlugin {
                 break;
             case "v1_12_R1":
                 nms = new v_1_12_R1();
+                break;
+            case "v1_13_R1":
+                nms = new v_1_13_R1();
                 break;
         }
         return nms != null;

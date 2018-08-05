@@ -10,10 +10,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Utilities {
 
@@ -70,18 +67,24 @@ public class Utilities {
     public PlayerManager getPlayerManager(UUID uuid) {
         PlayerManager playerManager = this.playerManagerMap.get(uuid);
         if (playerManager == null) addPlayerManager(uuid, TimedFly.getPlugin(TimedFly.class));
+        Objects.requireNonNull(playerManager).setPlayer(Bukkit.getPlayer(uuid));
         return playerManager;
     }
 
-    public PlayerManager addPlayerManager(UUID uuid, Plugin plugin, int initialTime, int timeLeft) {
+    private void addPlayerManager(UUID uuid, Plugin plugin, int initialTime, int timeLeft) {
         PlayerManager playerManager = new PlayerManager(plugin, uuid, initialTime, timeLeft);
         playerManager.setInServer(true);
         this.playerManagerMap.put(uuid, playerManager);
-        return this.playerManagerMap.get(uuid);
     }
 
-    public PlayerManager addPlayerManager(UUID uuid, Plugin plugin) {
-        return addPlayerManager(uuid, plugin, 0, 0);
+    public void addPlayerManager(UUID uuid, Plugin plugin) {
+        addPlayerManager(uuid, plugin, 0, 0);
+    }
+
+    public void addPlayerManager(UUID uuid, Player player, Plugin plugin) {
+        PlayerManager playerManager = new PlayerManager(plugin, player, uuid, 0, 0);
+        playerManager.setInServer(true);
+        this.playerManagerMap.put(uuid, playerManager);
     }
 
     public long getPlayersTimeLeft() {

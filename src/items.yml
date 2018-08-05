@@ -75,7 +75,8 @@ Items:
   '1':
     Name: '&7%time% &eMinutes Fly'
     Slot: 0
-    Material: 340
+    # If using 1.13 do not use the item's ID
+    Material: book
     Data: 0
     Amount: 1
     Lore:
@@ -111,7 +112,7 @@ Items:
   '2':
     Name: '&7%time% &eMinutes Fly'
     Slot: 1
-    Material: 340
+    Material: book
     Data: 0
     Amount: 1
     Lore:
@@ -147,7 +148,7 @@ Items:
   '3':
     Name: '&7%time% &eMinutes Fly'
     Slot: 2
-    Material: 340
+    Material: book
     Data: 0
     Amount: 1
     Lore:
@@ -187,7 +188,7 @@ Items:
 #  '4':
 #    Name: '&7Click me :D'
 #    Slot: 8
-#    Material: 341
+#    Material: book
 #    Data: 0
 #    Amount: 1
 #    Lore:

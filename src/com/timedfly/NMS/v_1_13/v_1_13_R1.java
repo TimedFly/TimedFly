@@ -1,12 +1,13 @@
-package com.timedfly.NMS.v_1_12;
+package com.timedfly.NMS.v_1_13;
 
 import com.timedfly.NMS.NMS;
-import net.minecraft.server.v1_12_R1.*;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import net.minecraft.server.v1_13_R1.ChatMessageType;
+import net.minecraft.server.v1_13_R1.IChatBaseComponent;
+import net.minecraft.server.v1_13_R1.PacketPlayOutChat;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-public class v_1_12_R1 implements NMS {
+public class v_1_13_R1 implements NMS {
 
     @Override
     public void sendActionbar(Player p, String message) {
@@ -20,12 +21,12 @@ public class v_1_12_R1 implements NMS {
 
     @Override
     public void sendTitle(Player player, String text, int fadeIn, int stay, int fadeOut) {
-        player.sendTitle(text, null);
+        player.sendTitle(null, text, fadeIn, stay, fadeOut);
     }
 
     @Override
     public void sendSubtitle(Player player, String text, int fadeIn, int stay, int fadeOut) {
-        player.sendTitle(null, text);
+        player.sendTitle(null, text, fadeIn, stay, fadeOut);
     }
 
 }

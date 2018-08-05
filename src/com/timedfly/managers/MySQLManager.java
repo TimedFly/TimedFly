@@ -101,22 +101,6 @@ public class MySQLManager {
         }
     }
 
-    public void setTimeLeft(Player player, int time) {
-        String uuid = player.getUniqueId().toString();
-        try {
-            if (this.sqlSetup.getConnection() == null || this.sqlSetup.getConnection().isClosed()) return;
-
-            PreparedStatement statement = this.sqlSetup.getConnection()
-                    .prepareStatement("UPDATE `" + table + "` SET TIMELEFT=? WHERE UUID=?;");
-            statement.setInt(1, time);
-            statement.setString(2, uuid);
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public int getInitialTime(Player player) {
         String uuid = player.getUniqueId().toString();
         Connection connection = this.sqlSetup.getConnection();
@@ -134,55 +118,6 @@ public class MySQLManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
-        }
-    }
-
-    public void setInitialTime(Player player, int time) {
-        String uuid = player.getUniqueId().toString();
-        try {
-            if (this.sqlSetup.getConnection() == null || this.sqlSetup.getConnection().isClosed()) return;
-
-            PreparedStatement statement = this.sqlSetup.getConnection()
-                    .prepareStatement("UPDATE `" + table + "` SET INITIALTIME=? WHERE UUID=?;");
-            statement.setInt(1, time);
-            statement.setString(2, uuid);
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean isTimeStopped(Player player) {
-        String uuid = player.getUniqueId().toString();
-        try {
-            if (this.sqlSetup.getConnection() == null || this.sqlSetup.getConnection().isClosed()) return false;
-
-            PreparedStatement statement = this.sqlSetup.getConnection()
-                    .prepareStatement("SELECT TimeStopped FROM `" + table + "` WHERE UUID = ?;");
-            statement.setString(1, uuid);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            return resultSet.getBoolean(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public void setTimeStopped(Player player, boolean b) {
-        String uuid = player.getUniqueId().toString();
-        try {
-            if (this.sqlSetup.getConnection() == null || this.sqlSetup.getConnection().isClosed()) return;
-
-            PreparedStatement statement = this.sqlSetup.getConnection()
-                    .prepareStatement("UPDATE `" + table + "` SET TimeStopped=? WHERE UUID=?;");
-            statement.setBoolean(1, b);
-            statement.setString(2, uuid);
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

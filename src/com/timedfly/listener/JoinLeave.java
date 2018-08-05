@@ -32,7 +32,7 @@ public class JoinLeave implements Listener {
         Player player = event.getPlayer();
 
         sqlManager.createPlayer(player);
-        utilities.addPlayerManager(player.getUniqueId(), plugin);
+        utilities.addPlayerManager(player.getUniqueId(), player, plugin);
 
         PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
 
@@ -54,7 +54,7 @@ public class JoinLeave implements Listener {
         PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
 
         playerManager.setInServer(false);
-        if (ConfigCache.isStopTimerOnLeave()) playerManager.stopTimedFly(true, true);
+        if (ConfigCache.isStopTimerOnLeave()) playerManager.stopTimedFly(false, true);
         sqlManager.saveData(player, playerManager.getTimeLeft(), playerManager.getInitialTime());
     }
 

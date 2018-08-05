@@ -44,12 +44,4 @@ public class v_1_8_R2 implements NMS {
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(length);
     }
 
-    @Override
-    public void spawnParticle(Player player, String particle, Location location) {
-        float x = (float) location.getX();
-        float y = (float) location.getY();
-        float z = (float) location.getZ();
-        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.valueOf(particle), true, x, y, z, 0, 0, 0, 1, 1);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-    }
 }

@@ -11,6 +11,5 @@ public interface NMS {
 
     void sendSubtitle(Player player, String subtitle, int fadeIn, int stay, int fadeOut);
 
-    void spawnParticle(Player player, String particle, Location location);
 
 }
