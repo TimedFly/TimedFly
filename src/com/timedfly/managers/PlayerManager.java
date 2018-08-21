@@ -59,7 +59,10 @@ public class PlayerManager {
     public void startTimedFly() {
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:startTimedFly: &7Start timed fly first line", 2);
         if (!this.isInServer()) return;
-        if (this.timeLeft <= 0) return;
+        if (this.timeLeft <= 0) {
+            if (isFlying()) stopTimedFly(true, false);
+            return;
+        }
 
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:startTimedFly: &7Showing bossbar", 1);
         this.getBossBarManager().setCurrentTime(getTimeLeft()).setInitialTime(getInitialTime()).show();
@@ -73,7 +76,7 @@ public class PlayerManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (getTimeLeft() > 0) {
+                if (getTimeLeft() > 1) {
                     setTimeLeft(timeLeft--);
                     timeLeft--;
 
