@@ -24,6 +24,7 @@ Fly:
     SetOff: '&aA repülés mód letiltva.'
     TimeLeft: '&aVan %timeleft% idő maradt.'
     OthersTimeLeft: '&a%player% has &7%timeleft% &atime left.'
+    ConsoleBuyLog: '&a%player% &7bought &c%time% of flight time for &c$%price%'
     StopAndResume:
       Stop: '&7Megállítva a repülési idő!'
       Resume: '&7Folytattad a repülési időt!'

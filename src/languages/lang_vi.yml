@@ -29,6 +29,7 @@ Fly:
     SetOff: '&cChế độ bay tắt.'
     TimeLeft: '&aBạn có &7%timeleft% &athời gian còn lại.'
     OthersTimeLeft: '&a%player% has &7%timeleft% &atime left.'
+    ConsoleBuyLog: '&a%player% &7bought &c%time% of flight time for &c$%price%.'
     StopAndResume:
       Stop: '&7Bạn đã Ngừng thời gian bay!'
       Resume: '&7Bạn đã Tiếp tục thời gian bay!'

@@ -10,6 +10,7 @@ import com.timedfly.managers.PlayerManager;
 import com.timedfly.utilities.Message;
 import com.timedfly.utilities.TimeFormat;
 import com.timedfly.utilities.Utilities;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -88,6 +89,10 @@ public class Inventory implements Listener {
 
                     Message.sendMessage(player, languageConfig.getString("Fly.Message.Enabled").replace("%price%",
                             "" + price).replace("%time%", "" + time));
+
+                    if (ConfigCache.isLogConsoleOnBuy())
+                        Message.sendMessage(Bukkit.getConsoleSender(), languageConfig.getString("Fly.Message.ConsoleBuyLog").replace("%price%",
+                                "" + price).replace("%time%", "" + time).replace("%player%", player.getDisplayName()));
 
                     if (ConfigCache.isMessagesTitle()) {
                         nms.sendTitle(player, Message.color(languageConfig.getString("Fly.Titles.Enabled.Title")

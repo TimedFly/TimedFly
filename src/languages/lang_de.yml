@@ -23,6 +23,7 @@ Fly:
     SetOff: '&fFly mode disabled.'
     TimeLeft: '&fVerbleibende Zeit &a%timeleft%.'
     OthersTimeLeft: '&a%player% has &7%timeleft% &atime left.'
+    ConsoleBuyLog: '&a%player% &7bought &c%time% of flight time for &c$%price%'
     StopAndResume:
       Stop: '&7Du hast die Flugzeit &cgestoppt&7!'
       Resume: '&7Du hast die Flugzeit &afortgesetzt&7!'

@@ -38,7 +38,7 @@ public class FlyCMD implements CommandExecutor {
             if (args.length == 0) {
                 if (!ConfigCache.isGuiEnable()) return true;
                 if (!(sender instanceof Player)) {
-                    Message.sendMessage(sender, "§cOnly Player can use this command");
+                    Message.sendMessage(sender, "&cOnly Player can use this command");
                     return true;
                 }
                 Player player = (Player) sender;
@@ -163,10 +163,18 @@ public class FlyCMD implements CommandExecutor {
                 }
                 if (args[0].equalsIgnoreCase("on")) {
                     if (!(sender instanceof Player)) {
-                        Message.sendMessage(sender, "§cOnly Player can use this command");
+                        Message.sendMessage(sender, "&cOnly Player can use this command");
                         return true;
                     }
-                    Player player = (Player) sender;
+
+                    Player player;
+                    if (args.length == 1) player = (Player) sender;
+                    else player = Bukkit.getPlayer(args[1]);
+
+                    if (player == null) {
+                        Message.sendMessage(sender, languageConfig.getString("Other.PlayerNotFound"));
+                        return true;
+                    }
 
                     if (!(player.hasPermission("timedfly.fly.onoff") || player.hasPermission("timedfly.admin"))) {
                         Message.sendNoPermission(player, languageConfig, nms);
@@ -184,10 +192,18 @@ public class FlyCMD implements CommandExecutor {
                 }
                 if (args[0].equalsIgnoreCase("off")) {
                     if (!(sender instanceof Player)) {
-                        Message.sendMessage(sender, "§cOnly Player can use this command");
+                        Message.sendMessage(sender, "&cOnly Player can use this command");
                         return true;
                     }
-                    Player player = (Player) sender;
+
+                    Player player;
+                    if (args.length == 1) player = (Player) sender;
+                    else player = Bukkit.getPlayer(args[1]);
+
+                    if (player == null) {
+                        Message.sendMessage(sender, languageConfig.getString("Other.PlayerNotFound"));
+                        return true;
+                    }
 
                     if (!(player.hasPermission("timedfly.fly.onoff") || player.hasPermission("timedfly.admin"))) {
                         Message.sendNoPermission(player, languageConfig, nms);
@@ -200,17 +216,22 @@ public class FlyCMD implements CommandExecutor {
                     }
 
                     player.setAllowFlight(false);
-                    Message.sendMessage(player, languageConfig.getString("Fly.Message.SetOn"));
+                    Message.sendMessage(player, languageConfig.getString("Fly.Message.SetOff"));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("timeleft")) {
                     Player player;
-
-                    if (args.length == 1) player = (Player) sender;
+                    if (args.length == 1) {
+                        if (!(sender instanceof Player)) {
+                            Message.sendMessage(sender, "&7Usage &a/tfly timeleft <player>");
+                            return true;
+                        }
+                        player = (Player) sender;
+                    }
                     else player = Bukkit.getPlayer(args[1]);
 
-                    if (!(sender instanceof Player)) {
-                        Message.sendMessage(sender, "§7Usage &a/tfly timeleft <player>");
+                    if (player == null) {
+                        Message.sendMessage(sender, languageConfig.getString("Other.PlayerNotFound"));
                         return true;
                     }
 
