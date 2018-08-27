@@ -76,7 +76,7 @@ public class PlayerManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (getTimeLeft() > 1) {
+                if (getTimeLeft() > 0) {
                     setTimeLeft(timeLeft--);
                     timeLeft--;
 

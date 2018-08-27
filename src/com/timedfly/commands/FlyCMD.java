@@ -239,10 +239,10 @@ public class FlyCMD implements CommandExecutor {
 
                     if (playerManager.getTimeLeft() > 0) {
                         long timeLeft = playerManager.getTimeLeft();
-                        Message.sendMessage(player, languageConfig.getString("Fly.Message.TimeLeft")
+                        Message.sendMessage(sender, languageConfig.getString("Fly.Message.TimeLeft")
                                 .replace("%timeleft%", TimeFormat.formatLong(timeLeft)));
                     } else {
-                        Message.sendMessage(player, languageConfig.getString("Fly.Message.TimeLeft")
+                        Message.sendMessage(sender, languageConfig.getString("Fly.Message.TimeLeft")
                                 .replace("%timeleft%", playerManager.getTimeLeft() != 0 || playerManager.isTimePaused()
                                         ? TimeFormat.formatLong(playerManager.getTimeLeft()) : languageConfig.getString("Format.NoTimeLeft")));
                     }

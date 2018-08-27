@@ -58,6 +58,8 @@ public class UpdateConfig {
         configuration.addDefault("OnFlyDisableCommands.Enabled", false);
         configuration.addDefault("StopFlyOnAttack", true);
         configuration.addDefault("StopFlyOnGround", false);
+        configuration.addDefault("SkipFlightTimeIfHasPerm", false);
+        configuration.addDefault("LogConsoleOnBuy", false);
         configuration.addDefault("OnFlyDisableCommands.Commands", Arrays.asList("[console] say %player% is using hacks D:", "[player] say i'm using hacks >:D"));
         configuration.addDefault("DisableFlyOnGround", true);
         configuration.addDefault("World-List.Type", "all");

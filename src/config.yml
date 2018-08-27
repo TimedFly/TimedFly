@@ -51,7 +51,10 @@ StopFlyOnGround: false
 StopTimerOnBlackListedWorld: false
 
 # If true players with "timedfly.fly.onoff" will not be able to get/buy time.
-SkipFlightTimeIfHasPerm: true
+SkipFlightTimeIfHasPerm: false
+
+# Set to true if you want to get a message in the console saying who bought flight time.
+LogConsoleOnBuy: false
 
 # Att: This is still on beta
 # If true a bossbar will appear when a player buys time (only servers v1.9 and above)
