@@ -23,10 +23,13 @@ public class PlayerManager {
     private int timeLeft;
     private int initialTime;
     private boolean timePaused;
+    private boolean timeManuallyPaused;
+    private boolean inCombat;
     private boolean flying;
     private boolean inServer;
     private boolean timeEnded;
     private BossBarManager bossBarManager;
+    private RefundManager refundManager;
     private MySQLManager sqlManager;
     private int taskId;
 
@@ -41,6 +44,7 @@ public class PlayerManager {
         this.flying = false;
         this.timeEnded = true;
         this.player = getPlayerFromUUID();
+        this.refundManager = new RefundManager(this);
     }
 
     public PlayerManager(Plugin plugin, Player player, UUID uuid, int initialTime, int timeLeft) {
@@ -54,6 +58,7 @@ public class PlayerManager {
         this.flying = false;
         this.timeEnded = true;
         this.player = player;
+        this.refundManager = new RefundManager(this);
     }
 
     public void startTimedFly() {
@@ -73,7 +78,7 @@ public class PlayerManager {
 
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:startTimedFly: &7Starting runnable", 2);
 
-        new BukkitRunnable() {
+        if (this.timeLeft > 0 && !this.timeEnded) new BukkitRunnable() {
             @Override
             public void run() {
                 if (getTimeLeft() > 0) {
@@ -119,7 +124,8 @@ public class PlayerManager {
             this.setFlying(false);
         }
 
-        if (save) this.sqlManager.saveData(getPlayerFromUUID(), getTimeLeft(), getInitialTime());
+        if (save)
+            this.sqlManager.saveData(getPlayerFromUUID(), getTimeLeft(), getInitialTime(), this.isTimeManuallyPaused());
         Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:stopTimedFly: &7TimeLeft: " + getTimeLeft() + ", Initial: " + getInitialTime(), 1);
 
         FlightTimeEndEvent event = new FlightTimeEndEvent(this.player, this.uuid, this.initialTime, this.timeLeft, timePaused, this);
@@ -140,6 +146,7 @@ public class PlayerManager {
             this.setInitialTime(time);
         }
 
+        if (this.isTimeManuallyPaused()) return this;
         if (this.isInServer() && !this.isTimePaused() && this.isTimeEnded()) {
             Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:AddTime: &7Starting timed fly", 1);
             this.startTimedFly();
@@ -155,6 +162,7 @@ public class PlayerManager {
         this.setTimeLeft(time);
         this.setInitialTime(time);
 
+        if (this.isTimeManuallyPaused()) return this;
         if (this.isInServer() && !this.isTimePaused() && this.isTimeEnded()) {
             Message.sendDebugMessage(this.getClass().getSimpleName() + "&c:SetTime: &7Starting timed fly", 2);
             this.startTimedFly();
@@ -173,6 +181,10 @@ public class PlayerManager {
 
     public BossBarManager getBossBarManager() {
         return bossBarManager;
+    }
+
+    public RefundManager getRefundManager() {
+        return refundManager;
     }
 
     public Player getPlayerFromUUID() {
@@ -216,6 +228,15 @@ public class PlayerManager {
         return this;
     }
 
+    public boolean isTimeManuallyPaused() {
+        return timeManuallyPaused;
+    }
+
+    public PlayerManager setTimeManuallyPaused(boolean timeManuallyPaused) {
+        this.timeManuallyPaused = timeManuallyPaused;
+        return this;
+    }
+
     public boolean isFlying() {
         return flying;
     }
@@ -233,6 +254,15 @@ public class PlayerManager {
 
     public PlayerManager setTimeEnded(boolean timeEnded) {
         this.timeEnded = timeEnded;
+        return this;
+    }
+
+    public boolean isInCombat() {
+        return inCombat;
+    }
+
+    public PlayerManager setInCombat(boolean inCombat) {
+        this.inCombat = inCombat;
         return this;
     }
 }

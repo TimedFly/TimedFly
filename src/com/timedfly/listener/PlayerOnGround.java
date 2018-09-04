@@ -29,10 +29,17 @@ public class PlayerOnGround implements Listener {
 
         PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
 
-        if (playerManager.isTimePaused() || playerManager.isTimeEnded()) return;
+        if (playerManager.getTimeLeft() < 1) {
+            playerManager.stopTimedFly(true, false);
+            return;
+        }
+        if (playerManager.isTimeManuallyPaused() || playerManager.isTimePaused() || playerManager.isTimeEnded())
+            return;
 
-        playerManager.stopTimedFly(false, true);
-        player.setAllowFlight(true);
+        if (!playerManager.isInCombat()) {
+            playerManager.stopTimedFly(false, true);
+            player.setAllowFlight(true);
+        }
 
     }
 
@@ -47,7 +54,11 @@ public class PlayerOnGround implements Listener {
 
         PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
 
-        if (!playerManager.isTimePaused()) return;
+        if (playerManager.getTimeLeft() < 1) {
+            playerManager.stopTimedFly(true, false);
+            return;
+        }
+        if (playerManager.isTimeManuallyPaused() || playerManager.isInCombat() || !playerManager.isTimePaused()) return;
 
         playerManager.startTimedFly();
     }

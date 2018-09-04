@@ -59,7 +59,7 @@ public class MySQLManager {
         }
     }
 
-    public void saveData(Player player, int timeleft, int initial) {
+    public void saveData(Player player, int timeleft, int initial, boolean manuallyStopped) {
         String uuid = player.getUniqueId().toString();
         Connection connection = this.sqlSetup.getConnection();
 
@@ -71,7 +71,7 @@ public class MySQLManager {
 
             statement.setInt(1, timeleft);
             statement.setInt(2, initial);
-            statement.setBoolean(3, false);
+            statement.setBoolean(3, manuallyStopped);
             statement.setString(4, uuid);
 
             statement.executeUpdate();
@@ -118,6 +118,26 @@ public class MySQLManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    public boolean getManuallyStopped(Player player) {
+        String uuid = player.getUniqueId().toString();
+        Connection connection = this.sqlSetup.getConnection();
+
+        try {
+            if (connection == null || connection.isClosed()) return false;
+
+            PreparedStatement statement = connection.prepareStatement("SELECT TimeStopped FROM `" + table + "` WHERE UUID = ?;");
+            statement.setString(1, uuid);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            Boolean initial = resultSet.getBoolean(1);
+            resultSet.close();
+            return initial;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

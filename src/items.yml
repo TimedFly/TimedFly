@@ -53,6 +53,8 @@
 #    Price: 2000
 #    Time in minutes of flight time
 #    Time: 15
+#    Time the player needs to wait before getting more flight time. Use s for seconds, m for minutes, and s for seconds
+#    Cooldown: 15m
 #
 #   Some Placeholders you could use are:
 #   %player% - player executing the command.
@@ -109,6 +111,7 @@ Items:
     - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
     Price: 2000
     Time: 15
+    Cooldown: 15m
   '2':
     Name: '&7%time% &eMinutes Fly'
     Slot: 1
@@ -145,6 +148,7 @@ Items:
     - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
     Price: 5000
     Time: 20
+    Cooldown: 30m
   '3':
     Name: '&7%time% &eMinutes Fly'
     Slot: 2
@@ -183,36 +187,4 @@ Items:
     - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
     Price: 10000
     Time: 60
-
-# remove the # to use
-#  '4':
-#    Name: '&7Click me :D'
-#    Slot: 8
-#    Material: book
-#    Data: 0
-#    Amount: 1
-#    Lore:
-#    - ' '
-#    - '&cThis is a custom item'
-#    - '&7Don''t forget to add more'
-#    - '&7Slots in the &econfig.yml &7if'
-#    - '&7You want more items'
-#    - ' '
-#    Hide_Attributes: false
-#    Hide_Enchants: true
-#    Hide_Place_On: false
-#    Hide_Potion_Effects: false
-#    Hide_Unbreakable: false
-#    Glow: true
-#    UsePermission: true
-#    Permission: something.here
-#    PermissionMSG: 'You don''t have permission to use this item. Try
-#      buying a rank'
-#    FlyItem: false
-#    OnClick:
-#    - '[player] say Hi! this is a test and I''m a player'
-#    - '[console] tell %player% you clicked me and I''m a console'
-#    - '[message] &9I''m a message that supports &cc&ao&bl&do&er &9codes.'
-#    - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
-#    - '[close]'
-      
+    Cooldown: 1h

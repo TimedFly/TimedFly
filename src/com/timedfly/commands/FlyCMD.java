@@ -3,7 +3,9 @@ package com.timedfly.commands;
 import com.timedfly.NMS.NMS;
 import com.timedfly.configurations.ConfigCache;
 import com.timedfly.configurations.Languages;
+import com.timedfly.managers.CooldownManager;
 import com.timedfly.managers.PlayerManager;
+import com.timedfly.managers.RefundManager;
 import com.timedfly.utilities.FlyGUI;
 import com.timedfly.utilities.Message;
 import com.timedfly.utilities.TimeFormat;
@@ -15,6 +17,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import java.text.NumberFormat;
 
 public class FlyCMD implements CommandExecutor {
 
@@ -57,6 +61,51 @@ public class FlyCMD implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help")) Bukkit.getServer().dispatchCommand(sender, "tf help");
                 if (args[0].equalsIgnoreCase("help2")) Bukkit.getServer().dispatchCommand(sender, "tf help2");
                 if (args[0].equalsIgnoreCase("help3")) Bukkit.getServer().dispatchCommand(sender, "tf help3");
+                if (args[0].equalsIgnoreCase("fix")) {
+                    if (!(sender instanceof Player)) {
+                        Message.sendMessage(sender, "&cOnly Player can use this command");
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+                    PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
+
+                    if (playerManager == null) return true;
+                    if (playerManager.isTimeManuallyPaused() || playerManager.isTimePaused() || playerManager.isTimeEnded() ||
+                            playerManager.isInCombat() || playerManager.getTimeLeft() < 0) return true;
+
+                    playerManager.startTimedFly();
+
+                }
+                if (args[0].equalsIgnoreCase("refund")) {
+                    if (!(sender instanceof Player)) {
+                        Message.sendMessage(sender, "&cOnly Player can use this command");
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+                    PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
+
+                    if (CooldownManager.isInCooldown(player.getUniqueId(), "refund_cmd")) {
+                        Message.sendMessage(player, languageConfig.getString("Other.OnCooldown")
+                                .replace("%cooldown%", TimeFormat.formatLong(CooldownManager
+                                        .getTimeLeft(player.getUniqueId(), "refund_cmd"))));
+                        return true;
+                    }
+
+                    new CooldownManager(player.getUniqueId(), "refund_cmd", 5).start();
+
+                    if (!player.hasPermission("timedfly.refund") || !player.hasPermission("timedfly.admin")) {
+                        Message.sendNoPermission(player, languageConfig, nms);
+                        return true;
+                    }
+                    if (playerManager == null) return true;
+
+                    RefundManager refundManager = playerManager.getRefundManager();
+                    refundManager.refundExec(player, languageConfig);
+
+                    return true;
+                }
                 if (args[0].equalsIgnoreCase("add")) {
                     if (!(sender.hasPermission("timedfly.fly.add") || sender.hasPermission("timedfly.admin"))) {
                         if (sender instanceof Player) Message.sendNoPermission((Player) sender, languageConfig, nms);
@@ -177,7 +226,7 @@ public class FlyCMD implements CommandExecutor {
                     }
 
                     if (!(player.hasPermission("timedfly.fly.onoff") || player.hasPermission("timedfly.admin"))) {
-                        Message.sendNoPermission(player, languageConfig, nms);
+                        Message.sendNoPermission((Player) sender, languageConfig, nms);
                         return true;
                     }
 
@@ -187,7 +236,7 @@ public class FlyCMD implements CommandExecutor {
                     }
 
                     player.setAllowFlight(true);
-                    Message.sendMessage(player, languageConfig.getString("Fly.Message.SetOn"));
+                    Message.sendMessage(sender, languageConfig.getString("Fly.Message.SetOn"));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("off")) {
@@ -206,7 +255,7 @@ public class FlyCMD implements CommandExecutor {
                     }
 
                     if (!(player.hasPermission("timedfly.fly.onoff") || player.hasPermission("timedfly.admin"))) {
-                        Message.sendNoPermission(player, languageConfig, nms);
+                        Message.sendNoPermission((Player) sender, languageConfig, nms);
                         return true;
                     }
 
@@ -216,7 +265,7 @@ public class FlyCMD implements CommandExecutor {
                     }
 
                     player.setAllowFlight(false);
-                    Message.sendMessage(player, languageConfig.getString("Fly.Message.SetOff"));
+                    Message.sendMessage(sender, languageConfig.getString("Fly.Message.SetOff"));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("timeleft")) {
@@ -227,8 +276,7 @@ public class FlyCMD implements CommandExecutor {
                             return true;
                         }
                         player = (Player) sender;
-                    }
-                    else player = Bukkit.getPlayer(args[1]);
+                    } else player = Bukkit.getPlayer(args[1]);
 
                     if (player == null) {
                         Message.sendMessage(sender, languageConfig.getString("Other.PlayerNotFound"));
@@ -275,7 +323,7 @@ public class FlyCMD implements CommandExecutor {
                     if (ConfigCache.isBossBarTimerEnabled()) playerManager.getBossBarManager().hide();
 
                     playerManager.stopTimedFly(true, true);
-                    playerManager.setTimePaused(true);
+                    playerManager.setTimeManuallyPaused(true);
 
                     Message.sendMessage(player, languageConfig.getString("Fly.Message.StopAndResume.Stop"));
 
@@ -304,11 +352,12 @@ public class FlyCMD implements CommandExecutor {
                         return true;
                     }
 
-                    if (!playerManager.isTimePaused()) {
+                    if (!playerManager.isTimeManuallyPaused()) {
                         Message.sendMessage(player, languageConfig.getString("Fly.Message.StopAndResume.Already"));
                         return true;
                     }
                     playerManager.startTimedFly();
+                    playerManager.setTimeManuallyPaused(false);
 
                     if (ConfigCache.isBossBarTimerEnabled()) playerManager.getBossBarManager().show();
                     Message.sendMessage(player, languageConfig.getString("Fly.Message.StopAndResume.Resume"));

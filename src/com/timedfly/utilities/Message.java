@@ -1,7 +1,6 @@
 package com.timedfly.utilities;
 
 import com.timedfly.NMS.NMS;
-import com.timedfly.TimedFly;
 import com.timedfly.configurations.ConfigCache;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

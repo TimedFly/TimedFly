@@ -1,0 +1,82 @@
+# This is when the player has the choosen time left it says something
+Announcer:
+  Chat:
+    Message: '&aO modo Voar sera desativado em &7%time%'
+  Titles:
+    Title: '&c%time%'
+    SubTitle: '&fPara desativar o modo Voar'
+Fly:
+  Message:
+    ToPlayer: '&aModo Voar ativado para &7%target% &apor &7%time% &aminutos.'
+    FromPlayer: '&a &7%player% &aativou seu fly por &7%time% &aminutos.'
+    AddTime: '&aFoi adicionado &7%time% &aminuto(s) de Fly para &7%player%'
+    AddTimeToPlayer: '&aVoce ganhou mais &7%time% &aminuto(s) deFly.'
+    Enabled: '&aYou have added &7%time% &aminutes to your flight time for &7$%price%.'
+    Disabled: '&aModo de voo desativado. Você pode comprar outro.'
+    NoMoney: '&aVoce nao tem dinheiro suficiente.'
+    NoExp: '&aVoce esta sem Xp necessario para comprar. Voce precisa ter &e%exp_needed%'
+    NoLevels: '&aVoce esta sem Nivel necessario para comprar. Voce precisa ter &e%levels_needed%'
+    SetOn: '&aModo Voo Ativado.'
+    SetOff: '&aModo Voo Desativado'
+    TimeLeft: '&aTempo restante: &7%timeleft% '
+    OthersTimeLeft: '&a%player% has &7%timeleft% &atime left.'
+    StopAndResume:
+      Stop: '&7You have &cStopped &7the flight time!'
+      Resume: '&7You have &aResumed &7the flight time!'
+      NoTime: '&7You don''t have any time left to do this!'
+      Already: '&7You have done this already!'
+  ActionBar: '&bVoce ainda pode voar por &6%timeleft% '
+  BossBar: '&aVoce tem %timeleft% d Voo'
+  Titles:
+    Enabled:
+      Title: '&cFoi adicionado'
+      SubTitle: '&f%time% de Voo'
+    Disabled:
+      Title: '&cVoce nao pode mais voar'
+      SubTitle: '&f:('
+Format:
+  Singular:
+    Days: dia
+    Hour: hora
+    Minute: minuto
+    Second: segundo
+  Plural:
+    Days: dias
+    Hours: horas
+    Minutes: minutos
+    Seconds: segundos
+  NoTimeLeft: Não há mais tempo
+Other:
+  Refund:
+    TimeLimit: '&7You have reached the time limit to be able to refund this. Limit is &a%refund_limit%'
+    MaxRefunds: '&7You have reached the max refunds today. Try again in &a%refund_cooldown%'
+    NotValid: '&7There was an error while trying to refund.'
+    Refunded: '&7You have been refunded &a%refund_amount%.'
+    Disabled: '&7Refunds are disabled.'
+  Fixed: '&7Your flight has been fixed.'
+  NoPermission:
+    Message: '&cVocê não tem permissão para usar o comando'
+    Title: '&cSem permissao'
+    SubTitle: '&7:('
+  SetItem:
+    Usage: '&eUse: &7/tf setItem <itemID>'
+    Found: '&eYou have changed the item of &7%itemid%.'
+    NotFound: '&eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
+  SetTime:
+    Usage: '&eUsage: &7/tf setTime <itemID> <minutes>'
+    Found: '&eYou have set the time of &7%itemid% &eto &7%time%.'
+    NotFound: '&eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
+  SetPrice:
+    Usage: '&eUsage: &7/tf setPrice <itemID> <price>'
+    Found: '&eYou have set the price of &7%itemid% &eto &7$%price%.'
+    NotFound: '&eI could not find the itemID &7%itemid%. Use /tf list to see all Items.'
+  DisabledWorld: '&eThis world is not enabled. If you think this is an error please
+    report it to the Admin.'
+  MaxReached: '&eVocê atingiu o limite máximo de seu tempo de voo permitido.'
+  MaxAllowed: '&eVocê não pode escolher mais do que seu tempo máximo permitido (&c%time_allowed%&7).'
+  OnCooldown: '&7Você não pode usar isso por %cooldown%'
+  NoCurrencyFound: '&7Não foi possível encontrar uma moeda para executar esta ação. Se você é o administrador do servidor, por favor, habilite um no arquivo de configuração.'
+  PlayerNotFound: '&7Não foi possível encontrar esse jogador ... Verifique se o player está on-line.'
+  OnCombat: '&aVocê entrou em combate. Desativando o voo.'
+  CannotDo: '&cVocê não pode fazer isso.'
+

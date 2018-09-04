@@ -7,7 +7,9 @@ import java.util.List;
 
 public class ConfigCache {
     private static String prefix;
-    private static String cooldown;
+    private static boolean refundsEnabled;
+    private static String refundTime;
+    private static int refundsPerDay;
     private static String sqlType;
     private static String mysqlDB;
     private static String mysqlHost;
@@ -29,6 +31,7 @@ public class ConfigCache {
     private static String soundsAnnouncer;
     private static String soundsFlightDisabled;
     private static boolean useTokenManager;
+    private static boolean usePlayerPoints;
     private static boolean useVault;
     private static boolean useLevelsCurrency;
     private static boolean useExpCurrency;
@@ -50,7 +53,6 @@ public class ConfigCache {
     private static boolean autoDownload;
     private static String language;
     private  FileConfiguration configuration;
-    private static boolean disableFlyOnGround;
     private static boolean stopFlyOnAttack;
     private static boolean stopFlyOnGround;
     private static boolean skipFlightTimeIfHasPerm;
@@ -65,7 +67,9 @@ public class ConfigCache {
 
     private void loadConfiguration() {
         ConfigCache.prefix = configuration.getString("Prefix");
-        ConfigCache.cooldown = configuration.getString("Cooldown");
+        ConfigCache.refundsEnabled = configuration.getBoolean("Refunds.Enabled");
+        ConfigCache.refundTime = configuration.getString("Refunds.TimeRefund");
+        ConfigCache.refundsPerDay = configuration.getInt("Refunds.RefundsPerDay");
         ConfigCache.sqlType = configuration.getString("Type");
         ConfigCache.mysqlDB = configuration.getString("MySQL.Database");
         ConfigCache.mysqlHost = configuration.getString("MySQL.Host");
@@ -87,6 +91,7 @@ public class ConfigCache {
         ConfigCache.soundsAnnouncer = configuration.getString("Sounds.Announcer");
         ConfigCache.soundsFlightDisabled = configuration.getString("Sounds.FlightDisabled");
         ConfigCache.useTokenManager = configuration.getBoolean("UseTokenManager");
+        ConfigCache.usePlayerPoints = configuration.getBoolean("UsePlayerPoints");
         ConfigCache.useVault = configuration.getBoolean("UseVault");
         ConfigCache.useLevelsCurrency = configuration.getBoolean("UseLevelsCurrency");
         ConfigCache.useExpCurrency = configuration.getBoolean("UseExpCurrency");
@@ -101,7 +106,6 @@ public class ConfigCache {
         ConfigCache.messagesActionBar = configuration.getBoolean("Messages.ActionBar");
         ConfigCache.onFlyDisableCommandsEnabled = configuration.getBoolean("OnFlyDisableCommands.Enabled");
         ConfigCache.onFlyDisableCommands = configuration.getStringList("OnFlyDisableCommands.Commands");
-        ConfigCache.disableFlyOnGround = configuration.getBoolean("disableFlyOnGround");
         ConfigCache.worldListType = configuration.getString("World-List.Type");
         ConfigCache.worldListWorlds = configuration.getStringList("World-List.Worlds");
         ConfigCache.aSkyblockIntegration = configuration.getBoolean("ASkyblockIntegration");
@@ -119,8 +123,16 @@ public class ConfigCache {
         return prefix;
     }
 
-    public static String getCooldown() {
-        return cooldown;
+    public static boolean isRefundsEnabled() {
+        return refundsEnabled;
+    }
+
+    public static String getRefundTime() {
+        return refundTime;
+    }
+
+    public static int getRefundsPerDay() {
+        return refundsPerDay;
     }
 
     public static String getSqlType() {
@@ -207,6 +219,10 @@ public class ConfigCache {
         return useTokenManager;
     }
 
+    public static boolean isUsePlayerPoints() {
+        return usePlayerPoints;
+    }
+
     public static boolean isUseVault() {
         return useVault;
     }
@@ -285,10 +301,6 @@ public class ConfigCache {
 
     public static String getLanguage() {
         return language;
-    }
-
-    public static boolean isDisableFlyOnGround() {
-        return disableFlyOnGround;
     }
 
     public static boolean isStopFlyOnAttack() {

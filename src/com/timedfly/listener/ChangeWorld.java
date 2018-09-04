@@ -29,6 +29,12 @@ public class ChangeWorld implements Listener {
 
         if (playerManager == null) return;
 
+        if (playerManager.getTimeLeft() < 1) {
+            playerManager.stopTimedFly(true, false);
+            return;
+        }
+
+        if (playerManager.isTimeManuallyPaused()) return;
         if (utility.isWorldEnabled(world)) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 if (!playerManager.isTimeEnded()) {
@@ -41,7 +47,6 @@ public class ChangeWorld implements Listener {
         } else if (!playerManager.isTimeEnded()) {
             if (ConfigCache.isStopTimerOnBlackListedWorld()) {
                 playerManager.stopTimedFly(false, true);
-                playerManager.setTimePaused(true);
             } else {
                 playerManager.getBossBarManager().hide();
                 player.setAllowFlight(false);

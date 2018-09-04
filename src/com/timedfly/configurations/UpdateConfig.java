@@ -21,7 +21,9 @@ public class UpdateConfig {
 
         configuration.options().header(getHeader());
         configuration.addDefault("Prefix", "&cTimedFly > ");
-        configuration.addDefault("Cooldown", "1h");
+        configuration.addDefault("Refunds.Enabled", true);
+        configuration.addDefault("Refunds.TimeRefund", "5m");
+        configuration.addDefault("Refunds.RefundsPerDay", 2);
         configuration.addDefault("Type", "sqlite");
         configuration.addDefault("MySQL.Database", "database");
         configuration.addDefault("MySQL.Host", "localhost");
@@ -43,6 +45,7 @@ public class UpdateConfig {
         configuration.addDefault("Sounds.Announcer", "ENTITY_EXPERIENCE_ORB_PICKUP");
         configuration.addDefault("Sounds.FlightDisabled", "ENTITY_WITHER_DEATH");
         configuration.addDefault("ASkyblockIntegration", true);
+        configuration.addDefault("UsePlayerPoints", false);
         configuration.addDefault("UseTokenManager", false);
         configuration.addDefault("UseVault", true);
         configuration.addDefault("UseLevelsCurrency", false);

@@ -1,8 +1,8 @@
 main: com.timedfly.TimedFly
 name: TimedFly
-version: 3.3.2
+version: 3.4.0
 author: By_Jack
-softdepend: [WorldGuard, PlaceholderAPI, TokenManager, ASkyBlock, Vault]
+softdepend: [WorldGuard, PlaceholderAPI, TokenManager, ASkyBlock, Vault, PlayerPoints]
 commands:
   timedfly:
     aliases: [tf, timedf]

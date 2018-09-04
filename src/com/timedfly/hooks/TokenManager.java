@@ -25,6 +25,14 @@ public class TokenManager {
         return tokenManager.getTokens(player).orElse(0);
     }
 
+    public void addTokens(Player player, int price) {
+        if (!HooksManager.isTokenManagerEnabled()) return;
+
+        final me.realized.tokenmanager.api.TokenManager tokenManager = getTokenManager();
+
+        tokenManager.addTokens(player.getUniqueId().toString(), price);
+    }
+
     public void removeTokens(Player player, int price) {
         if (!HooksManager.isTokenManagerEnabled()) return;
 

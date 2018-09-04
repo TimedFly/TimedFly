@@ -40,8 +40,10 @@ public class JoinLeave implements Listener {
         if (!utilities.isWorldEnabled(player.getWorld())) return;
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            playerManager.setInServer(true).setInitialTime(sqlManager.getInitialTime(player)).setTimeLeft(sqlManager.getTimeLeft(player));
-            if (!playerManager.isTimePaused()) playerManager.startTimedFly();
+            playerManager.setInServer(true).setInitialTime(sqlManager.getInitialTime(player)).setTimeLeft(sqlManager.getTimeLeft(player))
+                    .setTimeManuallyPaused(sqlManager.getManuallyStopped(player));
+
+            if (!playerManager.isTimePaused() && !playerManager.isTimeManuallyPaused()) playerManager.startTimedFly();
             if (playerManager.getTimeLeft() > 0 && ConfigCache.isJoinFlyingEnabled())
                 player.teleport(player.getLocation().add(0, ConfigCache.getJoinFlyingHeight(), 0));
         }, 20);
@@ -55,7 +57,7 @@ public class JoinLeave implements Listener {
 
         playerManager.setInServer(false);
         if (ConfigCache.isStopTimerOnLeave()) playerManager.stopTimedFly(false, true);
-        sqlManager.saveData(player, playerManager.getTimeLeft(), playerManager.getInitialTime());
+        sqlManager.saveData(player, playerManager.getTimeLeft(), playerManager.getInitialTime(), playerManager.isTimeManuallyPaused());
     }
 
 }

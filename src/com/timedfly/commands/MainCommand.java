@@ -131,6 +131,14 @@ public class MainCommand implements CommandExecutor {
                 sender.sendMessage(Message.color("&c&l                  TimedFly 3"));
                 sender.sendMessage(Message.color(""));
                 new FancyMessage(Message.color(
+                        "&6» &a/tfly refund &7- get your money back"))
+                        .tooltip("§aClick to execute /tfly refund")
+                        .command("/tfly refund").send(sender);
+                new FancyMessage(Message.color(
+                        "&6» &a/tfly fix &7- get your flight ability back"))
+                        .tooltip("§aClick to execute /tfly fix")
+                        .command("/tfly fix").send(sender);
+                new FancyMessage(Message.color(
                         "&6» &a/tfly stop &7- stop and save your time left"))
                         .tooltip("§aClick to execute /tfly stop")
                         .command("/tfly stop").send(sender);

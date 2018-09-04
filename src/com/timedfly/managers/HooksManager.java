@@ -21,6 +21,9 @@ public class HooksManager {
             new com.timedfly.hooks.PlaceholderAPI(plugin, languages, utilities).hook();
             Message.sendConsoleMessage("&7Hooking into PlaceholderAPI");
         }
+        if (ConfigCache.isUseVault() && isVaultEnabled()) {
+            Message.sendConsoleMessage("&7Hooking into VaultAPI.");
+        }
         if (ConfigCache.isaSkyblockIntegration() && isASkyBlockEnabled()) {
             Bukkit.getPluginManager().registerEvents(new aSkyblock(utilities), plugin);
             Message.sendConsoleMessage("&7Hooking into aSkyblock");
@@ -32,8 +35,12 @@ public class HooksManager {
             worldGuard.registerFlag();
             Message.sendConsoleMessage("&7Hooking into WorldGuard");
         }*/
-        if (isTokenManagerEnabled()) {
+        if (ConfigCache.isUseTokenManager() && isTokenManagerEnabled()) {
             Message.sendConsoleMessage("&7Hooking into TokensManager");
+        }
+
+        if (ConfigCache.isUsePlayerPoints() && isPlayerPointsEnabled()) {
+            Message.sendConsoleMessage("&7Hooking into PlayerPoints");
         }
 
         Metrics metrics = new Metrics(plugin);
@@ -51,6 +58,15 @@ public class HooksManager {
         else return Message.color(text);
     }
 
+    public static boolean setupEconomy() {
+        return isVaultEnabled() || isPlayerPointsEnabled() || isTokenManagerEnabled() || ConfigCache.isUseLevelsCurrency()
+                || ConfigCache.isUseExpCurrency();
+    }
+
+    public static boolean isVaultEnabled() {
+        return Bukkit.getPluginManager().isPluginEnabled("Vault");
+    }
+
     public static boolean isPapiEnabled() {
         return Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
@@ -65,6 +81,10 @@ public class HooksManager {
 
     public static boolean isTokenManagerEnabled() {
         return Bukkit.getPluginManager().isPluginEnabled("TokenManager");
+    }
+
+    public static boolean isPlayerPointsEnabled() {
+        return Bukkit.getPluginManager().isPluginEnabled("PlayerPoints");
     }
 
 }

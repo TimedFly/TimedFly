@@ -10,7 +10,15 @@ Prefix: '&cTimedFly >> '
 
 # Cooldown time to get more flight time,use s for seconds, m for minutes
 # and h for hours
-Cooldown: 1h
+Cooldown: 1h # Moved to items.yml
+
+# Enable this so your players can refund their flight time if they bought it by accident.
+Refunds:
+  Enabled: true
+  # The time they have until the refund is valid
+  TimeRefund: 5m
+  # The amount of refunds players can make a day
+  RefundsPerDay: 2
 
 # Type: sqlite for flatfile or mysql for an external database.
 Type: 'sqlite'
@@ -76,6 +84,9 @@ Sounds:
 
 # If true the currency used will be from TokenManager, balance placeholder: %tokens%
 UseTokenManager: false
+
+# If true the currency used will be from PlayerPoints, balance placeholder: %points%
+UsePlayerPoints: false
 
 # If true the currency used will be from Vault, balance placeholder: %balance%
 UseVault: true

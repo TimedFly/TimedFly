@@ -1,13 +1,13 @@
 package com.timedfly.utilities;
 
-import com.timedfly.TimedFly;
 import com.timedfly.configurations.ConfigCache;
 import com.timedfly.configurations.ItemsConfig;
 import com.timedfly.configurations.Languages;
-import com.timedfly.managers.HooksManager;
+import com.timedfly.hooks.PlayerPointsHook;
 import com.timedfly.hooks.TokenManager;
+import com.timedfly.hooks.Vault;
+import com.timedfly.managers.HooksManager;
 import com.timedfly.managers.PlayerManager;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -27,21 +27,23 @@ public class FlyGUI {
 
     private ItemsConfig items;
     private Languages languages;
-    private TimedFly plugin;
-    private TokenManager tokensManager = new TokenManager();
+    private TokenManager tokensManager;
+    private PlayerPointsHook playerPointsHook;
     private Utilities utility;
     private Inventory inventory;
+    private Vault vault;
 
-    public FlyGUI(ItemsConfig items, Languages languages, TimedFly plugin, Utilities utility) {
+    public FlyGUI(ItemsConfig items, Languages languages, TokenManager tokensManager, PlayerPointsHook playerPointsHook,
+                  Utilities utility, Vault vault) {
         this.items = items;
         this.languages = languages;
-        this.plugin = plugin;
+        this.tokensManager = tokensManager;
+        this.playerPointsHook = playerPointsHook;
         this.utility = utility;
+        this.vault = vault;
     }
 
     public void openGui(Player player) {
-        Economy economy = plugin.getEconomy();
-
         FileConfiguration itemsConfig = items.getItemsConfig();
         FileConfiguration languageConfig = languages.getLanguageFile();
 
@@ -59,14 +61,13 @@ public class FlyGUI {
                     itemsConfig.getInt("Items." + string + ".Amount"), (short) itemsConfig.getInt("Items." + string + ".Data"));
             ItemMeta meta = item.getItemMeta();
             String pformat = NumberFormat.getIntegerInstance().format(Double.valueOf(price));
-            int i = (int) Math.round(economy.getBalance(player));
-            String format = NumberFormat.getIntegerInstance().format(i);
 
             for (String lines : stringList) {
                 lore.add(HooksManager.setPlaceHolders(lines, player).replace("%time%", time)
                         .replace("%price%", pformat).replace("%timeleft%", playerManager.isTimeEnded() && !playerManager.isTimePaused() ?
                                 languageConfig.getString("Format.NoTimeLeft") : TimeFormat.formatLong(playerManager.getTimeLeft()))
-                        .replace("%balance%", format).replace("%tokens%", tokensManager.tokens(player)));
+                        .replace("%balance%", vault.getMoney(player)).replace("%tokens%", tokensManager.tokens(player))
+                        .replace("%points%", playerPointsHook.getPoints(player.getUniqueId())));
             }
 
             meta.setDisplayName(HooksManager.setPlaceHolders(itemsConfig.getString("Items." + string + ".Name")

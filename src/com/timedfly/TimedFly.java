@@ -19,7 +19,9 @@ import com.timedfly.configurations.ConfigCache;
 import com.timedfly.configurations.ItemsConfig;
 import com.timedfly.configurations.Languages;
 import com.timedfly.configurations.UpdateConfig;
+import com.timedfly.hooks.PlayerPointsHook;
 import com.timedfly.hooks.TokenManager;
+import com.timedfly.hooks.Vault;
 import com.timedfly.listener.*;
 import com.timedfly.managers.CurrencyManager;
 import com.timedfly.managers.HooksManager;
@@ -30,21 +32,20 @@ import com.timedfly.utilities.FlyGUI;
 import com.timedfly.utilities.Message;
 import com.timedfly.utilities.SqlSetup;
 import com.timedfly.utilities.Utilities;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TimedFly extends JavaPlugin {
 
     private TokenManager tokensManager;
+    private PlayerPointsHook playerPointsHook;
     private UpdateConfig updateConfig;
     private static MySQLManager sqlManager;
     private ItemsConfig itemsConfig;
     private Languages languages;
     private Utilities utility;
     private SqlSetup sqlSetup;
-    private Economy economy;
+    private Vault vault;
     private Updater updater;
     private static String version;
     private FlyGUI flyGUI;
@@ -68,7 +69,7 @@ public class TimedFly extends JavaPlugin {
             return;
         }
 
-        if (!setupEconomy()) {
+        if (!HooksManager.setupEconomy()) {
             Message.sendConsoleMessage("&cDisabling due to an Economy error!");
             this.getServer().getPluginManager().disablePlugin(this);
             return;
@@ -82,8 +83,9 @@ public class TimedFly extends JavaPlugin {
             utility.addPlayerManager(player.getUniqueId(), this);
 
             PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
-            playerManager.setInServer(true).setInitialTime(sqlManager.getInitialTime(player)).setTimeLeft(sqlManager.getTimeLeft(player));
-            if (!playerManager.isTimePaused() && utility.isWorldEnabled(player.getWorld()))
+            playerManager.setInServer(true).setInitialTime(sqlManager.getInitialTime(player))
+                    .setTimeLeft(sqlManager.getTimeLeft(player)).setTimeManuallyPaused(sqlManager.getManuallyStopped(player));
+            if (!playerManager.isTimePaused() && utility.isWorldEnabled(player.getWorld()) && !playerManager.isTimeManuallyPaused())
                 playerManager.startTimedFly();
         });
 
@@ -94,7 +96,7 @@ public class TimedFly extends JavaPlugin {
     public void onDisable() {
         Bukkit.getOnlinePlayers().forEach(player -> {
             PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
-            sqlManager.saveData(player, playerManager.getTimeLeft(), playerManager.getInitialTime());
+            sqlManager.saveData(player, playerManager.getTimeLeft(), playerManager.getInitialTime(), playerManager.isTimeManuallyPaused());
         });
         sqlSetup.closeConnection();
     }
@@ -107,9 +109,11 @@ public class TimedFly extends JavaPlugin {
         loadConfigs();
         this.sqlSetup = new SqlSetup(this);
         sqlManager = new MySQLManager(sqlSetup);
+        this.vault = new Vault();
         this.tokensManager = new TokenManager();
+        this.playerPointsHook = new PlayerPointsHook();
         this.updater = new Updater(this);
-        this.flyGUI = new FlyGUI(itemsConfig, languages, this, utility);
+        this.flyGUI = new FlyGUI(itemsConfig, languages, tokensManager, playerPointsHook, utility, vault);
     }
 
     private void setupCommands() {
@@ -125,31 +129,19 @@ public class TimedFly extends JavaPlugin {
     }
 
     private void registerListeners() {
-        CurrencyManager currencyManager = new CurrencyManager(tokensManager, economy, languages);
+        CurrencyManager currencyManager = new CurrencyManager(tokensManager, playerPointsHook, vault, languages);
         Bukkit.getServer().getPluginManager().registerEvents(new FlightTime(nms, flyGUI, utility, languages), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Inventory(currencyManager, utility, languages, itemsConfig, nms), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CustomFlyCMD(utility, languages, flyGUI, nms), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinLeave(utility, sqlManager, this, updater), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ChangeWorld(utility, this), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ChangeGameMode(utility), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Respawn(utility, this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerOnGround(utility), this);
 
         if (version.startsWith("v1_8")) Bukkit.getServer().getPluginManager().registerEvents(new FallDamage(), this);
         if (version.equals("v1_12_R1"))
             Bukkit.getServer().getPluginManager().registerEvents(new AttackMob(this, utility, languages), this);
-    }
-
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        economy = rsp.getProvider();
-        Message.sendConsoleMessage("&7Hooking into VaultAPI.");
-        return economy != null;
     }
 
     private boolean setupNMS() {
@@ -195,10 +187,6 @@ public class TimedFly extends JavaPlugin {
 
     public NMS getNMS() {
         return nms;
-    }
-
-    public Economy getEconomy() {
-        return economy;
     }
 
     public static MySQLManager getMySqlManager() {

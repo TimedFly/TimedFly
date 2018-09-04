@@ -28,6 +28,7 @@ public class Respawn implements Listener {
         Player player = event.getPlayer();
         PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
 
+        if (playerManager.isTimeManuallyPaused()) return;
         if (playerManager.isTimePaused() || playerManager.isTimeEnded()) return;
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> playerManager.setFlying(true), 5L);

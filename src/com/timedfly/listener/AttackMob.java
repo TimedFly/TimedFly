@@ -35,23 +35,23 @@ public class AttackMob implements Listener {
             if (!utility.isWorldEnabled(player.getWorld())) return;
             PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
 
-            if (playerManager == null || !playerManager.isFlying() || playerManager.isTimeEnded() || playerManager.isTimePaused())
-                return;
+            if (playerManager == null || !playerManager.isFlying() || playerManager.isTimeEnded() || playerManager.isTimePaused()
+                    || playerManager.isTimeManuallyPaused() || playerManager.isInCombat()) return;
 
             playerManager.setFlying(false);
-            Bukkit.getScheduler().runTaskLater(plugin, () -> playerManager.setFlying(true), 5 * 20L);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> playerManager.setFlying(true), 10 * 20L);
             Message.sendMessage(player, languages.getLanguageFile().getString("Other.OnCombat"));
         }
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             if (!utility.isWorldEnabled(player.getWorld())) return;
-            PlayerManager playerCache = utility.getPlayerManager(player.getUniqueId());
+            PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
 
-            if (playerCache == null || !playerCache.isFlying() || playerCache.isTimeEnded() || playerCache.isTimePaused())
-                return;
+            if (playerManager == null || !playerManager.isFlying() || playerManager.isTimeEnded() || playerManager.isTimePaused()
+                    || playerManager.isTimeManuallyPaused() || playerManager.isInCombat()) return;
 
-            playerCache.setFlying(false);
-            Bukkit.getScheduler().runTaskLater(plugin, () -> playerCache.setFlying(true), 10 * 20L);
+            playerManager.setFlying(false).setInCombat(true);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> playerManager.setFlying(true).setInCombat(false), 10 * 20L);
             Message.sendMessage(player, languages.getLanguageFile().getString("Other.OnCombat"));
         }
     }
@@ -65,13 +65,13 @@ public class AttackMob implements Listener {
         Player player = (Player) event.getEntity().getShooter();
         if (!player.hasPermission("timedfly.attack.bypass") || !player.hasPermission("timedfly.admin")) return;
         if (!utility.isWorldEnabled(player.getWorld())) return;
-        PlayerManager playerCache = utility.getPlayerManager(player.getUniqueId());
+        PlayerManager playerManager = utility.getPlayerManager(player.getUniqueId());
 
-        if (playerCache == null || !playerCache.isFlying() || playerCache.isTimeEnded() || playerCache.isTimePaused())
-            return;
+        if (playerManager == null || !playerManager.isFlying() || playerManager.isTimeEnded() || playerManager.isTimePaused()
+                || playerManager.isTimeManuallyPaused() || playerManager.isInCombat()) return;
 
-        playerCache.setFlying(false);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> playerCache.setFlying(true), 10 * 20L);
+        playerManager.setFlying(false).setInCombat(true);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> playerManager.setFlying(true).setInCombat(false), 10 * 20L);
         Message.sendMessage(player, languages.getLanguageFile().getString("Other.OnCombat"));
     }
 }

@@ -54,6 +54,13 @@ Format:
 
 # This are some other messages
 Other:
+  Refund:
+    TimeLimit: '&7You have reached the time limit to be able to refund this. Limit is &a%refund_limit%'
+    MaxRefunds: '&7You have reached the max refunds today. Try again in &a%refund_cooldown%'
+    NotValid: '&7There was an error while trying to refund.'
+    Refunded: '&7You have been refunded &a%refund_amount%.'
+    Disabled: '&7Refunds are disabled.'
+  Fixed: '&7Your flight has been fixed.'
   NoPermission:
     Message: '&cYou don''t have permission to use command'
     Title: '&cNo Permission'

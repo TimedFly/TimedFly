@@ -7,6 +7,7 @@ import com.timedfly.configurations.Languages;
 import com.timedfly.managers.CooldownManager;
 import com.timedfly.managers.CurrencyManager;
 import com.timedfly.managers.PlayerManager;
+import com.timedfly.managers.RefundManager;
 import com.timedfly.utilities.Message;
 import com.timedfly.utilities.TimeFormat;
 import com.timedfly.utilities.Utilities;
@@ -42,7 +43,6 @@ public class Inventory implements Listener {
         if (!utility.isWorldEnabled(player.getWorld())) return;
 
         if (event.getView().getTopInventory().getTitle().equals(Message.color(ConfigCache.getGuiDisplayName()))) {
-            String cooldowntime = ConfigCache.getCooldown();
 
             int slot = event.getSlot();
             FileConfiguration languageConfig = languages.getLanguageFile();
@@ -74,15 +74,16 @@ public class Inventory implements Listener {
                         return;
                     }
 
-                    if (startCooldown(player, cooldowntime)) {
+                    if (startCooldown(player, itemsConfig.getString("Items." + string + ".Cooldown"))) {
                         Message.sendMessage(player, languageConfig.getString("Other.OnCooldown")
                                 .replace("%cooldown%", TimeFormat.formatLong(CooldownManager.getTimeLeft(player.getUniqueId(), "fly"))));
                         player.closeInventory();
                         return;
                     }
 
+                    RefundManager refundManager = playerCache.getRefundManager();
                     if (!currencyManager.noCurrencyFound(player, languageConfig)) return;
-                    if (!currencyManager.withdraw(player, price, time)) return;
+                    if (!currencyManager.withdraw(player, price, time, refundManager)) return;
 
                     playerCache.addTime(time * 60);
                     utility.runCommands(player, itemsConfig.getStringList("Items." + string + ".OnClick"));
