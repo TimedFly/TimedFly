@@ -64,22 +64,6 @@ public class Updater {
         }
     }
 
-    public void sendUpdateMessage(Player player) {
-        fetchUpdates();
-        if (!this.checkForUpdates) return;
-
-        int newVersion = Integer.parseInt(this.newVersion.replaceAll("[^\\d]", ""));
-        int currentVersion = Integer.parseInt(getCurrentVersion().replaceAll("[^\\d]", ""));
-
-        if (newVersion > currentVersion) {
-            String[] message = {"There is a new update available.", "Current version: &c" + getCurrentVersion(),
-                    "Newest version: &c" + newVersion, "Download the new version here:",
-                    "https://www.spigotmc.org/resources/" + resourceId};
-
-            for (String string : message) Message.sendMessage(player, string);
-        }
-    }
-
     private void fetchUpdates() {
         if (!ConfigCache.isCheckForUpdates()) return;
         try {
