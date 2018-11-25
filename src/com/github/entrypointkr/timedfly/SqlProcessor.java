@@ -6,16 +6,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 public class SqlProcessor implements Runnable {
     private final Plugin plugin;
     private final BlockingDeque<Consumer<Connection>> queue = new LinkedBlockingDeque<>();
-    private final CountDownLatch latch = new CountDownLatch(1);
+    private final ReentrantLock lock = new ReentrantLock();
     private final Connection connection;
-    private boolean count = false;
 
     public SqlProcessor(Plugin plugin) {
         this.plugin = plugin;
@@ -35,19 +35,18 @@ public class SqlProcessor implements Runnable {
         while (plugin.isEnabled()) {
             try {
                 Consumer<Connection> runnable = queue.take();
+                lock.lock();
                 runnable.accept(connection);
             } catch (Exception ex) {
                 // Ignore
-            }
-            if (count && !queue.isEmpty()) {
-                latch.countDown();
+            } finally {
+                lock.unlock();
             }
         }
     }
 
-    public void release() throws InterruptedException, SQLException {
-        count = true;
-        latch.await();
+    public void release() throws SQLException {
+        lock.lock();
         connection.close();
     }
 }

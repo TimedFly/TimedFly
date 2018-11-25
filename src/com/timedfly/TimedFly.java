@@ -109,7 +109,7 @@ public class TimedFly extends JavaPlugin {
         this.sqlSetup.closeConnection();
         try {
             sqlProcessor.release();
-        } catch (InterruptedException | SQLException e) {
+        } catch (SQLException e) {
             throw new IllegalArgumentException(e);
         }
     }

@@ -10,34 +10,60 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Utilities {
-
     private Map<UUID, PlayerManager> playerManagerMap = new HashMap<>();
 
-    public boolean isWorldEnabled(World playerWorld) {
-        if (ConfigCache.getWorldListType().equalsIgnoreCase("enabled")) {
-            List<String> ENABLED_WORLDS = ConfigCache.getWorldListWorlds();
-            for (String worlds : ENABLED_WORLDS) {
-                World world = Bukkit.getWorld(worlds);
-                if (playerWorld == world)
-                    return true;
-            }
-            return false;
-        } else if (ConfigCache.getWorldListType().equalsIgnoreCase("disabled")) {
-            List<String> DISABLED_WORLDS = ConfigCache.getWorldListWorlds();
-            for (String worlds : DISABLED_WORLDS) {
-                World world = Bukkit.getWorld(worlds);
-                if (playerWorld == world)
-                    return false;
-            }
-            return true;
-        } else return ConfigCache.getWorldListType().equalsIgnoreCase("all");
+    public Utilities() {
     }
 
-    public void runCommands(Player player, List<String> string) {
-        for (String click : string) {
+    public boolean isWorldEnabled(World playerWorld) {
+        List DISABLED_WORLDS;
+        Iterator var3;
+        String worlds;
+        World world;
+        if (ConfigCache.getWorldListType().equalsIgnoreCase("enabled")) {
+            DISABLED_WORLDS = ConfigCache.getWorldListWorlds();
+            var3 = DISABLED_WORLDS.iterator();
+
+            do {
+                if (!var3.hasNext()) {
+                    return false;
+                }
+
+                worlds = (String) var3.next();
+                world = Bukkit.getWorld(worlds);
+            } while (playerWorld != world);
+
+            return true;
+        } else if (ConfigCache.getWorldListType().equalsIgnoreCase("disabled")) {
+            DISABLED_WORLDS = ConfigCache.getWorldListWorlds();
+            var3 = DISABLED_WORLDS.iterator();
+
+            do {
+                if (!var3.hasNext()) {
+                    return true;
+                }
+
+                worlds = (String) var3.next();
+                world = Bukkit.getWorld(worlds);
+            } while (playerWorld != world);
+
+            return false;
+        } else {
+            return ConfigCache.getWorldListType().equalsIgnoreCase("all");
+        }
+    }
+
+    public void runCommands(Player player, List<String> strings) {
+
+        for (String click : strings) {
             if (click.contains("[message]")) {
                 if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
                     String msgNoPAPI = Message.color(click.replace("[message] ", ""));
@@ -47,26 +73,33 @@ public class Utilities {
                     player.sendMessage(Message.color(click.replace("[message] ", "")));
                 }
             }
+
             if (click.contains("[player]")) {
                 Bukkit.dispatchCommand(player, click.replace("[player] ", "").replace("%player%", player.getName()));
             }
+
             if (click.contains("[console]")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), click.replace("[console] ", "").replace("%player%", player.getName()));
             }
-            if (click.contains("[sound]")) {
-                if (ConfigCache.isSoundsEnabled()) {
-                    player.playSound(player.getLocation(), Sound.valueOf(click.replace("[sound] ", "")), 100, 1);
-                }
+
+            if (click.contains("[sound]") && ConfigCache.isSoundsEnabled()) {
+                player.playSound(player.getLocation(), Sound.valueOf(click.replace("[sound] ", "")), 100.0F, 1.0F);
             }
+
             if (click.contains("[close]")) {
                 player.closeInventory();
             }
         }
+
     }
 
     public PlayerManager getPlayerManager(UUID uuid) {
         PlayerManager playerManager = this.playerManagerMap.get(uuid);
-        if (playerManager == null) addPlayerManager(uuid, TimedFly.getPlugin(TimedFly.class));
+        if (playerManager == null) {
+            this.addPlayerManager(uuid, TimedFly.getPlugin(TimedFly.class));
+            playerManager = playerManagerMap.get(uuid);
+        }
+
         Objects.requireNonNull(playerManager).setPlayer(Bukkit.getPlayer(uuid));
         return playerManager;
     }
@@ -78,7 +111,7 @@ public class Utilities {
     }
 
     public void addPlayerManager(UUID uuid, Plugin plugin) {
-        addPlayerManager(uuid, plugin, 0, 0);
+        this.addPlayerManager(uuid, plugin, 0, 0);
     }
 
     public void addPlayerManager(UUID uuid, Player player, Plugin plugin) {
@@ -88,11 +121,15 @@ public class Utilities {
     }
 
     public long getPlayersTimeLeft() {
-        long time = 0;
+        long time = 0L;
+        Iterator var3 = Bukkit.getOnlinePlayers().iterator();
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerManager playerManager = getPlayerManager(player.getUniqueId());
-            if (playerManager.getTimeLeft() > 0) time += playerManager.getTimeLeft();
+        while (var3.hasNext()) {
+            Player player = (Player) var3.next();
+            PlayerManager playerManager = this.getPlayerManager(player.getUniqueId());
+            if (playerManager.getTimeLeft() > 0) {
+                time += (long) playerManager.getTimeLeft();
+            }
         }
 
         return time;
@@ -100,10 +137,14 @@ public class Utilities {
 
     public int getPlayers() {
         int players = 0;
+        Iterator var2 = Bukkit.getOnlinePlayers().iterator();
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerManager playerManager = getPlayerManager(player.getUniqueId());
-            if (playerManager.getTimeLeft() > 0) players++;
+        while (var2.hasNext()) {
+            Player player = (Player) var2.next();
+            PlayerManager playerManager = this.getPlayerManager(player.getUniqueId());
+            if (playerManager.getTimeLeft() > 0) {
+                ++players;
+            }
         }
 
         return players;
