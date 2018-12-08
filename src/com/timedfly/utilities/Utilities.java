@@ -66,10 +66,7 @@ public class Utilities {
 
     public PlayerManager getPlayerManager(UUID uuid) {
         PlayerManager playerManager = this.playerManagerMap.get(uuid);
-        if (playerManager == null) {
-            addPlayerManager(uuid, TimedFly.getPlugin(TimedFly.class));
-            playerManager = playerManagerMap.get(uuid); // Assign for fix NullPointerException
-        }
+        if (playerManager == null) addPlayerManager(uuid, TimedFly.getPlugin(TimedFly.class));
         Objects.requireNonNull(playerManager).setPlayer(Bukkit.getPlayer(uuid));
         return playerManager;
     }

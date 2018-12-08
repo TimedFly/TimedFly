@@ -40,11 +40,8 @@ public class ChangeWorld implements Listener {
                 if (!playerManager.isTimeEnded()) {
                     player.setAllowFlight(true);
                     playerManager.getBossBarManager().show();
-                } else if (player.isFlying() && playerManager.isTimePaused()) {
+                } else if (playerManager.isTimePaused()) {
                     playerManager.startTimedFly();
-                } else {
-                    playerManager.setTimePaused(true);
-                    player.setAllowFlight(true);
                 }
             }, 8L);
         } else if (!playerManager.isTimeEnded()) {

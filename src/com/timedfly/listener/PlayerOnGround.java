@@ -43,11 +43,11 @@ public class PlayerOnGround implements Listener {
 
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onFlightToggle(PlayerToggleFlightEvent event) {
-        if (!ConfigCache.isStopFlyOnGround() || !event.isFlying()) {
-            return;
-        }
+        if (!ConfigCache.isStopFlyOnGround()) return;
+        if (event.isCancelled()) return;
+        if (!event.isFlying()) return;
 
         Player player = event.getPlayer();
         if (!utilities.isWorldEnabled(player.getWorld())) return;

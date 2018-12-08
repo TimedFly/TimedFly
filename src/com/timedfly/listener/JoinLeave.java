@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class JoinLeave implements Listener {
-
     private Utilities utilities;
     private MySQLManager sqlManager;
     private TimedFly plugin;
@@ -30,39 +29,39 @@ public class JoinLeave implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        this.sqlManager.createPlayer(player);
+        this.utilities.addPlayerManager(player.getUniqueId(), player, this.plugin);
+        PlayerManager playerManager = this.utilities.getPlayerManager(player.getUniqueId());
+        if (player.hasPermission("timedfly.getupdate")) {
+            this.updater.sendUpdateMessage(player);
+        }
 
-        sqlManager.createPlayer(player);
-//        utilities.addPlayerManager(player.getUniqueId(), player, plugin);
+        if (this.utilities.isWorldEnabled(player.getWorld())) {
+            Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+                playerManager.setInServer(true).setInitialTime(this.sqlManager.getInitialTime(player)).setTimeLeft(this.sqlManager.getTimeLeft(player)).setTimeManuallyPaused(this.sqlManager.getManuallyStopped(player));
+                if (playerManager.getTimeLeft() >= 1) {
+                    if (!playerManager.isTimePaused() && !playerManager.isTimeManuallyPaused()) {
+                        playerManager.startTimedFly();
+                    }
 
-        PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
+                    if (ConfigCache.isJoinFlyingEnabled()) {
+                        player.teleport(player.getLocation().add(0.0D, (double) ConfigCache.getJoinFlyingHeight(), 0.0D));
+                    }
 
-        if (player.hasPermission("timedfly.getupdate")) updater.sendUpdateMessage(player);
-        if (!utilities.isWorldEnabled(player.getWorld())) return;
-
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            playerManager.setInServer(true).setInitialTime(sqlManager.getInitialTime(player)).setTimeLeft(sqlManager.getTimeLeft(player))
-                    .setTimeManuallyPaused(sqlManager.getManuallyStopped(player));
-
-            if (player.isFlying() && !playerManager.isTimePaused() && !playerManager.isTimeManuallyPaused()) {
-                playerManager.startTimedFly();
-            } else {
-                playerManager.setTimePaused(true);
-                player.setAllowFlight(true);
-            }
-            if (playerManager.getTimeLeft() > 0 && ConfigCache.isJoinFlyingEnabled())
-                player.teleport(player.getLocation().add(0, ConfigCache.getJoinFlyingHeight(), 0));
-        }, 20);
-
+                }
+            }, 20L);
+        }
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        PlayerManager playerManager = utilities.getPlayerManager(player.getUniqueId());
-
+        PlayerManager playerManager = this.utilities.getPlayerManager(player.getUniqueId());
         playerManager.setInServer(false);
-        if (ConfigCache.isStopTimerOnLeave()) playerManager.stopTimedFly(false, true);
-        sqlManager.saveData(player, playerManager.getTimeLeft(), playerManager.getInitialTime(), playerManager.isTimeManuallyPaused());
-    }
+        if (ConfigCache.isStopTimerOnLeave()) {
+            playerManager.stopTimedFly(false, true);
+        }
 
+        sqlManager.saveDataAsync(player, playerManager.getTimeLeft(), playerManager.getInitialTime(), playerManager.isTimeManuallyPaused());
+    }
 }
