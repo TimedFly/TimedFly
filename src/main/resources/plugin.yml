@@ -1,0 +1,16 @@
+name: TimedFly
+version: ${project.version}
+main: me.jackint0sh.timedfly.TimedFly
+depend: [PlaceholderAPI]
+authors: [Jackint0sh]
+description: Fly for a limited ammount of time by paying some cash
+api-version: 1.13
+commands:
+  timedfly:
+    usage: "/timedfly"
+    aliases:
+      - tf
+    description: "Main command of TimedFly."
+  tfly:
+    usage: "/tfly"
+    description: "Open the fly GUI to buy flight time."
