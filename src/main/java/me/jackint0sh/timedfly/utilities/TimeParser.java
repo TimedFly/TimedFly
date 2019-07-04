@@ -10,6 +10,18 @@ public class TimeParser {
     private static String[] timeString = {"seconds", "minutes", "hours", "days"};
 
     public static int parse(String toParse) throws TimeParser.TimeFormatException {
+        return parse(toParse, true);
+    }
+
+    public static boolean isParsable(String toParse) {
+        try {
+            return parse(toParse, false) == -1;
+        } catch (TimeFormatException e) {
+            return false;
+        }
+    }
+
+    public static int parse(String toParse, boolean sum) throws TimeParser.TimeFormatException {
         toParse = toParse.replaceAll("\\s", "").toLowerCase();
 
         if (!toParse.replaceAll("\\d+", "").matches("[a-z]+")) return Integer.parseInt(toParse);
@@ -25,6 +37,8 @@ public class TimeParser {
 
         fillStacks(new StringBuilder(toParse), intStack, timeStack);
 
+        if (!sum) return -1;
+
         while (!intStack.empty() && !timeStack.empty()) {
             int integer = Integer.parseInt(intStack.pop());
             String time = timeStack.pop();
@@ -37,6 +51,10 @@ public class TimeParser {
 
     public static int toTicks(String toParse) throws TimeParser.TimeFormatException {
         return parse(toParse) / 50;
+    }
+
+    public static int ticksToMs(int ticks) throws TimeParser.TimeFormatException {
+        return ticks * 50;
     }
 
     private static void fillStacks(StringBuilder string, Stack<String> intStack, Stack<String> timeStack) throws TimeParser.TimeFormatException {
@@ -101,9 +119,7 @@ public class TimeParser {
     }
 
     public static boolean isTimeString(String s) {
-        if (isNumeric(s)) return true;
         return Arrays.stream(timeString).anyMatch(string -> string.startsWith(s));
-        // return Arrays.stream(timeString).anyMatch(string -> string.equals(s) || (string + "s").equals(s));
     }
 
     public static class TimeFormatException extends Exception {

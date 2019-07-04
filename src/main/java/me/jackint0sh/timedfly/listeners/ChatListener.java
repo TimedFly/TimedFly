@@ -44,7 +44,7 @@ public class ChatListener implements Listener {
                                     }
                                     break;
                                 case CHANGE_TIME:
-                                    if (TimeParser.isTimeString(message)) {
+                                    if (TimeParser.isParsable(message)) {
                                         flyItem.setTime(message);
                                         MessageUtil.sendMessage(player, "&aTime successfully changed to: " + message);
                                     } else {
@@ -112,7 +112,7 @@ public class ChatListener implements Listener {
                                             }
                                             break;
                                         case COOLDOWN:
-                                            if (TimeParser.isTimeString(message)) {
+                                            if (TimeParser.isParsable(message)) {
                                                 flyItem.setCooldown(message);
                                                 MessageUtil.sendMessage(player, "&aCooldown successfully changed to: " + message);
                                             } else {
