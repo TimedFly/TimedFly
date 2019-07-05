@@ -41,35 +41,58 @@ public class TFly implements CommandExecutor {
             case "h":
                 this.help(sender);
                 break;
+            case "add":
+            case "a":
+                if (args.length < 2) {
+                    MessageUtil.sendMessage(sender, "&cUsage: " + Arguments.TFly.ADD.getUsage());
+                    return true;
+                }
+                handleTimeArg(args, sender, 1);
+                break;
             case "set":
             case "s":
                 if (args.length < 2) {
                     MessageUtil.sendMessage(sender, "&cUsage: " + Arguments.TFly.SET.getUsage());
                     return true;
                 }
-                Player player = Bukkit.getPlayerExact(args[args.length - 1]);
-                int to = args.length - 1;
-                if (player == null || TimeParser.isParsable(args[args.length - 1])) {
-                    player = (Player) sender;
-                    to = args.length;
-                }
-
-                PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-                try {
-                    String timeString = String.join("", Arrays.copyOfRange(args, 1, to));
-                    int time = TimeParser.toTicks(timeString);
-                    playerManager.setTime(time).startTimer();
-
-                    if (!player.equals(sender)) {
-                        MessageUtil.sendMessage(player, "&c" + sender.getName() + "&7 set your time to: &e" + timeString);
-                    }
-                    MessageUtil.sendMessage(player, "Time successfully set to: " + timeString);
-                } catch (TimeParser.TimeFormatException e) {
-                    MessageUtil.sendError(player, e);
-                }
+                handleTimeArg(args, sender, -1);
                 break;
         }
         return true;
+    }
+
+    private void handleTimeArg(String[] args, CommandSender sender, int type) {
+        Player player = Bukkit.getPlayerExact(args[args.length - 1]);
+        int to = args.length - 1;
+        if (player == null || TimeParser.isParsable(args[args.length - 1])) {
+            player = (Player) sender;
+            to = args.length;
+        }
+
+        PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+        try {
+            String timeString = String.join("", Arrays.copyOfRange(args, 1, to));
+            int time = TimeParser.toTicks(timeString);
+            String text, from;
+
+            if (type > 0) {
+                playerManager.addTime(time);
+                text = "Time added successfully: " + timeString;
+                from = "&c" + sender.getName() + "&7 set your time to: &e" + timeString;
+            } else {
+                playerManager.setTime(time);
+                text = "Time successfully set to: " + timeString;
+                from = "&c" + sender.getName() + "&7 added &e" + timeString + "&7 to your time.";
+            }
+
+            playerManager.startTimer();
+
+            if (!player.equals(sender)) MessageUtil.sendMessage(player, from);
+
+            MessageUtil.sendMessage(player, text);
+        } catch (TimeParser.TimeFormatException e) {
+            MessageUtil.sendError(player, e);
+        }
     }
 
     private void help(CommandSender sender) {

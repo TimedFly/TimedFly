@@ -116,6 +116,7 @@ public class PlayerManager {
 
     public PlayerManager addTime(int time) {
         this.timeLeft += time;
+        if (this.timeLeft > this.initialTime) this.initialTime = this.timeLeft;
         return this;
     }
 

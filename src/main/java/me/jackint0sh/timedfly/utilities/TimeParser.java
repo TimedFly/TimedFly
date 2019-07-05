@@ -24,8 +24,6 @@ public class TimeParser {
     public static int parse(String toParse, boolean sum) throws TimeParser.TimeFormatException {
         toParse = toParse.replaceAll("\\s", "").toLowerCase();
 
-        if (!toParse.replaceAll("\\d+", "").matches("[a-z]+")) return Integer.parseInt(toParse);
-
         if (!TimeParser.isNumeric(toParse.charAt(0)))
             throw new TimeParser.TimeFormatException("First char should be a number found: " + toParse.charAt(0));
         if (TimeParser.isNumeric(toParse.charAt(toParse.length() - 1)))
