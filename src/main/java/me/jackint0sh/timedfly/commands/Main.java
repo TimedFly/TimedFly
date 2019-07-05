@@ -8,7 +8,6 @@ import me.jackint0sh.timedfly.utilities.Permissions;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,12 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Main implements CommandExecutor {
-
-    private Plugin plugin;
-
-    public Main(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {

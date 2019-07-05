@@ -49,16 +49,21 @@ public class TFly implements CommandExecutor {
                 }
                 Player player = Bukkit.getPlayerExact(args[args.length - 1]);
                 int to = args.length - 1;
-                if (player == null /*|| TimeParser.isTimeString(args[args.length - 1])*/) {
+                if (player == null || TimeParser.isParsable(args[args.length - 1])) {
                     player = (Player) sender;
                     to = args.length;
                 }
 
                 PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
                 try {
-                    int time = TimeParser.toTicks(String.join("", Arrays.copyOfRange(args, 1, to)));
-                    playerManager.setTime(time);
-                    MessageUtil.sendMessage(player, time + "");
+                    String timeString = String.join("", Arrays.copyOfRange(args, 1, to));
+                    int time = TimeParser.toTicks(timeString);
+                    playerManager.setTime(time).startTimer();
+
+                    if (!player.equals(sender)) {
+                        MessageUtil.sendMessage(player, "&c" + sender.getName() + "&7 set your time to: &e" + timeString);
+                    }
+                    MessageUtil.sendMessage(player, "Time successfully set to: " + timeString);
                 } catch (TimeParser.TimeFormatException e) {
                     MessageUtil.sendError(player, e);
                 }

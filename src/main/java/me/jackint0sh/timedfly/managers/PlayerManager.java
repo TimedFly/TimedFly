@@ -41,14 +41,12 @@ public class PlayerManager {
         this.player.setAllowFlight(true);
         this.player.setFlying(true);
         TimerManager.startIfNot();
-        System.out.println("Started");
     }
 
     public void stopTimer() {
         this.timeRunning = false;
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
-        System.out.println("Stopped");
     }
 
     public void pauseTimer() {

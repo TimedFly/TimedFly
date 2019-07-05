@@ -36,7 +36,7 @@ public class Item extends ItemStack {
         this.setLore(flyItem.getLore());
         this.setName(flyItem.getName());
         this.setDurability((short) flyItem.getData());
-        //this.setAmount(flyItem.getAmount());
+        this.setAmount(flyItem.getAmount());
     }
 
     public Item(String material) {

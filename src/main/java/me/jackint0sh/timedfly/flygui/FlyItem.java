@@ -31,9 +31,15 @@ public class FlyItem {
     public FlyItem() {
         this.key = UUID.randomUUID().toString();
         this.name = "";
+        this.cooldown = "";
+        this.permission = "";
+        this.permissionMessage = "";
+        this.material = "";
         this.lore = new ArrayList<>();
+        this.onClick = new ArrayList<>();
         this.price = 0;
         this.time = "0";
+        this.amount = 1;
 
         FlyItem.configItemMap.put(key, this);
     }

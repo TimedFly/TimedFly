@@ -25,7 +25,7 @@ public class FlightStore {
     }
 
     public static void createEdit(Player player) throws NullPointerException {
-        FlyInventory inventory = new FlyInventory(6, MessageUtil.color("&cTimedFly Store Items"));
+        FlyInventory inventory = new FlyInventory(6, MessageUtil.color("&cTimedFly Store - Items"));
         inventory.setItems(createContents(player, false));
         player.openInventory(inventory.getInventory());
     }

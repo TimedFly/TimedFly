@@ -36,7 +36,8 @@ public class Arguments {
 
     enum TFly {
         HELP("help", "Show the help page for /tfly."),
-        SET("set <time> [target]", "Set the flight time of a player");
+        SET("set <time> [target]", "Set the flight time of a player"),
+        ADD("add <time> [target]", "Set the flight time of a player");
 
         private String usage;
         private String description;

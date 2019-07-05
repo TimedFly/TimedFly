@@ -8,34 +8,10 @@ import java.util.Map;
 
 public class FlyItemCreator {
 
-    private Player player;
     private static Map<Player, FlyItem> currentFlyItem = new HashMap<>();
     private static Map<Player, FlyItemCreator.State> mainState = new HashMap<>();
     private static Map<Player, FlyItemCreator.InnerState> innerState = new HashMap<>();
     private static Map<Player, FlyItemCreator.OptionState> optionState = new HashMap<>();
-
-    public FlyItemCreator() {
-        this(null);
-    }
-
-    public FlyItemCreator(Player player) {
-        this.player = player;
-    }
-
-    public void openInventory(MenuType menuType) {
-        switch (menuType) {
-            case MAIN:
-                MainMenu.create(player);
-                break;
-            case EDITOR:
-                EditorMenu.create(player);
-                break;
-            case DELETE:
-            case CONFIRM:
-            case OPTIONS:
-                break;
-        }
-    }
 
     public static void openMenu(Player player) {
         State state = getState(player);
@@ -140,7 +116,4 @@ public class FlyItemCreator {
         COOLDOWN, PERM, PERM_MESSAGE, SLOT, AMOUNT, ON_CLICK
     }
 
-    public enum MenuType {
-        MAIN, EDITOR, DELETE, CONFIRM, OPTIONS
-    }
 }

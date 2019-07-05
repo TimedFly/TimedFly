@@ -47,7 +47,7 @@ public class ConfirmationMenu {
         }
         if (FlyItemCreator.getInnerState(player) == FlyItemCreator.InnerState.SAVE_ITEM) {
             handleSave(player);
-            MessageUtil.sendMessage(player, "Save");
+            MessageUtil.sendMessage(player, "Successfully saved!");
             FlyItemCreator.removeCurrentFlyItem(player);
             FlyItemCreator.clearStates(player);
             player.closeInventory();

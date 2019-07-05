@@ -31,7 +31,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
             if (args.length == 1) {
                 StringUtil.copyPartialMatches(args[0], this.args, completions);
-            } else {
+            } else if (args.length > 1) {
                 List<String> players = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
                 players.add("*");
                 StringUtil.copyPartialMatches(args[1], players, completions);
