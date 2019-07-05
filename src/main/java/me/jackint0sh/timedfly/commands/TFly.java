@@ -26,13 +26,13 @@ public class TFly implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            if (sender instanceof Player)
+            if (sender instanceof Player) {
                 try {
                     FlightStore.create((Player) sender);
                 } catch (NullPointerException e) {
                     MessageUtil.sendError((Player) sender, e);
                 }
-            else MessageUtil.sendConsoleMessage("&cOnly players can use this command!");
+            } else MessageUtil.sendConsoleMessage("&cOnly players can use this command!");
             return true;
         }
 
@@ -47,7 +47,7 @@ public class TFly implements CommandExecutor {
                     MessageUtil.sendMessage(sender, "&cUsage: " + Arguments.TFly.ADD.getUsage());
                     return true;
                 }
-                handleTimeArg(args, sender, 1);
+                handleTimeArg(args, sender, true);
                 break;
             case "set":
             case "s":
@@ -55,16 +55,29 @@ public class TFly implements CommandExecutor {
                     MessageUtil.sendMessage(sender, "&cUsage: " + Arguments.TFly.SET.getUsage());
                     return true;
                 }
-                handleTimeArg(args, sender, -1);
+                handleTimeArg(args, sender, false);
+                break;
+            case "pause":
+                toggleTimer(args, sender, 1);
+                break;
+            case "resume":
+                toggleTimer(args, sender, 2);
+                break;
+            case "toggle":
+                toggleTimer(args, sender, 3);
                 break;
         }
         return true;
     }
 
-    private void handleTimeArg(String[] args, CommandSender sender, int type) {
+    private void handleTimeArg(String[] args, CommandSender sender, boolean b) {
         Player player = Bukkit.getPlayerExact(args[args.length - 1]);
         int to = args.length - 1;
         if (player == null || TimeParser.isParsable(args[args.length - 1])) {
+            if (!(sender instanceof Player)) {
+                MessageUtil.sendMessage(sender, "Only players can do this.");
+                return;
+            }
             player = (Player) sender;
             to = args.length;
         }
@@ -75,7 +88,7 @@ public class TFly implements CommandExecutor {
             int time = TimeParser.toTicks(timeString);
             String text, from;
 
-            if (type > 0) {
+            if (b) {
                 playerManager.addTime(time);
                 text = "Time added successfully: " + timeString;
                 from = "&c" + sender.getName() + "&7 set your time to: &e" + timeString;
@@ -93,6 +106,35 @@ public class TFly implements CommandExecutor {
         } catch (TimeParser.TimeFormatException e) {
             MessageUtil.sendError(player, e);
         }
+    }
+
+    private void toggleTimer(String[] args, CommandSender sender, int type) {
+        Player player = Bukkit.getPlayerExact(args[args.length - 1]);
+        if (player == null) {
+            if (!(sender instanceof Player)) {
+                MessageUtil.sendMessage(sender, "Only players can do this.");
+                return;
+            }
+            player = (Player) sender;
+        }
+
+        PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+
+        if (playerManager.getTimeLeft() < 1) {
+            if (playerManager.isTimePaused()) MessageUtil.sendMessage(player, "The timer in not running...");
+            return;
+        }
+
+        if (type == 1) playerManager.pauseTimer();
+        else if (type == 2) playerManager.resumeTimer();
+        else if (type == 3) {
+            if (playerManager.isTimePaused()) playerManager.resumeTimer();
+            else playerManager.pauseTimer();
+        }
+
+        if (playerManager.isTimePaused()) MessageUtil.sendMessage(player, "The timer has been paused!");
+        else MessageUtil.sendMessage(player, "The timer has been resumed!");
+
     }
 
     private void help(CommandSender sender) {
