@@ -4,14 +4,21 @@ import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class PlayerManager {
 
     private static Map<UUID, PlayerManager> playerCache = new ConcurrentHashMap<>();
+    private Consumer<EntityDamageEvent> onDamage;
+    private boolean invulnerable;
+    private boolean damageTimerEnabled;
     private UUID playerUuid;
     private Player player;
     private int timeLeft;
@@ -47,16 +54,48 @@ public class PlayerManager {
         this.timeRunning = false;
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
+        this.disableDamage(10);
     }
 
     public void pauseTimer() {
-        this.timeRunning = false;
+        this.stopTimer();
         this.timePaused = true;
     }
 
     public void resumeTimer() {
-        this.timeRunning = true;
         this.timePaused = false;
+        this.startTimer();
+    }
+
+    public void disableDamage(int seconds) {
+        disableDamage(seconds, event -> this.invulnerable = true);
+    }
+
+    public void disableDamage(int seconds, Consumer<EntityDamageEvent> consumer) {
+        Consumer<EntityDamageEvent> consumer2 = event -> {
+            Plugin plugin = Bukkit.getPluginManager().getPlugin("TimedFly");
+            Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+                this.invulnerable = false;
+                this.onDamage = null;
+                this.damageTimerEnabled = false;
+                event.setCancelled(false);
+            }, seconds * 20);
+        };
+        this.onDamage = consumer2.andThen(consumer).andThen(e -> this.damageTimerEnabled = true);
+    }
+
+    public void callEvent(Event event) {
+        if (event instanceof EntityDamageEvent) {
+            if (this.onDamage != null) this.onDamage.accept((EntityDamageEvent) event);
+        }
+    }
+
+    public boolean isInvulnerable() {
+        return this.invulnerable;
+    }
+
+    public boolean isDamageTimerEnabled() {
+        return this.damageTimerEnabled;
     }
 
     public static void addPlayer(UUID uuid) {
