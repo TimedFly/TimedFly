@@ -16,7 +16,7 @@ public class PlayerDamageListener implements Listener {
             PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
             if (playerManager != null) {
                 if (!playerManager.isDamageTimerEnabled()) playerManager.callEvent(event);
-                event.setCancelled(playerManager.isInvulnerable());
+                event.setCancelled(playerManager.isDamageTimerEnabled());
             }
         }
     }

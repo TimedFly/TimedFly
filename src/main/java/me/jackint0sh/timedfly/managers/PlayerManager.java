@@ -17,7 +17,6 @@ public class PlayerManager {
 
     private static Map<UUID, PlayerManager> playerCache = new ConcurrentHashMap<>();
     private Consumer<EntityDamageEvent> onDamage;
-    private boolean invulnerable;
     private boolean damageTimerEnabled;
     private UUID playerUuid;
     private Player player;
@@ -68,30 +67,20 @@ public class PlayerManager {
     }
 
     public void disableDamage(int seconds) {
-        disableDamage(seconds, event -> this.invulnerable = true);
-    }
-
-    public void disableDamage(int seconds, Consumer<EntityDamageEvent> consumer) {
-        Consumer<EntityDamageEvent> consumer2 = event -> {
+        this.onDamage = event -> {
+            this.damageTimerEnabled = true;
             Plugin plugin = Bukkit.getPluginManager().getPlugin("TimedFly");
             Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-                this.invulnerable = false;
                 this.onDamage = null;
                 this.damageTimerEnabled = false;
-                event.setCancelled(false);
             }, seconds * 20);
         };
-        this.onDamage = consumer2.andThen(consumer).andThen(e -> this.damageTimerEnabled = true);
     }
 
     public void callEvent(Event event) {
         if (event instanceof EntityDamageEvent) {
             if (this.onDamage != null) this.onDamage.accept((EntityDamageEvent) event);
         }
-    }
-
-    public boolean isInvulnerable() {
-        return this.invulnerable;
     }
 
     public boolean isDamageTimerEnabled() {
