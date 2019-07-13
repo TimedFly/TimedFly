@@ -14,7 +14,7 @@ public class PlayerDamageListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-            if (playerManager != null) {
+            if (playerManager != null && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 if (!playerManager.isDamageTimerEnabled()) playerManager.callEvent(event);
                 event.setCancelled(playerManager.isDamageTimerEnabled());
             }
