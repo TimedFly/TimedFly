@@ -69,6 +69,7 @@ public final class TimedFly extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerDamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new AttackListener(), this);
         Bukkit.getPluginManager().registerEvents(new GameModeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ReSpawnListener(), this);
 
         MessageUtil.sendConsoleMessage("&cEvent listeners successfully loaded!");
     }
