@@ -6,6 +6,7 @@ import me.jackint0sh.timedfly.commands.TFly;
 import me.jackint0sh.timedfly.commands.TabCompleter;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
+import me.jackint0sh.timedfly.listeners.AttackListener;
 import me.jackint0sh.timedfly.listeners.ChatListener;
 import me.jackint0sh.timedfly.listeners.InventoryListener;
 import me.jackint0sh.timedfly.listeners.PlayerDamageListener;
@@ -69,6 +70,7 @@ public final class TimedFly extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDamageListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AttackListener(), this);
 
         MessageUtil.sendConsoleMessage("&cEvent listeners successfully loaded!");
     }
