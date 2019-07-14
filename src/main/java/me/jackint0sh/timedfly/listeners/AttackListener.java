@@ -18,47 +18,16 @@ public class AttackListener implements Listener {
         PlayerManager damagerManager = null;
         PlayerManager damagedManager = null;
 
-        if (event.getDamager() instanceof Player)
+        if (event.getDamager() instanceof Player) {
             damagerManager = PlayerManager.getCachedPlayer(event.getDamager().getUniqueId());
-        if (event.getEntity() instanceof Player)
-            damagedManager = PlayerManager.getCachedPlayer(event.getDamager().getUniqueId());
-
-        if (damagerManager != null) {
-            if (damagerManager.isTimeRunning()) {
-                damagerManager.getPlayer().setAllowFlight(false);
-                damagerManager.getPlayer().setFlying(false);
-                damagerManager.disableDamage(5);
-
-                MessageUtil.sendMessage(damagerManager.getPlayer(), "Entering attack mode. Flight disabled!");
-            }
-
-            if (damagedManager != null && damagedManager.isTimeRunning()) {
-                damagedManager.getPlayer().setAllowFlight(false);
-                damagedManager.getPlayer().setFlying(false);
-                damagedManager.disableDamage(5);
-
-                MessageUtil.sendMessage(damagedManager.getPlayer(), "Entering attack mode. Flight disabled!");
-            }
-
-            PlayerManager finalDamagedManager = damagedManager;
-            PlayerManager finalDamagerManager = damagerManager;
-
-            Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("TimedFly"), () -> {
-                if (finalDamagerManager.isTimeRunning()) {
-                    finalDamagerManager.getPlayer().setAllowFlight(true);
-                    finalDamagerManager.getPlayer().setFlying(true);
-
-                    MessageUtil.sendMessage(finalDamagerManager.getPlayer(), "Exiting attack mode. Flight re-enabled!");
-                }
-
-                if (finalDamagedManager != null && finalDamagedManager.isTimeRunning()) {
-                    finalDamagedManager.getPlayer().setAllowFlight(true);
-                    finalDamagedManager.getPlayer().setFlying(true);
-
-                    MessageUtil.sendMessage(finalDamagedManager.getPlayer(), "Exiting attack mode. Flight re-enabled!");
-                }
-            }, 10 * 20L);
         }
+        if (event.getEntity() instanceof Player) {
+            damagedManager = PlayerManager.getCachedPlayer(event.getEntity().getUniqueId());
+        }
+
+        if (damagerManager != null) damagerManager.enterAttackMode();
+        if (damagedManager != null) damagedManager.enterAttackMode();
+
     }
 
     @EventHandler
@@ -70,13 +39,13 @@ public class AttackListener implements Listener {
             PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
             if (playerManager != null && playerManager.isTimeRunning()) {
-                playerManager.disableDamage(5);
+                playerManager.disableFallDamage();
                 player.setAllowFlight(false);
                 player.setFlying(false);
 
                 MessageUtil.sendMessage(player, "Entering attack mode. Flight disabled!");
 
-                Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("TimedFly"), () -> {
+                Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
                     if (playerManager.isTimeRunning()) {
                         player.setAllowFlight(true);
                         player.setFlying(true);

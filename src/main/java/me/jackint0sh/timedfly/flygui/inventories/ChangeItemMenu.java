@@ -53,7 +53,7 @@ public class ChangeItemMenu {
             MessageUtil.sendMessage(player, "Material changed from: &e" + materialBefore + "&7 to: &e" + flyItem.getMaterial());
 
             FlyItemCreator.clearState(FlyItemCreator.StateType.INNER_STATE, player);
-            Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("TimedFly"),
+            Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0],
                     () -> FlyItemCreator.openMenu(player), 1);
         });
         if (b) player.openInventory(inventory.getInventory());

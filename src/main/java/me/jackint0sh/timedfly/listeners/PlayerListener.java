@@ -20,7 +20,7 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null && playerManager.isTimeRunning()) {
-            Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("TimedFly"), () -> {
+            Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
                 player.setAllowFlight(true);
                 player.setFlying(true);
             }, 2);
@@ -32,20 +32,20 @@ public class PlayerListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-            if (playerManager != null && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                if (!playerManager.isDamageTimerEnabled()) playerManager.callEvent(event);
-                event.setCancelled(playerManager.isDamageTimerEnabled());
+            if (playerManager != null && !playerManager.isFallDamageEnabled() && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+                playerManager.enableFallDamage();
+                event.setCancelled(true);
             }
         }
     }
 
     @EventHandler
-    private void onGameCodeChange(PlayerGameModeChangeEvent event) {
+    private void onGameModeChange(PlayerGameModeChangeEvent event) {
         if (event.isCancelled()) return;
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
         if (playerManager != null && event.getNewGameMode() == GameMode.SURVIVAL && playerManager.isTimeRunning()) {
-            Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("TimedFly"), () -> {
+            Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
                 player.setAllowFlight(true);
                 player.setFlying(true);
             }, 2);
@@ -60,7 +60,7 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (player.isOnGround() && playerManager != null) {
-            if (!playerManager.isOnFloor() && playerManager.hasTime() && playerManager.isTimeRunning()) {
+            if (!playerManager.isOnFloor() && playerManager.hasTime()) {
                 playerManager.setOnFloor(true).setTimeRunning(false);
             }
         }
