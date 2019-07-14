@@ -43,6 +43,7 @@ public class PlayerManager {
     }
 
     public void startTimer() {
+        if (this.player.isOnGround()) return;
         this.timeRunning = true;
         this.player.setAllowFlight(true);
         this.player.setFlying(true);
@@ -163,7 +164,7 @@ public class PlayerManager {
     }
 
     public boolean hasTime() {
-        return hasTime;
+        return timeLeft > 0;
     }
 
     public PlayerManager setHasTime(boolean hasTime) {
