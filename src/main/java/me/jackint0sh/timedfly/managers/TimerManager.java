@@ -51,8 +51,7 @@ public class TimerManager {
                 if (!playerManager.isTimeRunning()) continue;
 
                 if (playerManager.getTimeLeft() <= 0) playerManager.stopTimer();
-                playerManager.decreaseTime();
-                playerManager.updateStore();
+                playerManager.decreaseTime().updateStore();
             }
         }
     }

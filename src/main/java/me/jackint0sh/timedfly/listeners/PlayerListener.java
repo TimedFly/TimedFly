@@ -97,7 +97,7 @@ public class PlayerListener implements Listener {
             }
         }, 20);
     }
-    
+
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();

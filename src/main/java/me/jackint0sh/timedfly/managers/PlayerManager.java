@@ -43,11 +43,11 @@ public class PlayerManager {
 
     public void startTimer() {
         this.player.setAllowFlight(true);
-        if (!this.player.isOnGround()) {
+        if (!this.isOnFloor()) {
             this.timeRunning = true;
             this.player.setFlying(true);
-            TimerManager.startIfNot();
         }
+        TimerManager.startIfNot();
     }
 
     public void stopTimer() {
@@ -63,8 +63,8 @@ public class PlayerManager {
     }
 
     public void resumeTimer() {
-        this.timePaused = false;
         this.startTimer();
+        this.timePaused = false;
     }
 
     public void enterAttackMode() {
@@ -80,6 +80,7 @@ public class PlayerManager {
         if (attackTimer != null) attackTimer.cancel();
 
         attackTimer = Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
+            if (!this.hasTime()) return;
             this.player.setAllowFlight(true);
             this.setAttacking(false);
             MessageUtil.sendMessage(this.player, "Exiting attack mode. Flight re-enabled!");
@@ -142,6 +143,13 @@ public class PlayerManager {
         return this;
     }
 
+
+    public PlayerManager setPlayer(Player player) {
+        this.player = player;
+        this.playerUuid = player.getUniqueId();
+        return this;
+    }
+
     public int getTimeLeft() {
         return timeLeft;
     }
@@ -183,7 +191,7 @@ public class PlayerManager {
     }
 
     public boolean hasTime() {
-        return timeLeft > 0;
+        return hasTime = timeLeft > 0;
     }
 
     public PlayerManager setHasTime(boolean hasTime) {
@@ -216,5 +224,22 @@ public class PlayerManager {
     public void updateStore() {
         FlyInventory flyInventory = FlyInventory.getFlyInventory(player.getOpenInventory().getTitle());
         if (flyInventory != null) flyInventory.setItems(FlightStore.createContents(player));
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerManager{" +
+                "attackTimer=" + attackTimer +
+                ", fallDamage=" + fallDamage +
+                ", attacking=" + attacking +
+                ", playerUuid=" + playerUuid +
+                ", player=" + player +
+                ", timeLeft=" + timeLeft +
+                ", initialTime=" + initialTime +
+                ", hasTime=" + hasTime +
+                ", onFloor=" + onFloor +
+                ", timeRunning=" + timeRunning +
+                ", timePaused=" + timePaused +
+                '}';
     }
 }
