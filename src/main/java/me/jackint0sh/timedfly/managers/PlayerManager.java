@@ -2,22 +2,21 @@ package me.jackint0sh.timedfly.managers;
 
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
+import me.jackint0sh.timedfly.utilities.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 public class PlayerManager {
 
     private static Map<UUID, PlayerManager> playerCache = new ConcurrentHashMap<>();
-    private Consumer<EntityDamageEvent> onDamage;
-    private boolean damageTimerEnabled;
+    private BukkitTask attackTimer;
+    private boolean fallDamage;
+    private boolean attacking;
     private UUID playerUuid;
     private Player player;
     private int timeLeft;
@@ -39,21 +38,23 @@ public class PlayerManager {
         this.onFloor = onFloor;
         this.timeRunning = timeRunning;
         this.player = Bukkit.getPlayer(playerUuid);
-        if (this.player == null) this.player = (Player) Bukkit.getOfflinePlayer(playerUuid);
+        if (this.player == null) this.player = Bukkit.getOfflinePlayer(playerUuid).getPlayer();
     }
 
     public void startTimer() {
-        this.timeRunning = true;
         this.player.setAllowFlight(true);
-        this.player.setFlying(true);
-        TimerManager.startIfNot();
+        if (!this.player.isOnGround()) {
+            this.timeRunning = true;
+            this.player.setFlying(true);
+            TimerManager.startIfNot();
+        }
     }
 
     public void stopTimer() {
         this.timeRunning = false;
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
-        this.disableDamage(10);
+        if (!this.player.isOnGround()) this.disableFallDamage();
     }
 
     public void pauseTimer() {
@@ -66,25 +67,44 @@ public class PlayerManager {
         this.startTimer();
     }
 
-    public void disableDamage(int seconds) {
-        this.onDamage = event -> {
-            this.damageTimerEnabled = true;
-            Plugin plugin = Bukkit.getPluginManager().getPlugin("TimedFly");
-            Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-                this.onDamage = null;
-                this.damageTimerEnabled = false;
-            }, seconds * 20);
-        };
-    }
+    public void enterAttackMode() {
+        if (!this.isAttacking() && this.isTimeRunning()) {
 
-    public void callEvent(Event event) {
-        if (event instanceof EntityDamageEvent) {
-            if (this.onDamage != null) this.onDamage.accept((EntityDamageEvent) event);
+            this.player.setAllowFlight(false);
+            this.player.setFlying(false);
+            this.setAttacking(true).disableFallDamage();
+
+            MessageUtil.sendMessage(this.player, "Entering attack mode. Flight disabled!");
         }
+
+        if (attackTimer != null) attackTimer.cancel();
+
+        attackTimer = Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
+            this.player.setAllowFlight(true);
+            this.setAttacking(false);
+            MessageUtil.sendMessage(this.player, "Exiting attack mode. Flight re-enabled!");
+        }, 10 * 20L);
     }
 
-    public boolean isDamageTimerEnabled() {
-        return this.damageTimerEnabled;
+    public void disableFallDamage() {
+        this.fallDamage = false;
+    }
+
+    public void enableFallDamage() {
+        this.fallDamage = true;
+    }
+
+    public boolean isFallDamageEnabled() {
+        return this.fallDamage;
+    }
+
+    public boolean isAttacking() {
+        return this.attacking;
+    }
+
+    public PlayerManager setAttacking(boolean attacking) {
+        this.attacking = attacking;
+        return this;
     }
 
     public static void addPlayer(UUID uuid) {
@@ -163,7 +183,7 @@ public class PlayerManager {
     }
 
     public boolean hasTime() {
-        return hasTime;
+        return timeLeft > 0;
     }
 
     public PlayerManager setHasTime(boolean hasTime) {
