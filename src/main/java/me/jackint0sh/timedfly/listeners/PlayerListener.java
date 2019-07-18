@@ -97,12 +97,7 @@ public class PlayerListener implements Listener {
             }
         }, 20);
     }
-
-    @EventHandler
-    public void a(PlayerToggleSneakEvent event) {
-        event.getPlayer().setAllowFlight(true);
-    }
-
+    
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
