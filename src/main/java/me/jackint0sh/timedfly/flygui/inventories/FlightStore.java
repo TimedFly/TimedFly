@@ -25,12 +25,28 @@ public class FlightStore {
     }
 
     public static void createEdit(Player player) throws NullPointerException {
-        FlyInventory inventory = new FlyInventory(6, MessageUtil.color("&cTimedFly Store - Items"));
-        inventory.setItems(createContents(player, false));
-        player.openInventory(inventory.getInventory());
+        FlyInventory inventory = new FlyInventory(6, MessageUtil.color("&cTimedFly Store - Edit Item"));
+        inventory.setItems(createContents(player, 2));
+        player.openInventory(inventory.onClose(event -> {
+            if (FlyItemCreator.getState(player) != FlyItemCreator.State.EDITING_ITEM) {
+                FlyItemCreator.clearStates(player);
+                FlyItemCreator.setMainState(player, FlyItemCreator.State.MAIN_MENU);
+            }
+        }).getInventory());
     }
 
-    public static Item[] createContents(Player player, boolean b) {
+    public static void createDelete(Player player) {
+        FlyInventory inventory = new FlyInventory(6, MessageUtil.color("&cTimedFly Store - Delete Item"));
+        inventory.setItems(createContents(player, 3));
+        player.openInventory(inventory.onClose(event -> {
+            if (FlyItemCreator.getInnerState(player) != FlyItemCreator.InnerState.CONFIRM_DELETE) {
+                FlyItemCreator.clearStates(player);
+                FlyItemCreator.setMainState(player, FlyItemCreator.State.MAIN_MENU);
+            }
+        }).getInventory());
+    }
+
+    public static Item[] createContents(Player player, int type) {
         List<Item> items = new ArrayList<>();
         FileConfiguration config = Config.getConfig("items").get();
         ConfigurationSection configSection = config.getConfigurationSection("Items");
@@ -43,7 +59,7 @@ public class FlightStore {
                         .stream().map(string -> string.replace("[time]", item.getTime()))
                         .collect(Collectors.toList()))
                 .onClick(event -> {
-                    if (b) {
+                    if (type == 1) {
                         PlayerManager playerManager = PlayerManager.getCachedPlayer(event.getWhoClicked().getUniqueId());
                         try {
                             int time = TimeParser.toTicks(item.getTime());
@@ -52,10 +68,14 @@ public class FlightStore {
                         } catch (Exception e) {
                             MessageUtil.sendError(player, e);
                         }
-                    } else {
+                    } else if (type == 2) {
                         FlyItemCreator.setMainState(player, FlyItemCreator.State.EDITING_ITEM);
                         FlyItemCreator.setCurrentFlyItem(player, item);
                         EditorMenu.create(player);
+                    } else if (type == 3) {
+                        FlyItemCreator.setInnerState(player, FlyItemCreator.InnerState.CONFIRM_DELETE);
+                        FlyItemCreator.setCurrentFlyItem(player, item);
+                        ConfirmationMenu.create(player);
                     }
                 })));
 
@@ -63,6 +83,6 @@ public class FlightStore {
     }
 
     public static Item[] createContents(Player player) {
-        return createContents(player, true);
+        return createContents(player, 1);
     }
 }

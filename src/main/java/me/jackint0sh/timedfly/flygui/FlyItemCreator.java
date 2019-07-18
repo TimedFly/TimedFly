@@ -35,7 +35,7 @@ public class FlyItemCreator {
                     } else EditorMenu.create(player);
                     break;
                 case DELETE_ITEM:
-                    ConfirmationMenu.create(player);
+                    FlightStore.createDelete(player);
                     break;
                 case MAIN_MENU:
                     MainMenu.create(player);
@@ -109,7 +109,7 @@ public class FlyItemCreator {
     }
 
     public enum InnerState {
-        CHANGE_NAME, CHANGE_ITEM, CHANGE_PRICE, CHANGE_TIME, CHANGE_OPTIONS, ADD_LORE_LINE, REMOVE_LORE_LINE, SAVE_ITEM
+        CHANGE_NAME, CHANGE_ITEM, CHANGE_PRICE, CHANGE_TIME, CHANGE_OPTIONS, ADD_LORE_LINE, REMOVE_LORE_LINE, SAVE_ITEM, CONFIRM_DELETE
     }
 
     public enum OptionState {

@@ -37,21 +37,25 @@ public class ConfirmationMenu {
     }
 
     private static void handleConfirmation(Player player, boolean b) {
-        if (!b) {
+        if (b) {
             if (FlyItemCreator.getState(player) == FlyItemCreator.State.DELETE_ITEM) {
                 handleDelete(player);
-                FlyItemCreator.setMainState(player, FlyItemCreator.State.MAIN_MENU);
+                MessageUtil.sendMessage(player, "Successfully deleted!");
+                FlyItemCreator.removeCurrentFlyItem(player);
+                FlyItemCreator.clearStates(player);
+                player.closeInventory();
+                return;
+            } else if (FlyItemCreator.getInnerState(player) == FlyItemCreator.InnerState.SAVE_ITEM) {
+                handleSave(player);
+                MessageUtil.sendMessage(player, "Successfully saved!");
+                FlyItemCreator.removeCurrentFlyItem(player);
+                FlyItemCreator.clearStates(player);
+                player.closeInventory();
+                return;
             }
-            FlyItemCreator.openMenu(player);
-            return;
         }
-        if (FlyItemCreator.getInnerState(player) == FlyItemCreator.InnerState.SAVE_ITEM) {
-            handleSave(player);
-            MessageUtil.sendMessage(player, "Successfully saved!");
-            FlyItemCreator.removeCurrentFlyItem(player);
-            FlyItemCreator.clearStates(player);
-            player.closeInventory();
-        }
+        FlyItemCreator.clearState(FlyItemCreator.StateType.INNER_STATE, player);
+        FlyItemCreator.openMenu(player);
     }
 
     private static void handleSave(Player player) {
@@ -91,8 +95,14 @@ public class ConfirmationMenu {
 
     private static void handleDelete(Player player) {
         FlyItem flyItem = FlyItemCreator.getCurrentFlyItem(player);
-        FileConfiguration config = Config.getConfig("items").get();
+        Config config = Config.getConfig("items");
 
-        config.set(flyItem.getKey(), null);
+        config.get().set("Items." + flyItem.getKey(), null);
+        FlyItem.removeConfigItem(flyItem.getKey());
+        try {
+            config.reload();
+        } catch (IOException e) {
+            MessageUtil.sendError(player, e);
+        }
     }
 }

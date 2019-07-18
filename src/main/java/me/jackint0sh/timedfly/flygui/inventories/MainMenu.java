@@ -37,7 +37,7 @@ public class MainMenu {
                 .setLore("&7", "&eClick here to delete a", "&ecurrent Item.", "&7")
                 .onClick(event -> {
                     FlyItemCreator.setMainState(player, FlyItemCreator.State.DELETE_ITEM);
-                    ConfirmationMenu.create(player);
+                    FlightStore.createDelete(player);
                 });
 
         inventory.setItem(create, 0);
