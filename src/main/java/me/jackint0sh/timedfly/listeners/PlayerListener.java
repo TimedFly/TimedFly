@@ -7,10 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.*;
 
 public class PlayerListener implements Listener {
 
@@ -44,7 +41,8 @@ public class PlayerListener implements Listener {
         if (event.isCancelled()) return;
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-        if (playerManager != null && event.getNewGameMode() == GameMode.SURVIVAL && playerManager.isTimeRunning()) {
+        if (playerManager != null && (event.getNewGameMode() == GameMode.SURVIVAL || event.getNewGameMode() == GameMode.ADVENTURE)
+                && playerManager.isTimeRunning()) {
             Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
                 player.setAllowFlight(true);
                 player.setFlying(true);
@@ -60,8 +58,10 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (player.isOnGround() && playerManager != null) {
-            if (!playerManager.isOnFloor() && playerManager.hasTime()) {
-                playerManager.setOnFloor(true).setTimeRunning(false);
+            playerManager.setOnFloor(true);
+            if (playerManager.hasTime() && playerManager.isTimeRunning() && !playerManager.isAttacking()) {
+                if (!player.getAllowFlight()) player.setAllowFlight(true);
+                playerManager.setTimeRunning(false);
             }
         }
     }
@@ -74,13 +74,42 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null && playerManager.isOnFloor()) {
-            playerManager.setOnFloor(false);
             if (!playerManager.hasTime()) {
                 event.setCancelled(true);
                 playerManager.stopTimer();
                 return;
             }
+            playerManager.setOnFloor(false);
             playerManager.startTimer();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
+            Player player = event.getPlayer();
+            PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+
+            if (playerManager != null) {
+                // TODO: Database implementation
+                playerManager.setOnFloor(player.isOnGround()).setPlayer(player);
+                if (!playerManager.isTimePaused() && playerManager.hasTime()) playerManager.startTimer();
+            }
+        }, 20);
+    }
+
+    @EventHandler
+    public void a(PlayerToggleSneakEvent event) {
+        event.getPlayer().setAllowFlight(true);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+
+        if (playerManager != null) {
+            // TODO: Database implementation
         }
     }
 }

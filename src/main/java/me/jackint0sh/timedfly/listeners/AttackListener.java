@@ -1,8 +1,6 @@
 package me.jackint0sh.timedfly.listeners;
 
 import me.jackint0sh.timedfly.managers.PlayerManager;
-import me.jackint0sh.timedfly.utilities.MessageUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,23 +35,7 @@ public class AttackListener implements Listener {
         if (event.getEntity().getShooter() instanceof Player) {
             Player player = (Player) event.getEntity().getShooter();
             PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-
-            if (playerManager != null && playerManager.isTimeRunning()) {
-                playerManager.disableFallDamage();
-                player.setAllowFlight(false);
-                player.setFlying(false);
-
-                MessageUtil.sendMessage(player, "Entering attack mode. Flight disabled!");
-
-                Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
-                    if (playerManager.isTimeRunning()) {
-                        player.setAllowFlight(true);
-                        player.setFlying(true);
-
-                        MessageUtil.sendMessage(player, "Exiting attack mode. Flight re-enabled!");
-                    }
-                }, 10 * 20L);
-            }
+            if (playerManager != null) playerManager.enterAttackMode();
         }
     }
 }
