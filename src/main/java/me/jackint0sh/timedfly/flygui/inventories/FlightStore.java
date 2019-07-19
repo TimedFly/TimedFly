@@ -66,7 +66,7 @@ public class FlightStore {
                         return;
                     }
                     if (type == 1) {
-                        if (!player.hasPermission(item.getPermission())) {
+                        if (item.isUsePerms() && !player.hasPermission(item.getPermission())) {
                             MessageUtil.sendNoPermission(player);
                             player.closeInventory();
                             return;
