@@ -34,4 +34,11 @@ public class Hooks {
         }
     }
 
+    public static void hookPapi(Plugin plugin) {
+        if (isPluginEnabled("PlaceholderAPI")) {
+            new PlaceholderAPI(plugin).register();
+            MessageUtil.sendConsoleMessage("&cHooked to PlaceholderAPI!");
+        }
+    }
+
 }

@@ -110,6 +110,7 @@ public final class TimedFly extends JavaPlugin {
         MessageUtil.sendConsoleMessage("&cLooking for hooks...");
 
         Hooks.hookVault();
+        Hooks.hookPapi(this);
 
         MessageUtil.sendConsoleMessage("&cAll plugins hooked...");
     }
