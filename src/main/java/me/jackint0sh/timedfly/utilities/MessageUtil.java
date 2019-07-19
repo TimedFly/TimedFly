@@ -65,7 +65,10 @@ public class MessageUtil {
     }
 
     public static void sendMessages(CommandSender to, List<String> text, boolean prefix) {
-        text.forEach(message -> sendMessage(to, message, prefix));
+        text.forEach(message -> {
+            sendMessage(to, message, prefix);
+            System.out.println(message);
+        });
     }
 
     public static void sendMessages(CommandSender to, List<String> text) {

@@ -6,7 +6,7 @@ public enum  Permissions {
     RELOAD("timedfly.reload", "Reload the plugin."),
     GET_UPDATE("timedfly.getupdate", "Get an update notification if available."),
     BYPASS_ATTACK("timedfly.bypass.attack", "Bypass restriction of toggle fly off for entering attack mode."),
-    BYPASS_LIMIT("timedfly.bypass.attack", "Bypass the limit of time bought."),
+    BYPASS_LIMIT("timedfly.bypass.limit", "Bypass the limit of time bought."),
     FLY_SET("timedfly.fly.set", "Set fly time to your self or another player."),
     FLY_SET_SELF("timedfly.fly.set.self", "Set fly time to your self."),
     FLY_SET_OTHERS("timedfly.fly.set.others", "Set fly time to another player."),
