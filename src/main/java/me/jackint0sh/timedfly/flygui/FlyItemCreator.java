@@ -1,6 +1,9 @@
 package me.jackint0sh.timedfly.flygui;
 
 import me.jackint0sh.timedfly.flygui.inventories.*;
+import me.jackint0sh.timedfly.managers.PlayerManager;
+import me.jackint0sh.timedfly.utilities.MessageUtil;
+import me.jackint0sh.timedfly.utilities.Permissions;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -20,6 +23,11 @@ public class FlyItemCreator {
         if (state != null) {
             switch (state) {
                 case EDIT_ITEM:
+                    if (!PlayerManager.hasPermission(player, Permissions.CREATOR_EDIT)) {
+                        MessageUtil.sendNoPermission(player);
+                        player.closeInventory();
+                        return;
+                    }
                     if (innerState != null) {
                         if (innerState == InnerState.CHANGE_OPTIONS && optionState != null) OptionsMenu.create(player);
                         else if (innerState == InnerState.CHANGE_ITEM) ChangeItemMenu.create(player);
@@ -28,6 +36,11 @@ public class FlyItemCreator {
                     break;
                 case CREATE_ITEM:
                 case EDITING_ITEM:
+                    if (!PlayerManager.hasPermission(player, Permissions.CREATOR_CREATE)) {
+                        MessageUtil.sendNoPermission(player);
+                        player.closeInventory();
+                        return;
+                    }
                     if (innerState != null) {
                         if (innerState == InnerState.CHANGE_OPTIONS) OptionsMenu.create(player);
                         else if (innerState == InnerState.CHANGE_ITEM) ChangeItemMenu.create(player);
@@ -35,6 +48,11 @@ public class FlyItemCreator {
                     } else EditorMenu.create(player);
                     break;
                 case DELETE_ITEM:
+                    if (!PlayerManager.hasPermission(player, Permissions.CREATOR_DELETE)) {
+                        MessageUtil.sendNoPermission(player);
+                        player.closeInventory();
+                        return;
+                    }
                     FlightStore.createDelete(player);
                     break;
                 case MAIN_MENU:

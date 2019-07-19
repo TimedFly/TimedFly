@@ -3,10 +3,12 @@ package me.jackint0sh.timedfly.managers;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
+import me.jackint0sh.timedfly.utilities.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,7 +69,38 @@ public class PlayerManager {
         this.timePaused = false;
     }
 
+    public boolean hasPermission(Permissions permission) {
+        return PlayerManager.hasPermission(this.player, permission);
+    }
+
+    public static boolean hasPermission(Player player, Permissions permission) {
+        return player.isOp()
+                || player.hasPermission(Permissions.ADMIN.getPermission())
+                || player.hasPermission(permission.getPermission());
+    }
+
+    private static boolean hasPermissions(Player player, boolean and, Permissions... permissions) {
+        if (player.isOp() || player.hasPermission(Permissions.ADMIN.getPermission())) return true;
+
+        boolean hasPerm;
+        if (and) {
+            hasPerm = Arrays.stream(permissions).allMatch(permission -> PlayerManager.hasPermission(player, permission));
+        } else {
+            hasPerm = Arrays.stream(permissions).anyMatch(permission -> PlayerManager.hasPermission(player, permission));
+        }
+        return hasPerm;
+    }
+
+    public static boolean hasAllPermissions(Player player, Permissions... permissions) {
+        return hasPermissions(player, true, permissions);
+    }
+
+    public static boolean hasAnyPermission(Player player, Permissions... permissions) {
+        return hasPermissions(player, false, permissions);
+    }
+
     public void enterAttackMode() {
+        if (this.hasPermission(Permissions.BYPASS_ATTACK)) return;
         if (!this.isAttacking() && this.isTimeRunning()) {
 
             this.player.setAllowFlight(false);
