@@ -115,8 +115,27 @@ public class MessageUtil {
         else sendError(e.getMessage());
     }
 
+    public static void sendError(CommandSender to, String text) {
+        sendMessage(to, "&c" + text);
+        sendError(text);
+    }
+
+    public static void sendError(CommandSender to, Exception e) {
+        sendMessage(to, "&c" + e.getMessage());
+        if (me.jackint0sh.timedfly.TimedFly.debug) e.printStackTrace();
+        else sendError(e.getMessage());
+    }
+
     public static void sendError(String text) {
         sendMessage(Bukkit.getConsoleSender(), "&c&lTimedFly ERROR > &7" + text, false);
+    }
+
+    public static void sendNoPermission(CommandSender to) {
+        sendMessage(to, "&cYou don't have permission to do this!", true);
+    }
+
+    public static void sendNoPermission(Player to) {
+        sendMessage(to, "&cYou don't have permission to do this!", true);
     }
 
     public static void sendCenteredMessage(CommandSender to, String text, int width) {

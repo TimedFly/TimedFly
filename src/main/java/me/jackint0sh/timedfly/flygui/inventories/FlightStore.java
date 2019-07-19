@@ -7,6 +7,7 @@ import me.jackint0sh.timedfly.flygui.Item;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
+import me.jackint0sh.timedfly.utilities.Permissions;
 import me.jackint0sh.timedfly.utilities.TimeParser;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -59,23 +60,38 @@ public class FlightStore {
                         .stream().map(string -> string.replace("[time]", item.getTime()))
                         .collect(Collectors.toList()))
                 .onClick(event -> {
+                    PlayerManager playerManager = PlayerManager.getCachedPlayer(event.getWhoClicked().getUniqueId());
+                    if (playerManager == null) {
+                        MessageUtil.sendError(player, "Something went wrong on line: " + new Throwable().getStackTrace()[0].getLineNumber());
+                        return;
+                    }
                     if (type == 1) {
-                        PlayerManager playerManager = PlayerManager.getCachedPlayer(event.getWhoClicked().getUniqueId());
+                        if (!player.hasPermission(item.getPermission())) {
+                            MessageUtil.sendNoPermission(player);
+                            player.closeInventory();
+                            return;
+                        }
+
                         try {
                             int time = TimeParser.toTicks(item.getTime());
                             playerManager.addTime(time).startTimer();
-                            MessageUtil.sendMessage(player, "Time: " + time);
+                            playerManager.updateStore();
+                            MessageUtil.sendMessage(player, "You've added &e" + time + " &7to your timer!");
                         } catch (Exception e) {
                             MessageUtil.sendError(player, e);
                         }
-                    } else if (type == 2) {
-                        FlyItemCreator.setMainState(player, FlyItemCreator.State.EDITING_ITEM);
-                        FlyItemCreator.setCurrentFlyItem(player, item);
-                        EditorMenu.create(player);
-                    } else if (type == 3) {
-                        FlyItemCreator.setInnerState(player, FlyItemCreator.InnerState.CONFIRM_DELETE);
-                        FlyItemCreator.setCurrentFlyItem(player, item);
-                        ConfirmationMenu.create(player);
+                    } else {
+                        boolean all = playerManager.hasPermission(Permissions.CREATOR_ALL);
+                        if (type == 2 && playerManager.hasPermission(Permissions.CREATOR_EDIT) && all) {
+                            FlyItemCreator.setMainState(player, FlyItemCreator.State.EDITING_ITEM);
+                            FlyItemCreator.setCurrentFlyItem(player, item);
+                            EditorMenu.create(player);
+                        } else if (type == 3 && playerManager.hasPermission(Permissions.CREATOR_DELETE) && all) {
+                            FlyItemCreator.setInnerState(player, FlyItemCreator.InnerState.CONFIRM_DELETE);
+                            FlyItemCreator.setCurrentFlyItem(player, item);
+                            ConfirmationMenu.create(player);
+                        } else MessageUtil.sendNoPermission(player);
+
                     }
                 })));
 

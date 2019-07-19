@@ -53,7 +53,7 @@ public final class TimedFly extends JavaPlugin {
         MessageUtil.sendConsoleMessage("&cLoading commands...");
 
         Bukkit.getPluginCommand("timedfly").setExecutor(new Main());
-        Bukkit.getPluginCommand("tfly").setExecutor(new TFly(this));
+        Bukkit.getPluginCommand("tfly").setExecutor(new TFly());
 
         Bukkit.getPluginCommand("timedfly").setTabCompleter(new TabCompleter(Arguments.Type.TIMEDFLY));
         Bukkit.getPluginCommand("tfly").setTabCompleter(new TabCompleter(Arguments.Type.TFLY));

@@ -2,9 +2,11 @@ package me.jackint0sh.timedfly.commands;
 
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyItemCreator;
+import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.Permissions;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -27,6 +29,10 @@ public class Main implements CommandExecutor {
                 break;
             case "reload":
             case "r":
+                if (sender instanceof Player && !PlayerManager.hasPermission((Player) sender, Permissions.RELOAD)) {
+                    MessageUtil.sendNoPermission(sender);
+                    return true;
+                }
                 reload(sender);
                 break;
             case "permissions":
@@ -35,8 +41,14 @@ public class Main implements CommandExecutor {
                 permissions(sender);
                 break;
             case "editor":
-                if (sender instanceof Player) FlyItemCreator.openMenu((Player) sender);
-                else MessageUtil.sendError("Only players allowed!");
+            case "creator":
+            case "edit":
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (PlayerManager.hasAnyPermission(player, Permissions.CREATOR_OPEN, Permissions.CREATOR_ALL)) {
+                        FlyItemCreator.openMenu(player);
+                    } else MessageUtil.sendNoPermission(player);
+                } else MessageUtil.sendError("Only players allowed!");
                 break;
             default:
                 MessageUtil.sendMessage(sender, "Command not found. Try using " + MessageUtil.COMMAND_TIMEDFLY + "help");
@@ -76,15 +88,16 @@ public class Main implements CommandExecutor {
     private void reload(CommandSender sender) {
         try {
             for (Config config : Config.getConfigs().values()) {
-                if (config.getName().equals("items.yml"))
-                    config.get().getConfigurationSection("Items").getKeys(false).forEach(FlyItem::new);
                 config.reload();
+                if (config.getName().equals("items.yml")) {
+                    config.get().getConfigurationSection("Items").getKeys(false).forEach(FlyItem::new);
+                }
             }
         } catch (IOException e) {
             if (sender instanceof Player)
                 MessageUtil.sendError((Player) sender, "Couldn't reload the plugin. Check the console...");
-            else MessageUtil.sendError(e.getMessage());
-            e.printStackTrace();
+            MessageUtil.sendError(Bukkit.getConsoleSender(), e);
+            return;
         }
         MessageUtil.sendMessage(sender, "Plugin successfully reloaded!");
     }

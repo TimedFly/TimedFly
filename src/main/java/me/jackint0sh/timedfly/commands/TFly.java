@@ -3,25 +3,19 @@ package me.jackint0sh.timedfly.commands;
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
+import me.jackint0sh.timedfly.utilities.Permissions;
 import me.jackint0sh.timedfly.utilities.TimeParser;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TFly implements CommandExecutor {
-
-    private Plugin plugin;
-
-    public TFly(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -73,16 +67,50 @@ public class TFly implements CommandExecutor {
     private void handleTimeArg(String[] args, CommandSender sender, boolean b) {
         Player player = Bukkit.getPlayerExact(args[args.length - 1]);
         int to = args.length - 1;
-        if (player == null || TimeParser.isParsable(args[args.length - 1])) {
+        if (TimeParser.isParsable(args[args.length - 1])) {
             if (!(sender instanceof Player)) {
                 MessageUtil.sendMessage(sender, "Only players can do this.");
                 return;
             }
             player = (Player) sender;
             to = args.length;
+        } else if (player == null) {
+            MessageUtil.sendError(sender, "That player is not online!");
+            return;
         }
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+        if (playerManager == null) {
+            MessageUtil.sendError(player, "Something went wrong on line: " + new Throwable().getStackTrace()[0].getLineNumber());
+            return;
+        }
+
+        if (player.equals(sender)) {
+            if (b) {
+                if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_ADD_SELF, Permissions.FLY_ADD)) {
+                    MessageUtil.sendNoPermission(player);
+                    return;
+                }
+            } else {
+                if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_SET_SELF, Permissions.FLY_SET)) {
+                    MessageUtil.sendNoPermission(player);
+                    return;
+                }
+            }
+        } else {
+            if (b) {
+                if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_ADD_OTHERS, Permissions.FLY_ADD)) {
+                    MessageUtil.sendNoPermission(sender);
+                    return;
+                }
+            } else {
+                if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_SET_OTHERS, Permissions.FLY_SET)) {
+                    MessageUtil.sendNoPermission(sender);
+                    return;
+                }
+            }
+        }
+
         try {
             String timeString = String.join("", Arrays.copyOfRange(args, 1, to));
             int time = TimeParser.toTicks(timeString);
@@ -91,11 +119,11 @@ public class TFly implements CommandExecutor {
             if (b) {
                 playerManager.addTime(time);
                 text = "Time added successfully: " + timeString;
-                from = "&c" + sender.getName() + "&7 set your time to: &e" + timeString;
+                from = "&c" + sender.getName() + "&7 added &e" + timeString + "&7 to your time.";
             } else {
                 playerManager.setTime(time);
                 text = "Time successfully set to: " + timeString;
-                from = "&c" + sender.getName() + "&7 added &e" + timeString + "&7 to your time.";
+                from = "&c" + sender.getName() + "&7 set your time to: &e" + timeString;
             }
 
             playerManager.startTimer();
@@ -109,8 +137,14 @@ public class TFly implements CommandExecutor {
     }
 
     private void toggleTimer(String[] args, CommandSender sender, int type) {
-        Player player = Bukkit.getPlayerExact(args[args.length - 1]);
-        if (player == null) {
+        Player player;
+        if (args.length > 1) {
+            player = Bukkit.getPlayerExact(args[args.length - 1]);
+            if (player == null) {
+                MessageUtil.sendError(sender, "That player is not online!");
+                return;
+            }
+        } else {
             if (!(sender instanceof Player)) {
                 MessageUtil.sendMessage(sender, "Only players can do this.");
                 return;
@@ -119,6 +153,22 @@ public class TFly implements CommandExecutor {
         }
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+        if (playerManager == null) {
+            MessageUtil.sendError(player, "Something went wrong on line: " + new Throwable().getStackTrace()[0].getLineNumber());
+            return;
+        }
+
+        if (player.equals(sender)) {
+            if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_TOGGLE_SELF, Permissions.FLY_TOGGLE_SELF)) {
+                MessageUtil.sendNoPermission(player);
+                return;
+            }
+        } else {
+            if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_TOGGLE_OTHERS, Permissions.FLY_TOGGLE)) {
+                MessageUtil.sendNoPermission(sender);
+                return;
+            }
+        }
 
         if (playerManager.getTimeLeft() < 1) {
             if (playerManager.isTimePaused()) MessageUtil.sendMessage(player, "The timer in not running...");
