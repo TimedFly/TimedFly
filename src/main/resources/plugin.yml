@@ -1,7 +1,7 @@
 name: TimedFly
 version: ${project.version}
 main: me.jackint0sh.timedfly.TimedFly
-softdepend: [Vault, TokenManager, PlaceholderAPI]
+softdepend: [Vault, TokenManager, PlaceholderAPI, PlayerPoints]
 authors: [Jackint0sh]
 description: Fly for a limited ammount of time by paying some cash
 api-version: 1.13

@@ -95,7 +95,7 @@ Sounds:
 
 # You can enable multiple currency types (Not recommended)
 CurrencyType:
-  # If true the currency used will be from TokenManager, balance placeholder: [tokens]
+  # If true the currency used will be from Levels, balance placeholder: [tokens]
   UseTokenManager: false
 
   # If true the currency used will be from PlayerPoints, balance placeholder: [points]
