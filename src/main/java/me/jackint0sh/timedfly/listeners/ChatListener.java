@@ -3,8 +3,10 @@ package me.jackint0sh.timedfly.listeners;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyItemCreator;
 import me.jackint0sh.timedfly.flygui.Item;
+import me.jackint0sh.timedfly.hooks.Hooks;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.TimeParser;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -135,9 +137,12 @@ public class ChatListener implements Listener {
                     }
                     if (valid) {
                         flyItem.setLore(item.getLore());
-                        if (FlyItemCreator.getInnerState(player) != FlyItemCreator.InnerState.CHANGE_OPTIONS)
+                        if (FlyItemCreator.getInnerState(player) != FlyItemCreator.InnerState.CHANGE_OPTIONS) {
                             FlyItemCreator.clearState(FlyItemCreator.StateType.INNER_STATE, player);
-                        FlyItemCreator.openMenu(player);
+                        }
+                        Bukkit.getScheduler().runTask(Hooks.getPlugin("TimedFly"), () -> {
+                            FlyItemCreator.openMenu(player);
+                        });
                     }
                     event.setCancelled(true);
                 }

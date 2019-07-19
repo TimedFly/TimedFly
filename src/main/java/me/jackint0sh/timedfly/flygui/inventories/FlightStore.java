@@ -4,6 +4,7 @@ import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyItemCreator;
 import me.jackint0sh.timedfly.flygui.Item;
+import me.jackint0sh.timedfly.managers.CurrencyManager;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
@@ -57,7 +58,12 @@ public class FlightStore {
         FlyItem.getConfigItems().values().forEach(item -> items.add(new Item(item)
                 .setName(MessageUtil.replacePlaceholders(player, item.getName()))
                 .setLore(MessageUtil.replacePlaceholders(player, item.getLore())
-                        .stream().map(string -> string.replace("[time]", item.getTime()))
+                        .stream().map(string -> string
+                                .replace("[time]", item.getTime())
+                                .replace("[price]", item.getPrice() + "")
+                                .replace("[currency]", item.getCurrency().name())
+                                .replace("[balance]", CurrencyManager.balance(player, item.getCurrency()) + "")
+                        )
                         .collect(Collectors.toList()))
                 .onClick(event -> {
                     PlayerManager playerManager = PlayerManager.getCachedPlayer(event.getWhoClicked().getUniqueId());
@@ -74,9 +80,18 @@ public class FlightStore {
 
                         try {
                             int time = TimeParser.toTicks(item.getTime());
-                            playerManager.addTime(time).startTimer();
-                            playerManager.updateStore();
-                            MessageUtil.sendMessage(player, "You've added &e" + time + " &7to your timer!");
+                            if (CurrencyManager.has(player, item.getPrice(), item.getCurrency())) {
+                                if (!CurrencyManager.withdraw(player, item.getPrice(), item.getCurrency())) {
+                                    MessageUtil.sendError(player, "Something went wrong while trying to perform this action!");
+                                    return;
+                                }
+                                playerManager.addTime(time).startTimer();
+                                playerManager.updateStore();
+                                MessageUtil.sendMessage(player, "You've added &e" + time + " &7to your timer!");
+                            } else {
+                                MessageUtil.sendError(player, "You don't have enough money!");
+                                player.closeInventory();
+                            }
                         } catch (Exception e) {
                             MessageUtil.sendError(player, e);
                         }

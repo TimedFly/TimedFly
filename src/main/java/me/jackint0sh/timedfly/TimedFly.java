@@ -4,9 +4,13 @@ import me.jackint0sh.timedfly.commands.Arguments;
 import me.jackint0sh.timedfly.commands.Main;
 import me.jackint0sh.timedfly.commands.TFly;
 import me.jackint0sh.timedfly.commands.TabCompleter;
-import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
-import me.jackint0sh.timedfly.listeners.*;
+import me.jackint0sh.timedfly.flygui.FlyItem;
+import me.jackint0sh.timedfly.hooks.Hooks;
+import me.jackint0sh.timedfly.listeners.AttackListener;
+import me.jackint0sh.timedfly.listeners.ChatListener;
+import me.jackint0sh.timedfly.listeners.InventoryListener;
+import me.jackint0sh.timedfly.listeners.PlayerListener;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.managers.TimerManager;
 import me.jackint0sh.timedfly.utilities.Config;
@@ -29,6 +33,7 @@ public final class TimedFly extends JavaPlugin {
         MessageUtil.sendConsoleMessage("&cLoading assets...");
 
         this.initializeConfigurations();
+        this.initializeHooks();
         this.registerCommands();
         this.registerEvents();
         this.initializeStoreItems();
@@ -99,5 +104,17 @@ public final class TimedFly extends JavaPlugin {
         itemsConfig.get().getConfigurationSection("Items").getKeys(false).forEach(FlyItem::new);
 
         MessageUtil.sendConsoleMessage("&cStore's Items loaded from file...");
+    }
+
+    private void initializeHooks() {
+        MessageUtil.sendConsoleMessage("&cLooking for hooks...");
+
+        Hooks.hookVault();
+        Hooks.hookPlayerPoints();
+        Hooks.hookTokenManager();
+        Hooks.enableLevelExp();
+        Hooks.hookPapi(this);
+
+        MessageUtil.sendConsoleMessage("&cAll plugins hooked...");
     }
 }

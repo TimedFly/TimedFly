@@ -65,10 +65,7 @@ public class MessageUtil {
     }
 
     public static void sendMessages(CommandSender to, List<String> text, boolean prefix) {
-        text.forEach(message -> {
-            sendMessage(to, message, prefix);
-            System.out.println(message);
-        });
+        text.forEach(message -> sendMessage(to, message, prefix));
     }
 
     public static void sendMessages(CommandSender to, List<String> text) {
@@ -109,7 +106,6 @@ public class MessageUtil {
 
     public static void sendError(Player player, String text) {
         sendMessage(player, "&c" + text);
-        sendError(text);
     }
 
     public static void sendError(Player player, Exception e) {
