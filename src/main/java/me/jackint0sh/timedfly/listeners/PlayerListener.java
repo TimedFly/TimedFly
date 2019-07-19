@@ -18,8 +18,7 @@ public class PlayerListener implements Listener {
 
         if (playerManager != null && playerManager.isTimeRunning()) {
             Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
-                player.setAllowFlight(true);
-                player.setFlying(true);
+                playerManager.setOnFloor(true).startTimer();
             }, 2);
         }
     }
@@ -44,8 +43,7 @@ public class PlayerListener implements Listener {
         if (playerManager != null && (event.getNewGameMode() == GameMode.SURVIVAL || event.getNewGameMode() == GameMode.ADVENTURE)
                 && playerManager.isTimeRunning()) {
             Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
-                player.setAllowFlight(true);
-                player.setFlying(true);
+                playerManager.setOnFloor(true).startTimer();
             }, 2);
         }
     }
