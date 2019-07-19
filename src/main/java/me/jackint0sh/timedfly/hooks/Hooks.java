@@ -1,9 +1,6 @@
 package me.jackint0sh.timedfly.hooks;
 
-import me.jackint0sh.timedfly.hooks.currencies.Exp;
-import me.jackint0sh.timedfly.hooks.currencies.Levels;
-import me.jackint0sh.timedfly.hooks.currencies.PlayerPoints;
-import me.jackint0sh.timedfly.hooks.currencies.Vault;
+import me.jackint0sh.timedfly.hooks.currencies.*;
 import me.jackint0sh.timedfly.managers.CurrencyManager;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import net.milkbowl.vault.economy.Economy;
@@ -48,6 +45,13 @@ public class Hooks {
         if (isPluginEnabled("PlayerPoints")) {
             CurrencyManager.addCurrency(new PlayerPoints());
             MessageUtil.sendConsoleMessage("&cHooked to PlayerPoints!");
+        }
+    }
+
+    public static void hookTokenManager() {
+        if (isPluginEnabled("TokenManager")) {
+            CurrencyManager.addCurrency(new TokenManager());
+            MessageUtil.sendConsoleMessage("&cHooked to TokenManager!");
         }
     }
 
