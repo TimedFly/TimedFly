@@ -36,22 +36,22 @@ public class CurrencyManager {
     }
 
     public static boolean withdraw(Player player, int amount, Currency currency) {
-        if (currency == null) currency = CurrencyManager.getDefaultCurrency();
+        if (currency == null) return false;
         return currency.withdraw(player, amount);
     }
 
     public static boolean deposit(Player player, int amount, Currency currency) {
-        if (currency == null) currency = CurrencyManager.getDefaultCurrency();
+        if (currency == null) return false;
         return currency.deposit(player, amount);
     }
 
     public static int balance(Player player, Currency currency) {
-        if (currency == null) currency = CurrencyManager.getDefaultCurrency();
+        if (currency == null) return 0;
         return currency.balance(player);
     }
 
     public static boolean has(Player player, int amount, Currency currency) {
-        if (currency == null) currency = CurrencyManager.getDefaultCurrency();
+        if (currency == null) return false;
         return currency.has(player, amount);
     }
 }
