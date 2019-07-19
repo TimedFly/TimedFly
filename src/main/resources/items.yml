@@ -1,13 +1,13 @@
 Items:
   '1':
     Name: '&7%time% &eMinutes Fly'
-    Slot: 0
+    Slot: -1 # Use -1 to add the item instead of setting it in the inventory
     Material: book
     Data: 0
     Amount: 1
     Lore:
       - ' '
-      - '&eBalance: &7[points]'
+      - '&eBalance: &7[balance]'
       - ' '
       - '&eGet access to fly'
       - '&efor [time] minutes'
@@ -17,20 +17,27 @@ Items:
       - '&7You will hide flying'
       - '&7after the [time] minutes'
       - ' '
-      - '&eTime Left: [timeleft]'
+      - '&eTime Left: [time_left]'
       - ' '
     Hide_Attributes: false
     Hide_Enchants: true
     Hide_Place_On: false
     Hide_Potion_Effects: false
     Hide_Unbreakable: false
-    Glow: false
+    Glow: false # Makes the item glow like its enchanted
     UsePermission: false
     Permission: something.here
     PermissionMessage: You don't have permission to use this item. Try buying a rank
-    OnClick:
-      - '[close]'
-      - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
-    Price: 2000
-    Time: '15 minutes'
-    Cooldown: '1h'
+    OnClick: # Commands that will run when the player clicks the item.
+      Enable: false
+      Commands:
+        - '[sound] ENTITY_EXPERIENCE_ORB_PICKUP'
+    OnFlyDisable: # Commands that will execute when flight disables.
+      Enable: false
+      Commands:
+        - '[console] say %player% is using hacks D:'
+        - '[player] say i''m using hacks >:D'
+    Price: 2000 # Price of the item, using the desired currency.
+    Time: '15 minutes' # Time to be added to the player who buys it
+    Cooldown: '1h' # Sets a cooldown for when the item can be used again
+    Currency: 'vault' # Available currencies: none, vault, tokenmanager, playerpoints, levels, exp

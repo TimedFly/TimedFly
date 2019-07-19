@@ -99,7 +99,7 @@
               -DgroupId=<group-id> \
               -DartifactId=<artifact-id> \
               -Dversion=<version> \
-              -Dpackaging=jat \
+              -Dpackaging=jar \
               -DgeneratePom=true
          -->
         <dependency>
