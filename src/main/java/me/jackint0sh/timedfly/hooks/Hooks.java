@@ -1,5 +1,7 @@
 package me.jackint0sh.timedfly.hooks;
 
+import me.jackint0sh.timedfly.hooks.currencies.Exp;
+import me.jackint0sh.timedfly.hooks.currencies.Levels;
 import me.jackint0sh.timedfly.hooks.currencies.PlayerPoints;
 import me.jackint0sh.timedfly.hooks.currencies.Vault;
 import me.jackint0sh.timedfly.managers.CurrencyManager;
@@ -47,6 +49,11 @@ public class Hooks {
             CurrencyManager.addCurrency(new PlayerPoints());
             MessageUtil.sendConsoleMessage("&cHooked to PlayerPoints!");
         }
+    }
+
+    public static void enableLevelExp() {
+        new Levels();
+        new Exp();
     }
 
 }

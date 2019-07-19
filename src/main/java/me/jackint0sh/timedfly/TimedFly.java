@@ -111,6 +111,7 @@ public final class TimedFly extends JavaPlugin {
 
         Hooks.hookVault();
         Hooks.hookPlayerPoints();
+        Hooks.enableLevelExp();
         Hooks.hookPapi(this);
 
         MessageUtil.sendConsoleMessage("&cAll plugins hooked...");
