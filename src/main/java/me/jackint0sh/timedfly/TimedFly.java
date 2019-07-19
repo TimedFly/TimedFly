@@ -33,6 +33,7 @@ public final class TimedFly extends JavaPlugin {
         MessageUtil.sendConsoleMessage("&cLoading assets...");
 
         this.initializeConfigurations();
+        this.initializeHooks();
         this.registerCommands();
         this.registerEvents();
         this.initializeStoreItems();

@@ -27,7 +27,10 @@ public class Hooks {
             if (rsp != null) econ = rsp.getProvider();
             if (econ == null) {
                 MessageUtil.sendError("Something went wrong while hooking to Vault!");
-            } else CurrencyManager.addCurrency(new Vault(econ));
+            } else {
+                CurrencyManager.addCurrency(new Vault(econ));
+                MessageUtil.sendConsoleMessage("&cHooked to Vault!");
+            }
         }
     }
 
