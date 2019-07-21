@@ -1,6 +1,7 @@
 package me.jackint0sh.timedfly.listeners;
 
 import me.jackint0sh.timedfly.managers.PlayerManager;
+import me.jackint0sh.timedfly.utilities.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -51,6 +52,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onGround(PlayerMoveEvent event) {
         if (event.isCancelled()) return;
+        if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Ground")) return;
 
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
@@ -84,20 +86,25 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
-            Player player = event.getPlayer();
-            PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+        Player player = event.getPlayer();
+        PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
-            if (playerManager != null) {
-                // TODO: Database implementation
-                playerManager.setOnFloor(player.isOnGround()).setPlayer(player);
-                if (!playerManager.isTimePaused() && playerManager.hasTime()) playerManager.startTimer();
+        if (playerManager != null) {
+            // TODO: Database implementation
+            playerManager.setOnFloor(player.isOnGround());
+            if (Config.getConfig("config").get().getBoolean("JoinFlying.Enable")) {
+                int height = Config.getConfig("config").get().getInt("JoinFlying.Height");
+                playerManager.setPlayer(player);
+                player.teleport(player.getLocation().add(0, height, 0));
             }
-        }, 20);
+            if (!playerManager.isTimePaused() && playerManager.hasTime()) playerManager.startTimer();
+        }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Leave")) return;
+
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 

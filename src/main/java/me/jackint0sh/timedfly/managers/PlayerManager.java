@@ -2,8 +2,10 @@ package me.jackint0sh.timedfly.managers;
 
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
+import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.Permissions;
+import me.jackint0sh.timedfly.utilities.TimeParser;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -23,6 +25,7 @@ public class PlayerManager {
     private Player player;
     private int timeLeft;
     private int initialTime;
+    private int currentTimeLimit;
     private boolean hasTime;
     private boolean onFloor;
     private boolean timeRunning;
@@ -40,6 +43,7 @@ public class PlayerManager {
         this.onFloor = onFloor;
         this.timeRunning = timeRunning;
         this.player = Bukkit.getPlayer(playerUuid);
+        this.currentTimeLimit = 0;
         if (this.player == null) this.player = Bukkit.getOfflinePlayer(playerUuid).getPlayer();
     }
 
@@ -100,6 +104,7 @@ public class PlayerManager {
     }
 
     public void enterAttackMode() {
+        if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Attack.Enable")) return;
         if (this.hasPermission(Permissions.BYPASS_ATTACK)) return;
         if (!this.isAttacking() && this.isTimeRunning()) {
 
@@ -112,12 +117,16 @@ public class PlayerManager {
 
         if (attackTimer != null) attackTimer.cancel();
 
-        attackTimer = Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
-            if (!this.hasTime()) return;
-            this.player.setAllowFlight(true);
-            this.setAttacking(false);
-            MessageUtil.sendMessage(this.player, "Exiting attack mode. Flight re-enabled!");
-        }, 10 * 20L);
+        try {
+            attackTimer = Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
+                if (!this.hasTime()) return;
+                this.player.setAllowFlight(true);
+                this.setAttacking(false);
+                MessageUtil.sendMessage(this.player, "Exiting attack mode. Flight re-enabled!");
+            }, TimeParser.toTicks(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown")));
+        } catch (TimeParser.TimeFormatException e) {
+            MessageUtil.sendError(player, e);
+        }
     }
 
     public void disableFallDamage() {
@@ -254,9 +263,28 @@ public class PlayerManager {
         return timePaused;
     }
 
-    public void updateStore() {
+    public int getCurrentTimeLimit() {
+        return currentTimeLimit;
+    }
+
+    public PlayerManager resetCurrentTimeLimit() {
+        this.currentTimeLimit = 0;
+        return this;
+    }
+
+    public boolean passedCurrentTimeLimit(int time) {
+        return this.currentTimeLimit >= time ;
+    }
+
+    public PlayerManager addCurrentTimeLimit(int time) {
+        this.currentTimeLimit += time ;
+        return this;
+    }
+
+    public PlayerManager updateStore() {
         FlyInventory flyInventory = FlyInventory.getFlyInventory(player.getOpenInventory().getTitle());
         if (flyInventory != null) flyInventory.setItems(FlightStore.createContents(player));
+        return this;
     }
 
     @Override

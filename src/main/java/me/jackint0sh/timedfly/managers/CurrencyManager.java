@@ -1,6 +1,7 @@
 package me.jackint0sh.timedfly.managers;
 
 import me.jackint0sh.timedfly.hooks.currencies.NoCurrency;
+import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.Currency;
 import org.bukkit.entity.Player;
 
@@ -30,7 +31,8 @@ public class CurrencyManager {
     }
 
     public static Currency getDefaultCurrency() {
-        Currency currency = CurrencyManager.currencies.get("vault"); // TODO: Get from config
+        String defaultCurrency = Config.getConfig("config").get().getString("DefaultCurrency");
+        Currency currency = CurrencyManager.currencies.get(defaultCurrency);
         if (currency == null) CurrencyManager.currencies.get("none");
         return currency;
     }

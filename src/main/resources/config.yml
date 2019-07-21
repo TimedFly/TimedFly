@@ -41,7 +41,7 @@ Database:
     # password of your MongoDB database
     Password: 'root'
 
-OpenMenu:
+CustomCommands:
   # If set to true players will need a permission to use the command /fly (or the specified command)
   UsePermission:
     Enable: false
@@ -55,8 +55,8 @@ Gui:
   Enable: true
   # Custom name of the inventory
   DisplayName: 'TimedFly'
-  # Rows of the inventory (must be multiple of 9, ex: 9, 18... etc)
-  Slots: 9
+  # Rows of the inventory (must be multiple of 9, ex: 9, 18... etc. Use -1 to automatically set the slot size)
+  Slots: -1
 
 StopTimerOn:
   # If true the players time will be saved with the player leaves the server
@@ -65,8 +65,11 @@ StopTimerOn:
   # If true flight will be disabled for the provided time if the player attacks a mob/player.
   Attack:
     Enable: true
-    # Disable flight if the player attacks the provided entity. (player, mob, all)
-    Entity: 'all'
+    # Disable flight if the player attacks the provided entity. (player, mob, all, hostile, pacific)
+    Entity:
+      - 'all'
+      #- 'players' # You can provide multiple entities
+      #- '!COW' # You can also provide an specific entity (add ! to the beginning to make it not disable flight if the entity after the ! was damaged)
     Cooldown: '10s'
 
   # If true flight will be disabled if the player is on the ground.
@@ -79,7 +82,7 @@ StopTimerOn:
 # If true players with "timedfly.fly.skipstore" will toggle flight mode if a command from OpenMenuCommand is used.
 ToogleFlight: false
 
-# Set to true if you want to get a message in the console saying who bought flight time.
+# Set to true if you want to getFileConfiguration a message in the console saying who bought flight time.
 LogConsoleOnBuy: false
 
 # If true a bossbar will appear when a player buys time (only servers v1.9 and above)
@@ -88,8 +91,9 @@ BossBarTimer:
   Color: green
   Style: SEGMENTED_6
 
-# If true player will join flying if they have some time left.
+# If true player will join flying if they have some time left and the timer will continue.
 JoinFlying:
+  # If false timer will not resume after joining.
   Enable: true
   # Amount of blocks above the player's location.
   Height: 2
@@ -106,7 +110,7 @@ DefaultCurrency: vault
 
 # This is the limit amount of time a player can add to his fly time (in minutes)
 # bypass this with timedfly.bypass.limit
-LimitMaxTime: 30
+LimitMaxTime: 30 minutes
 
 # Display some messages on Title/Actionbar.
 Messages:

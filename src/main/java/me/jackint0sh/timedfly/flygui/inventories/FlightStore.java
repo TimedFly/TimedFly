@@ -79,14 +79,24 @@ public class FlightStore {
                         }
 
                         try {
-                            int time = TimeParser.toTicks(item.getTime());
+
+                            int limit = TimeParser.toTicks(Config.getConfig("config").get().getString("LimitMaxTime"));
+                            if (playerManager.passedCurrentTimeLimit(limit)) {
+                                MessageUtil.sendError(player, "You already reached the time limit you can buy.");
+                                return;
+                            }
+
                             if (CurrencyManager.has(player, item.getPrice(), item.getCurrency())) {
                                 if (!CurrencyManager.withdraw(player, item.getPrice(), item.getCurrency())) {
                                     MessageUtil.sendError(player, "Something went wrong while trying to perform this action!");
                                     return;
                                 }
+                                int time = TimeParser.toTicks(item.getTime());
+
+
                                 playerManager.addTime(time).startTimer();
-                                playerManager.updateStore();
+                                playerManager.addCurrentTimeLimit(time).updateStore();
+
                                 MessageUtil.sendMessage(player, "You've added &e" + time + " &7to your timer!");
                             } else {
                                 MessageUtil.sendError(player, "You don't have enough money!");

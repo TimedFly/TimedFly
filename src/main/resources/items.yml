@@ -1,6 +1,6 @@
 Items:
   '1':
-    Name: '&7%time% &eMinutes Fly'
+    Name: '&7[time] &eMinutes Fly'
     Slot: -1 # Use -1 to add the item instead of setting it in the inventory
     Material: book
     Data: 0
@@ -10,7 +10,7 @@ Items:
       - '&eBalance: &7[balance]'
       - ' '
       - '&eGet access to fly'
-      - '&efor [time] minutes'
+      - '&efor [time]'
       - ' '
       - '&eCost: &a$[price]'
       - ' '
