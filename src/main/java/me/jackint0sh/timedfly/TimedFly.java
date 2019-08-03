@@ -15,12 +15,15 @@ import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.managers.TimerManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
+import me.jackint0sh.timedfly.versions.Default;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public final class TimedFly extends JavaPlugin {
 
@@ -32,6 +35,7 @@ public final class TimedFly extends JavaPlugin {
         MessageUtil.sendConsoleMessage("&cWelcome to TimedFly");
         MessageUtil.sendConsoleMessage("&cLoading assets...");
 
+        if (!this.initializeSupportedVersion()) return;
         this.initializeConfigurations();
         this.initializeHooks();
         this.registerCommands();
@@ -116,5 +120,29 @@ public final class TimedFly extends JavaPlugin {
         Hooks.hookPapi(this);
 
         MessageUtil.sendConsoleMessage("&cAll plugins hooked...");
+    }
+
+    private boolean initializeSupportedVersion() {
+        String version;
+        try {
+            version = getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            MessageUtil.sendError(e.getMessage());
+            Bukkit.getPluginManager().disablePlugin(this);
+            return false;
+        }
+
+        MessageUtil.sendConsoleMessage("Your server is running version &6" + version);
+
+        try {
+            Class<?> clazz = Class.forName("me.jackint0sh.timedfly.versions." + version.substring(0, version.length() - 3) + "." + version);
+            Constructor<?> ctor = clazz.getConstructor();
+            ctor.newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            MessageUtil.sendError(e.getMessage());
+            new Default();
+        }
+
+        return true;
     }
 }
