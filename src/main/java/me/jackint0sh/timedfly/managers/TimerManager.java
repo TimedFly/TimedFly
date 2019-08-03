@@ -1,5 +1,6 @@
 package me.jackint0sh.timedfly.managers;
 
+import me.jackint0sh.timedfly.events.TimedFlyRunningEvent;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -52,6 +53,8 @@ public class TimerManager {
 
                 if (playerManager.getTimeLeft() <= 0) playerManager.stopTimer();
                 playerManager.decreaseTime().updateStore();
+
+                Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(playerManager));
             }
         }
     }

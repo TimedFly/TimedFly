@@ -1,5 +1,8 @@
 package me.jackint0sh.timedfly.managers;
 
+import me.jackint0sh.timedfly.events.TimedFlyEndEvent;
+import me.jackint0sh.timedfly.events.TimedFlyRunningEvent;
+import me.jackint0sh.timedfly.events.TimedFlyStartEvent;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
 import me.jackint0sh.timedfly.utilities.Config;
@@ -55,6 +58,7 @@ public class PlayerManager {
             this.player.setFlying(true);
         }
         TimerManager.startIfNot();
+        Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
     }
 
     public void stopTimer() {
@@ -62,6 +66,7 @@ public class PlayerManager {
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
         if (!this.player.isOnGround()) this.disableFallDamage();
+        Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
     }
 
     public void pauseTimer() {
