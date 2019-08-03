@@ -4,6 +4,7 @@ import me.jackint0sh.timedfly.utilities.MessageUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class ServerVersion {
 
@@ -20,6 +21,10 @@ public abstract class ServerVersion {
     public void sendTitle(Player player, String title, String subtile, int fadeIn, int stay, int fadeOut) {
         player.sendTitle(title, subtile, fadeIn, stay, fadeOut);
     }
+
+    public abstract ItemStack setNBT(ItemStack itemStack, String key, String value);
+
+    public abstract boolean hasTag(ItemStack itemStack, String key);
 
     public static ServerVersion getSupportedVersion() {
         return serverVersion;

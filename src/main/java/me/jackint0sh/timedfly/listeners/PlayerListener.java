@@ -94,8 +94,8 @@ public class PlayerListener implements Listener {
             playerManager.setOnFloor(player.isOnGround());
             if (Config.getConfig("config").get().getBoolean("JoinFlying.Enable")) {
                 int height = Config.getConfig("config").get().getInt("JoinFlying.Height");
-                playerManager.setPlayer(player);
                 player.teleport(player.getLocation().add(0, height, 0));
+                playerManager.setPlayer(player).setOnFloor(false);
             }
             if (!playerManager.isTimePaused() && playerManager.hasTime()) playerManager.startTimer();
         }

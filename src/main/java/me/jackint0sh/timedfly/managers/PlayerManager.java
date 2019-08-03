@@ -1,7 +1,6 @@
 package me.jackint0sh.timedfly.managers;
 
 import me.jackint0sh.timedfly.events.TimedFlyEndEvent;
-import me.jackint0sh.timedfly.events.TimedFlyRunningEvent;
 import me.jackint0sh.timedfly.events.TimedFlyStartEvent;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
@@ -179,7 +178,7 @@ public class PlayerManager {
 
     public Player getPlayer() {
         Player onlinePlayer = Bukkit.getPlayer(playerUuid);
-        return onlinePlayer != null ? onlinePlayer : (Player) Bukkit.getOfflinePlayer(playerUuid);
+        return onlinePlayer != null ? onlinePlayer : Bukkit.getOfflinePlayer(playerUuid).getPlayer();
     }
 
     public UUID getPlayerUuid() {

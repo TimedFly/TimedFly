@@ -41,6 +41,7 @@ public class FlyItem {
         this.lore = new ArrayList<>();
         this.onClick = new ArrayList<>();
         this.price = 0;
+        this.slot = -1;
         this.time = "0";
         this.amount = 1;
         this.currency = CurrencyManager.getDefaultCurrency();
