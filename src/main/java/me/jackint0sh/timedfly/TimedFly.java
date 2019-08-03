@@ -7,10 +7,7 @@ import me.jackint0sh.timedfly.commands.TabCompleter;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.hooks.Hooks;
-import me.jackint0sh.timedfly.listeners.AttackListener;
-import me.jackint0sh.timedfly.listeners.ChatListener;
-import me.jackint0sh.timedfly.listeners.InventoryListener;
-import me.jackint0sh.timedfly.listeners.PlayerListener;
+import me.jackint0sh.timedfly.listeners.*;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.managers.TimerManager;
 import me.jackint0sh.timedfly.utilities.Config;
@@ -77,6 +74,7 @@ public final class TimedFly extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
         Bukkit.getPluginManager().registerEvents(new AttackListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TimedFlyListener(), this);
 
         MessageUtil.sendConsoleMessage("&cEvent listeners successfully loaded!");
     }

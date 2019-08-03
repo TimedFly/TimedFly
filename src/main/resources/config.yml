@@ -123,15 +123,14 @@ Messages:
     Chat: false
     Titles: true
     Times:
-      - '120'
-      - '60'
-      - '10'
-      - '5'
-      - '4'
-      - '3'
-      - '2'
-      - '1'
-      - '0'
+      - '5m'
+      - '1m'
+      - '10s'
+      - '5s'
+      - '4s'
+      - '3s'
+      - '2s'
+      - '1s'
 
 # A list of world in which you want the plugin to be Enable.
 World-List:

@@ -9,7 +9,16 @@ public class TimeParser {
 
     private static String[] timeString = {"seconds", "minutes", "hours", "days"};
 
-    public static int parse(String toParse) throws TimeParser.TimeFormatException {
+    public static long parseNoException(String toParse) {
+        try {
+            return parse(toParse, true);
+        } catch (TimeFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static long parse(String toParse) throws TimeParser.TimeFormatException {
         return parse(toParse, true);
     }
 
@@ -21,8 +30,10 @@ public class TimeParser {
         }
     }
 
-    public static int parse(String toParse, boolean sum) throws TimeParser.TimeFormatException {
+    public static long parse(String toParse, boolean sum) throws TimeParser.TimeFormatException {
         toParse = toParse.replaceAll("\\s", "").toLowerCase();
+
+        if (TimeParser.isNumeric(toParse)) return Long.parseLong(toParse);
 
         if (!TimeParser.isNumeric(toParse.charAt(0)))
             throw new TimeParser.TimeFormatException("First char should be a number found: " + toParse.charAt(0));
@@ -31,14 +42,14 @@ public class TimeParser {
 
         Stack<String> intStack = new Stack<>();
         Stack<String> timeStack = new Stack<>();
-        int result = 0;
+        long result = 0;
 
         fillStacks(new StringBuilder(toParse), intStack, timeStack);
 
         if (!sum) return -1;
 
         while (!intStack.empty() && !timeStack.empty()) {
-            int integer = Integer.parseInt(intStack.pop());
+            long integer = Integer.parseInt(intStack.pop());
             String time = timeStack.pop();
 
             result += timeMs(integer, time);
@@ -143,7 +154,7 @@ public class TimeParser {
         return builderString;
     }
 
-    private static long timeMs(int integer, String string) {
+    private static long timeMs(long integer, String string) {
         AtomicReference<Long> time = new AtomicReference<>((long) 0);
 
         Arrays.stream(timeString).filter(value -> value.startsWith(string))
@@ -154,7 +165,7 @@ public class TimeParser {
 
     public static boolean isNumeric(String s) {
         try {
-            Integer.parseInt(s);
+            Long.parseLong(s);
             return true;
         } catch (NumberFormatException e) {
             return false;
