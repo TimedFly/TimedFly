@@ -47,12 +47,61 @@ public class TimeParser {
         return result;
     }
 
-    public static int toTicks(String toParse) throws TimeParser.TimeFormatException {
-        return parse(toParse) / 50;
+    public static String toReadableString(long ms) {
+        return toReadableString(ms, true);
     }
 
-    public static int ticksToMs(int ticks) throws TimeParser.TimeFormatException {
-        return ticks * 50;
+    public static String toReadableString(long ms, boolean longWord) {
+        StringBuilder result = new StringBuilder();
+        long time = ms;
+
+        long days = TimeUnit.MILLISECONDS.toDays(time);
+        if (days > 0) {
+            result.append(days);
+
+            if (longWord) result.append(days > 1 ? " days " : " day ");
+            else result.append("d ");
+
+            time -= TimeUnit.DAYS.toMillis(days);
+        }
+
+        long hours = TimeUnit.MILLISECONDS.toHours(time);
+        if (hours > 0) {
+            result.append(hours);
+
+            if (longWord) result.append(hours > 1 ? " hours " : " hour ");
+            else result.append("h ");
+
+            time -= TimeUnit.HOURS.toMillis(hours);
+        }
+
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
+        if (minutes > 0) {
+            result.append(minutes);
+
+            if (longWord) result.append(minutes > 1 ? " minutes " : " minute ");
+            else result.append("m ");
+
+            time -= TimeUnit.MINUTES.toMillis(minutes);
+        }
+
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
+        if (seconds > 0) {
+            result.append(seconds);
+
+            if (longWord) result.append(seconds > 1 ? " seconds " : " second ");
+            else result.append("s ");
+        }
+
+        return result.toString().trim();
+    }
+
+    public static long toSeconds(long ms) {
+        return TimeUnit.MILLISECONDS.toSeconds(ms);
+    }
+
+    public static long secondsToMs(long seconds) {
+        return TimeUnit.SECONDS.toMillis(seconds);
     }
 
     private static void fillStacks(StringBuilder string, Stack<String> intStack, Stack<String> timeStack) throws TimeParser.TimeFormatException {
