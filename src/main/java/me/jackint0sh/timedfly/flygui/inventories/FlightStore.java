@@ -79,10 +79,11 @@ public class FlightStore {
                         }
 
                         try {
-
-                            int limit = TimeParser.toTicks(Config.getConfig("config").get().getString("LimitMaxTime"));
-                            if (playerManager.passedCurrentTimeLimit(limit)) {
-                                MessageUtil.sendError(player, "You already reached the time limit you can buy.");
+                            if (playerManager.passedCurrentTimeLimit()) {
+                                if (!playerManager.resetCurrentTimeLimit()) {
+                                    MessageUtil.sendError(player, "You already reached the time limit you can buy.");
+                                    MessageUtil.sendError(player, "You have to wait &e" + playerManager.getLimitCooldown() + "&c.");
+                                }
                                 return;
                             }
 
@@ -91,13 +92,15 @@ public class FlightStore {
                                     MessageUtil.sendError(player, "Something went wrong while trying to perform this action!");
                                     return;
                                 }
-                                int time = TimeParser.toTicks(item.getTime());
+                                int time = TimeParser.parse(item.getTime());
 
+                                playerManager
+                                        .addTime(time)
+                                        .addCurrentTimeLimit(time)
+                                        .updateStore()
+                                        .startTimer();
 
-                                playerManager.addTime(time).startTimer();
-                                playerManager.addCurrentTimeLimit(time).updateStore();
-
-                                MessageUtil.sendMessage(player, "You've added &e" + time + " &7to your timer!");
+                                MessageUtil.sendMessage(player, "You've added &e" + item.getTime() + " &7to your timer!");
                             } else {
                                 MessageUtil.sendError(player, "You don't have enough money!");
                                 player.closeInventory();

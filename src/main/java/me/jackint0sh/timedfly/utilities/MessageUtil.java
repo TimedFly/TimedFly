@@ -26,11 +26,11 @@ public class MessageUtil {
 
     public static String replacePlaceholders(Player player, String text) {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-        String timeLeft = playerManager.getTimeLeft() + "";
-        String initialTime = playerManager.getInitialTime() + "";
+        String timeLeft = TimeParser.toReadableString(playerManager.getTimeLeft());
+        String initialTime = TimeParser.toReadableString(playerManager.getInitialTime());
 
-        if (timeLeft.equals("0") || timeLeft.equals("-1")) timeLeft = "No Time";
-        if (initialTime.equals("0") || initialTime.equals("-1")) timeLeft = "No Time";
+        if (timeLeft.isEmpty()) timeLeft = "No Time";
+        if (initialTime.isEmpty()) initialTime = "No Time";
 
         return MessageUtil.color(text)
                 .replace("[player_name]", player.getName())

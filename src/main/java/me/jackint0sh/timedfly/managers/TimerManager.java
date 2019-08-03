@@ -23,7 +23,7 @@ public class TimerManager {
             return;
         }
 
-        timer = new Timer().runTaskTimer(Bukkit.getPluginManager().getPlugins()[0], 0, 0);
+        timer = new Timer().runTaskTimer(Bukkit.getPluginManager().getPlugins()[0], 0, 20);
         MessageUtil.sendConsoleMessage("&cFly timer initialized!");
     }
 

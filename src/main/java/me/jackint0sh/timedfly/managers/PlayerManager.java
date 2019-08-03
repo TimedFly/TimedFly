@@ -23,9 +23,10 @@ public class PlayerManager {
     private boolean attacking;
     private UUID playerUuid;
     private Player player;
-    private int timeLeft;
-    private int initialTime;
-    private int currentTimeLimit;
+    private long timeLeft;
+    private long initialTime;
+    private long currentTimeLimit;
+    private long limitCoolDown;
     private boolean hasTime;
     private boolean onFloor;
     private boolean timeRunning;
@@ -35,7 +36,7 @@ public class PlayerManager {
         this(playerUuid, 0, 0, false, true, false);
     }
 
-    private PlayerManager(UUID playerUuid, int timeLeft, int initialTime, boolean hasTime, boolean onFloor, boolean timeRunning) {
+    private PlayerManager(UUID playerUuid, long timeLeft, long initialTime, boolean hasTime, boolean onFloor, boolean timeRunning) {
         this.playerUuid = playerUuid;
         this.timeLeft = timeLeft;
         this.initialTime = initialTime;
@@ -123,7 +124,7 @@ public class PlayerManager {
                 this.player.setAllowFlight(true);
                 this.setAttacking(false);
                 MessageUtil.sendMessage(this.player, "Exiting attack mode. Flight re-enabled!");
-            }, TimeParser.toTicks(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown")));
+            }, TimeParser.parse(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown")));
         } catch (TimeParser.TimeFormatException e) {
             MessageUtil.sendError(player, e);
         }
@@ -167,7 +168,7 @@ public class PlayerManager {
         return playerCache;
     }
 
-    public static float getPlayersTimeLeft() {
+    public static long getPlayersTimeLeft() {
         return playerCache.values().stream().mapToLong(PlayerManager::getTimeLeft).sum();
     }
 
@@ -192,42 +193,42 @@ public class PlayerManager {
         return this;
     }
 
-    public int getTimeLeft() {
+    public long getTimeLeft() {
         return timeLeft;
     }
 
-    public PlayerManager setTimeLeft(int timeLeft) {
+    public PlayerManager setTimeLeft(long timeLeft) {
         this.timeLeft = timeLeft;
         return this;
     }
 
-    public PlayerManager setTime(int time) {
+    public PlayerManager setTime(long time) {
         this.timeLeft = time;
         this.initialTime = time;
         return this;
     }
 
     public PlayerManager decreaseTime() {
-        this.timeLeft--;
+        this.timeLeft -= TimeParser.secondsToMs(1);
         return this;
     }
 
-    public PlayerManager addTime(int time) {
+    public PlayerManager addTime(long time) {
         this.timeLeft += time;
         if (this.timeLeft > this.initialTime) this.initialTime = this.timeLeft;
         return this;
     }
 
-    public PlayerManager decreaseTime(int by) {
+    public PlayerManager decreaseTime(long by) {
         this.timeLeft -= by;
         return this;
     }
 
-    public int getInitialTime() {
+    public long getInitialTime() {
         return initialTime;
     }
 
-    public PlayerManager setInitialTime(int initialTime) {
+    public PlayerManager setInitialTime(long initialTime) {
         this.initialTime = initialTime;
         return this;
     }
@@ -263,22 +264,44 @@ public class PlayerManager {
         return timePaused;
     }
 
-    public int getCurrentTimeLimit() {
+    public long getCurrentTimeLimit() {
         return currentTimeLimit;
     }
 
-    public PlayerManager resetCurrentTimeLimit() {
-        this.currentTimeLimit = 0;
+    public boolean resetCurrentTimeLimit() {
+        if (System.currentTimeMillis() >= this.limitCoolDown) {
+            this.currentTimeLimit = 0;
+            this.limitCoolDown = 0;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean passedCurrentTimeLimit() {
+        try {
+            long limit = TimeParser.parse(Config.getConfig("config").get().getString("LimitMaxTime.Time"));
+            return this.currentTimeLimit >= limit;
+        } catch (TimeParser.TimeFormatException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public PlayerManager addCurrentTimeLimit(long time) {
+        this.currentTimeLimit += time;
+        if (passedCurrentTimeLimit() && this.limitCoolDown == 0) {
+            String cooldown = Config.getConfig("config").get().getString("LimitMaxTime.Cooldown");
+            try {
+                this.limitCoolDown = System.currentTimeMillis() + TimeParser.parse(cooldown);
+            } catch (TimeParser.TimeFormatException e) {
+                e.printStackTrace();
+            }
+        }
         return this;
     }
 
-    public boolean passedCurrentTimeLimit(int time) {
-        return this.currentTimeLimit >= time ;
-    }
-
-    public PlayerManager addCurrentTimeLimit(int time) {
-        this.currentTimeLimit += time ;
-        return this;
+    public String getLimitCooldown() {
+        return TimeParser.toReadableString(limitCoolDown - System.currentTimeMillis());
     }
 
     public PlayerManager updateStore() {

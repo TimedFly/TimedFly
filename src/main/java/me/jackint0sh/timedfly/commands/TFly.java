@@ -113,7 +113,7 @@ public class TFly implements CommandExecutor {
 
         try {
             String timeString = String.join("", Arrays.copyOfRange(args, 1, to));
-            int time = TimeParser.toTicks(timeString);
+            long time = TimeParser.parse(timeString);
             String text, from;
 
             if (b) {

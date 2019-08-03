@@ -108,9 +108,11 @@ Sounds:
 # Available currencies are: none, vault, tokenmanager, playerpoints, levels, exp
 DefaultCurrency: vault
 
-# This is the limit amount of time a player can add to his fly time (in minutes)
+# This is the limit amount of time a player can add to his fly time
 # bypass this with timedfly.bypass.limit
-LimitMaxTime: 30 minutes
+LimitMaxTime:
+  Time: 30 minutes
+  Cooldown: 1d
 
 # Display some messages on Title/Actionbar.
 Messages:
