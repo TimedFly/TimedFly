@@ -13,6 +13,7 @@ public class TimedFlyEndEvent extends Event {
 
     public TimedFlyEndEvent(PlayerManager playerManager) {
         this.playerManager = playerManager;
+        this.player = playerManager.getPlayer();
     }
 
     public PlayerManager getPlayerManager() {

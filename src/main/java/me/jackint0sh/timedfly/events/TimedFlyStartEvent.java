@@ -13,6 +13,7 @@ public class TimedFlyStartEvent extends Event {
 
     public TimedFlyStartEvent(PlayerManager playerManager) {
         this.playerManager = playerManager;
+        this.player = playerManager.getPlayer();
     }
 
     public PlayerManager getPlayerManager() {
