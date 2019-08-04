@@ -13,7 +13,6 @@ import me.jackint0sh.timedfly.utilities.TimeParser;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +48,8 @@ public class FlightStore {
         }).getInventory());
     }
 
-    public static ItemStack[] createContents(Player player, int type) {
-        List<ItemStack> items = new ArrayList<>();
+    public static Item[] createContents(Player player, int type) {
+        List<Item> items = new ArrayList<>();
         FileConfiguration config = Config.getConfig("items").get();
         ConfigurationSection configSection = config.getConfigurationSection("Items");
 
@@ -124,10 +123,10 @@ public class FlightStore {
                     }
                 })));
 
-        return items.toArray(new ItemStack[0]);
+        return items.toArray(new Item[0]);
     }
 
-    public static ItemStack[] createContents(Player player) {
+    public static Item[] createContents(Player player) {
         return createContents(player, 1);
     }
 }

@@ -1,6 +1,7 @@
 package me.jackint0sh.timedfly.flygui;
 
 import me.jackint0sh.timedfly.utilities.MessageUtil;
+import me.jackint0sh.timedfly.versions.ServerVersion;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -44,7 +45,7 @@ public class Item extends ItemStack {
     }
 
     public Item(Material material) {
-        super(material);
+        super(ServerVersion.getSupportedVersion().setNBT(new ItemStack(material), "customitem", "true"));
         loadItem();
     }
 
