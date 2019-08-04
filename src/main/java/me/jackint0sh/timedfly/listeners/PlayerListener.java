@@ -15,6 +15,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onReSpawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null && playerManager.isTimeRunning()) {
@@ -28,6 +30,8 @@ public class PlayerListener implements Listener {
     private void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
+            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+
             PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
             if (playerManager != null && !playerManager.isFallDamageEnabled() && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 playerManager.enableFallDamage();
@@ -41,10 +45,11 @@ public class PlayerListener implements Listener {
         if (event.isCancelled()) return;
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-        if (playerManager != null && (event.getNewGameMode() == GameMode.SURVIVAL || event.getNewGameMode() == GameMode.ADVENTURE)
-                && playerManager.isTimeRunning()) {
+        if (playerManager != null && (event.getNewGameMode() == GameMode.SURVIVAL || event.getNewGameMode() == GameMode.ADVENTURE)) {
             Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
-                playerManager.setOnFloor(true).startTimer();
+                if (playerManager.getTimeLeft() > 0 && !playerManager.isTimePaused()) {
+                    playerManager.setOnFloor(true).startTimer();
+                }
             }, 2);
         }
     }
@@ -55,6 +60,8 @@ public class PlayerListener implements Listener {
         if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Ground")) return;
 
         Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (player.isOnGround() && playerManager != null) {
@@ -71,6 +78,8 @@ public class PlayerListener implements Listener {
         if (event.isCancelled()) return;
 
         Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null && playerManager.isOnFloor()) {
@@ -97,6 +106,7 @@ public class PlayerListener implements Listener {
                 player.teleport(player.getLocation().add(0, height, 0));
                 playerManager.setPlayer(player).setOnFloor(false);
             }
+            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
             if (!playerManager.isTimePaused() && playerManager.hasTime()) playerManager.startTimer();
         }
     }
