@@ -63,6 +63,10 @@ public class TimeParser {
     }
 
     public static String toReadableString(long ms, boolean longWord) {
+        return toReadableString(ms, longWord, false);
+    }
+
+    public static String toReadableString(long ms, boolean longWord, boolean cut) {
         StringBuilder result = new StringBuilder();
         long time = ms;
 
@@ -74,6 +78,7 @@ public class TimeParser {
             else result.append("d ");
 
             time -= TimeUnit.DAYS.toMillis(days);
+            if (cut) return result.toString().trim();
         }
 
         long hours = TimeUnit.MILLISECONDS.toHours(time);
@@ -84,6 +89,7 @@ public class TimeParser {
             else result.append("h ");
 
             time -= TimeUnit.HOURS.toMillis(hours);
+            if (cut) return result.toString().trim();
         }
 
         long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
@@ -94,6 +100,7 @@ public class TimeParser {
             else result.append("m ");
 
             time -= TimeUnit.MINUTES.toMillis(minutes);
+            if (cut) return result.toString().trim();
         }
 
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
