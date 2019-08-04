@@ -96,18 +96,22 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null) {
             // TODO: Database implementation
-            playerManager.setOnFloor(player.isOnGround());
-            if (Config.getConfig("config").get().getBoolean("JoinFlying.Enable")) {
-                int height = Config.getConfig("config").get().getInt("JoinFlying.Height");
-                player.teleport(player.getLocation().add(0, height, 0));
-                playerManager.setPlayer(player).setOnFloor(false);
-            }
             if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
-            if (!playerManager.isTimePaused() && playerManager.hasTime()) playerManager.startTimer();
+            playerManager.setOnFloor(player.isOnGround());
+            if (!playerManager.isTimePaused() && playerManager.hasTime()) {
+                if (Config.getConfig("config").get().getBoolean("JoinFlying.Enable")) {
+                    int height = Config.getConfig("config").get().getInt("JoinFlying.Height");
+                    player.teleport(player.getLocation().add(0, height, 0));
+                    playerManager.setPlayer(player).setOnFloor(false);
+                }
+                playerManager.startTimer();
+            }
         }
     }
 

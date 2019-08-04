@@ -79,7 +79,6 @@ public class AttackListener implements Listener {
 
     private List<String> getExcludedEntities() {
         List<String> entities = Config.getConfig("config").get().getStringList("StopTimerOn.Attack.Entity");
-        System.out.println(entities.toString());
         return entities.stream()
                 .filter(entity -> entity.startsWith("!"))
                 .map(entity -> entity.toUpperCase().substring(1))

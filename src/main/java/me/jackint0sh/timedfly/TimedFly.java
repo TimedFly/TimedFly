@@ -1,9 +1,6 @@
 package me.jackint0sh.timedfly;
 
-import me.jackint0sh.timedfly.commands.Arguments;
-import me.jackint0sh.timedfly.commands.Main;
-import me.jackint0sh.timedfly.commands.TFly;
-import me.jackint0sh.timedfly.commands.TabCompleter;
+import me.jackint0sh.timedfly.commands.*;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.hooks.Hooks;
@@ -63,6 +60,8 @@ public final class TimedFly extends JavaPlugin {
 
         Bukkit.getPluginCommand("timedfly").setTabCompleter(new TabCompleter(Arguments.Type.TIMEDFLY));
         Bukkit.getPluginCommand("tfly").setTabCompleter(new TabCompleter(Arguments.Type.TFLY));
+
+        Bukkit.getPluginManager().registerEvents(new CustomCommand(), this);
 
         MessageUtil.sendConsoleMessage("&cCommands successfully loaded!");
     }
