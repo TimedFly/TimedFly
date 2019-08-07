@@ -51,10 +51,10 @@ public class PlayerManager {
     }
 
     public void startTimer() {
-        this.player.setAllowFlight(true);
+        if (this.player.isOnline()) this.player.setAllowFlight(true);
         if (!this.isOnFloor()) {
             this.timeRunning = true;
-            this.player.setFlying(true);
+            if (this.player.isOnline()) this.player.setFlying(true);
         }
         TimerManager.startIfNot();
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
@@ -62,9 +62,11 @@ public class PlayerManager {
 
     public void stopTimer() {
         this.timeRunning = false;
-        this.player.setAllowFlight(false);
-        this.player.setFlying(false);
-        if (!this.player.isOnGround()) this.disableFallDamage();
+        if (this.player.isOnline()) {
+            this.player.setAllowFlight(false);
+            this.player.setFlying(false);
+            if (!this.player.isOnGround()) this.disableFallDamage();
+        }
         Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
     }
 
@@ -76,6 +78,11 @@ public class PlayerManager {
     public void resumeTimer() {
         this.startTimer();
         this.timePaused = false;
+    }
+
+    public PlayerManager setTimePaused(boolean b) {
+        this.timePaused = b;
+        return this;
     }
 
     public boolean hasPermission(Permissions permission) {
@@ -269,11 +276,16 @@ public class PlayerManager {
     }
 
     public long getCurrentTimeLimit() {
-        return currentTimeLimit;
+        return this.currentTimeLimit;
+    }
+
+    public PlayerManager setCurrentTimeLimit(long l) {
+        this.currentTimeLimit = l;
+        return this;
     }
 
     public boolean resetCurrentTimeLimit() {
-        if (System.currentTimeMillis() >= this.limitCoolDown) {
+        if (this.limitCoolDown != 0 && System.currentTimeMillis() >= this.limitCoolDown) {
             this.currentTimeLimit = 0;
             this.limitCoolDown = 0;
             return true;
@@ -304,11 +316,21 @@ public class PlayerManager {
         return this;
     }
 
-    public String getLimitCooldown() {
+    public long getLimitCooldown() {
+        return this.limitCoolDown;
+    }
+
+    public String getLimitCooldownString() {
         return TimeParser.toReadableString(limitCoolDown - System.currentTimeMillis());
     }
 
+    public PlayerManager setLimitCooldown(long l) {
+        this.limitCoolDown = l;
+        return this;
+    }
+
     public PlayerManager updateStore() {
+        if (!this.player.isOnline()) return this;
         FlyInventory flyInventory = FlyInventory.getFlyInventory(player.getOpenInventory().getTitle());
         if (flyInventory != null) flyInventory.setItems(FlightStore.createContents(player));
         return this;

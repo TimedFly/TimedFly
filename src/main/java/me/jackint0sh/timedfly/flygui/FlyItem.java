@@ -2,7 +2,7 @@ package me.jackint0sh.timedfly.flygui;
 
 import me.jackint0sh.timedfly.managers.CurrencyManager;
 import me.jackint0sh.timedfly.utilities.Config;
-import me.jackint0sh.timedfly.utilities.Currency;
+import me.jackint0sh.timedfly.interfaces.Currency;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;

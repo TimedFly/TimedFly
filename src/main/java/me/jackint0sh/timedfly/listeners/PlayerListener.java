@@ -1,7 +1,10 @@
 package me.jackint0sh.timedfly.listeners;
 
+import me.jackint0sh.timedfly.database.DatabaseHandler;
+import me.jackint0sh.timedfly.interfaces.AsyncDatabase;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.utilities.Config;
+import me.jackint0sh.timedfly.utilities.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -9,6 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerListener implements Listener {
 
@@ -101,16 +106,10 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null) {
-            // TODO: Database implementation
-            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
-            playerManager.setOnFloor(player.isOnGround());
-            if (!playerManager.isTimePaused() && playerManager.hasTime()) {
-                if (Config.getConfig("config").get().getBoolean("JoinFlying.Enable")) {
-                    int height = Config.getConfig("config").get().getInt("JoinFlying.Height");
-                    player.teleport(player.getLocation().add(0, height, 0));
-                    playerManager.setPlayer(player).setOnFloor(false);
-                }
-                playerManager.startTimer();
+            AsyncDatabase database = DatabaseHandler.getDatabase();
+
+            if (!handlePlayerQuery(database, playerManager, false)) {
+                MessageUtil.sendError("Could not handle player's data.");
             }
         }
     }
@@ -123,7 +122,85 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null) {
-            // TODO: Database implementation
+            AsyncDatabase database = DatabaseHandler.getDatabase();
+
+            if (!handlePlayerQuery(database, playerManager, true)) {
+                MessageUtil.sendError("Could not update player's data.");
+            }
         }
+    }
+
+    public static boolean handlePlayerQuery(AsyncDatabase database, PlayerManager playerManager, boolean update) {
+        AtomicBoolean bool = new AtomicBoolean(true);
+        String[] keys = {
+                "UUID", "Name", "TimeLeft", "InitialTime", "CurrentTimeLimit",
+                "TimeLimitCooldownExpires", "TimeRunning", "TimePaused"
+        };
+        Object[] values = {
+                playerManager.getPlayerUuid().toString(), playerManager.getPlayer().getName(), playerManager.getTimeLeft(),
+                playerManager.getInitialTime(), playerManager.getCurrentTimeLimit(),
+                playerManager.getLimitCooldown(), playerManager.isTimeRunning(), playerManager.isTimePaused()
+        };
+
+        if (update) {
+            database.update(keys, values, (error, result) -> {
+                if (error != null) {
+                    error.printStackTrace();
+                    bool.set(false);
+                }
+            });
+        } else {
+            database.insert(keys, values, (error, result) -> {
+                if (error != null) {
+                    error.printStackTrace();
+                    bool.set(false);
+                }
+                Player player = playerManager.getPlayer();
+                database.select("*", "UUID", player.getUniqueId(), (e, r) -> {
+                    if (e != null) {
+                        e.printStackTrace();
+                        bool.set(false);
+                        return;
+                    }
+                    playerManager.setPlayer(player)
+                            .setTimeRunning((Integer) r.get("TimeRunning") != 0)
+                            .setTimePaused((Integer) r.get("TimePaused") != 0);
+
+                    Object initialTime = r.get("InitialTime");
+                    Object limitCooldown = r.get("TimeLimitCooldownExpires");
+
+                    if (initialTime instanceof Long) playerManager.setInitialTime((Long) initialTime);
+                    else if (initialTime instanceof Integer) playerManager.setInitialTime((Integer) initialTime);
+
+                    if (limitCooldown instanceof Long) playerManager.setLimitCooldown((Long) limitCooldown);
+                    else if (limitCooldown instanceof Integer) playerManager.setLimitCooldown((Integer) limitCooldown);
+
+                    if (playerManager.isTimePaused() || !playerManager.isTimeRunning()) {
+                        Object timeLeft = r.get("TimeLeft");
+                        if (timeLeft instanceof Long) playerManager.setTimeLeft((Long) timeLeft);
+                        else if (timeLeft instanceof Integer) playerManager.setTimeLeft((Integer) timeLeft);
+                    }
+
+                    if (!playerManager.resetCurrentTimeLimit()) {
+                        Object limit = r.get("CurrentTimeLimit");
+                        if (limit instanceof Long) playerManager.setCurrentTimeLimit((Long) limit);
+                        else if (limit instanceof Integer) playerManager.setCurrentTimeLimit((Integer) limit);
+                    }
+
+                    if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+                    playerManager.setOnFloor(player.isOnGround());
+                    if (!playerManager.isTimePaused() && playerManager.hasTime()) {
+                        if (Config.getConfig("config").get().getBoolean("JoinFlying.Enable")) {
+                            int height = Config.getConfig("config").get().getInt("JoinFlying.Height");
+                            player.teleport(player.getLocation().add(0, height, 0));
+                            playerManager.setOnFloor(false);
+                        }
+                        playerManager.startTimer();
+                    } else if (!playerManager.hasTime() && playerManager.isTimeRunning()) playerManager.stopTimer();
+                });
+
+            });
+        }
+        return bool.get();
     }
 }

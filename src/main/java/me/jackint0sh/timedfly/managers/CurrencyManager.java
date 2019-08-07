@@ -2,7 +2,7 @@ package me.jackint0sh.timedfly.managers;
 
 import me.jackint0sh.timedfly.hooks.currencies.NoCurrency;
 import me.jackint0sh.timedfly.utilities.Config;
-import me.jackint0sh.timedfly.utilities.Currency;
+import me.jackint0sh.timedfly.interfaces.Currency;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;

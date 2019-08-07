@@ -1,4 +1,4 @@
-package me.jackint0sh.timedfly.utilities;
+package me.jackint0sh.timedfly.interfaces;
 
 import org.bukkit.entity.Player;
 

@@ -26,6 +26,8 @@ public class TimedFlyListener implements Listener {
     private void onFlyRunning(TimedFlyRunningEvent event) {
         PlayerManager playerManager = event.getPlayerManager();
         Player player = event.getPlayer();
+        if (player == null || !player.isOnline()) return;
+
         String timeLeft = TimeParser.toReadableString(playerManager.getTimeLeft());
 
         if (Config.getConfig("config").get().getBoolean("Messages.ActionBar") && playerManager.getTimeLeft() > 0) {
@@ -54,6 +56,7 @@ public class TimedFlyListener implements Listener {
     private void onFlyEnd(TimedFlyEndEvent event) {
         PlayerManager playerManager = event.getPlayerManager();
         Player player = event.getPlayer();
+        if (player == null || !player.isOnline()) return;
 
         String message = playerManager.getTimeLeft() <= 0 ? "&cFlight time ended." : "&cFlight time paused.";
         String subtitle = playerManager.getTimeLeft() <= 0 ? "&eBuy more on the store." : TimeParser.toReadableString(playerManager.getTimeLeft());

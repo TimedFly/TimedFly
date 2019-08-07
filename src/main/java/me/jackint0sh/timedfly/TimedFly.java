@@ -1,6 +1,7 @@
 package me.jackint0sh.timedfly;
 
 import me.jackint0sh.timedfly.commands.*;
+import me.jackint0sh.timedfly.database.DatabaseHandler;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.hooks.Hooks;
@@ -31,11 +32,20 @@ public final class TimedFly extends JavaPlugin {
 
         if (!this.initializeSupportedVersion()) return;
         this.initializeConfigurations();
+        if (!DatabaseHandler.initialize(this)) return;
         this.initializeHooks();
         this.registerCommands();
         this.registerEvents();
         this.initializeStoreItems();
         this.initializeTimer();
+
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            PlayerListener.handlePlayerQuery(
+                    DatabaseHandler.getDatabase(),
+                    PlayerManager.getCachedPlayer(player.getUniqueId()),
+                    false
+            );
+        });
 
         MessageUtil.sendConsoleMessage("&cAssets loaded. Plugin ready!");
     }
@@ -44,10 +54,16 @@ public final class TimedFly extends JavaPlugin {
     public void onDisable() {
         MessageUtil.sendConsoleMessage("&cShutting down TimedFly...");
 
-        Bukkit.getOnlinePlayers()
-                .stream()
-                .filter(player -> FlyInventory.inventories.containsKey(player.getOpenInventory().getTitle()))
-                .forEach(Player::closeInventory);
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            if (FlyInventory.inventories.containsKey(player.getOpenInventory().getTitle())) {
+                player.closeInventory();
+            }
+            PlayerListener.handlePlayerQuery(
+                    DatabaseHandler.getDatabase(),
+                    PlayerManager.getCachedPlayer(player.getUniqueId()).setTimeRunning(false),
+                    true
+            );
+        });
 
         MessageUtil.sendConsoleMessage("&cTimedFly disabled!");
     }

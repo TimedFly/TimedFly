@@ -82,7 +82,7 @@ public class FlightStore {
                             if (playerManager.passedCurrentTimeLimit()) {
                                 if (!playerManager.resetCurrentTimeLimit()) {
                                     MessageUtil.sendError(player, "You already reached the time limit you can buy.");
-                                    MessageUtil.sendError(player, "You have to wait &e" + playerManager.getLimitCooldown() + "&c.");
+                                    MessageUtil.sendError(player, "You have to wait &e" + playerManager.getLimitCooldownString() + "&c.");
                                 }
                                 return;
                             }

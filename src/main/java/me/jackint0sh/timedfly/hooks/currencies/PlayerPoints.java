@@ -1,7 +1,7 @@
 package me.jackint0sh.timedfly.hooks.currencies;
 
 import me.jackint0sh.timedfly.hooks.Hooks;
-import me.jackint0sh.timedfly.utilities.Currency;
+import me.jackint0sh.timedfly.interfaces.Currency;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.entity.Player;
 

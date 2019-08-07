@@ -1,6 +1,6 @@
 package me.jackint0sh.timedfly.hooks.currencies;
 
-import me.jackint0sh.timedfly.utilities.Currency;
+import me.jackint0sh.timedfly.interfaces.Currency;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.entity.Player;

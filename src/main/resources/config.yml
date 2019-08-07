@@ -16,29 +16,17 @@ Refunds:
 Database:
   # Type: sqlite for flatfile, and mysql or mongodb for an external database.
   Type: 'sqlite'
-  # Only edit if 'mysql' is set in Type
-  MySQL:
+  # Only edit if Type is 'mysql' or 'mongodb'.
+  Server:
     # name of your database
     Database: 'timedfly'
-    # ip of your MySQL database
+    # ip of your MySQL/MongoDB database
     Host: 'localhost'
-    # port of your MySQL database, commonly is 3306
+    # port of your MySQL/Mongodb database, commonly is 3306/27017
     Port: 3306
     # username of your MySQL database
     Username: 'user'
     # password of your MySQL database
-    Password: 'root'
-  # Only edit if 'mongodb' is set in Type
-  MongoBD:
-    # name of your database
-    Database: 'timedfly'
-    # ip of your MongoDB database
-    Host: 'localhost'
-    # port of your MongoDB database, commonly is 27017
-    Port: 27017
-    # username of your MongoDB database
-    Username: 'user'
-    # password of your MongoDB database
     Password: 'root'
 
 CustomCommands:

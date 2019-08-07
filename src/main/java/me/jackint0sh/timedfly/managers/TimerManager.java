@@ -53,7 +53,6 @@ public class TimerManager {
 
                 if (playerManager.getTimeLeft() <= 0) playerManager.stopTimer();
                 playerManager.decreaseTime().updateStore();
-
                 Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(playerManager));
             }
         }
