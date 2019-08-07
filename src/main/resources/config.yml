@@ -5,6 +5,9 @@
 #                                              #
 ################################################
 
+# Prefix of the plugin.
+Prefix: "&c&lTimedFly > &7"
+
 # Enable this so your players can refund their flight time if they bought it by accident.
 Refunds:
   Enable: true
@@ -30,6 +33,7 @@ Database:
     Password: 'root'
 
 CustomCommands:
+  Enable: true
   # If set to true players will need a permission to use the command /fly (or the specified command)
   UsePermission:
     Enable: false

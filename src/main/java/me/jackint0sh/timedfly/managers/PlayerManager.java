@@ -33,6 +33,7 @@ public class PlayerManager {
     private boolean onFloor;
     private boolean timeRunning;
     private boolean timePaused;
+    private boolean manualFly;
 
     private PlayerManager(UUID playerUuid) {
         this(playerUuid, 0, 0, false, true, false);
@@ -351,5 +352,14 @@ public class PlayerManager {
                 ", timeRunning=" + timeRunning +
                 ", timePaused=" + timePaused +
                 '}';
+    }
+
+    public boolean isManualFly() {
+        return manualFly;
+    }
+
+    public PlayerManager setManualFly(boolean manualFly) {
+        this.manualFly = manualFly;
+        return this;
     }
 }

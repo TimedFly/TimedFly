@@ -68,6 +68,8 @@ public class TimedFlyListener implements Listener {
         if (Config.getConfig("config").get().getBoolean("Messages.Title")) {
             ServerVersion.getSupportedVersion().sendTitle(player, message, subtitle);
         }
+
+        PlayerListener.handlePlayerQuery(playerManager, true);
     }
 
 }

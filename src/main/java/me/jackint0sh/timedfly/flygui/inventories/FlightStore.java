@@ -56,7 +56,12 @@ public class FlightStore {
         if (configSection == null) throw new NullPointerException("The config file should not be empty!");
 
         FlyItem.getConfigItems().values().forEach(item -> items.add(new Item(item)
-                .setName(MessageUtil.replacePlaceholders(player, item.getName()))
+                .setName(MessageUtil.replacePlaceholders(player, item.getName())
+                        .replace("[time]", item.getTime())
+                        .replace("[price]", item.getPrice() + "")
+                        .replace("[currency]", item.getCurrency().name())
+                        .replace("[balance]", CurrencyManager.balance(player, item.getCurrency()) + "")
+                )
                 .setLore(MessageUtil.replacePlaceholders(player, item.getLore())
                         .stream().map(string -> string
                                 .replace("[time]", item.getTime())
@@ -95,6 +100,7 @@ public class FlightStore {
                                 long time = TimeParser.parse(item.getTime());
 
                                 playerManager
+                                        .setManualFly(false)
                                         .addTime(time)
                                         .addCurrentTimeLimit(time)
                                         .updateStore()

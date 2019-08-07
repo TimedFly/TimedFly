@@ -87,7 +87,7 @@ public class PlayerListener implements Listener {
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
-        if (playerManager != null && playerManager.isOnFloor()) {
+        if (playerManager != null && playerManager.isOnFloor() && !playerManager.isManualFly()) {
             if (!playerManager.hasTime()) {
                 event.setCancelled(true);
                 playerManager.stopTimer();
@@ -108,7 +108,7 @@ public class PlayerListener implements Listener {
         if (playerManager != null) {
             AsyncDatabase database = DatabaseHandler.getDatabase();
 
-            if (!handlePlayerQuery(database, playerManager, false)) {
+            if (!handlePlayerQuery(playerManager, false)) {
                 MessageUtil.sendError("Could not handle player's data.");
             }
         }
@@ -116,21 +116,20 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Leave")) return;
-
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null) {
-            AsyncDatabase database = DatabaseHandler.getDatabase();
-
-            if (!handlePlayerQuery(database, playerManager, true)) {
+            if (!handlePlayerQuery(playerManager, true)) {
                 MessageUtil.sendError("Could not update player's data.");
+            }
+            if (Config.getConfig("config").get().getBoolean("StopTimerOn.Leave")) {
+                playerManager.setTimeRunning(false);
             }
         }
     }
 
-    public static boolean handlePlayerQuery(AsyncDatabase database, PlayerManager playerManager, boolean update) {
+    public static boolean handlePlayerQuery(PlayerManager playerManager, boolean update) {
         AtomicBoolean bool = new AtomicBoolean(true);
         String[] keys = {
                 "UUID", "Name", "TimeLeft", "InitialTime", "CurrentTimeLimit",
@@ -142,6 +141,7 @@ public class PlayerListener implements Listener {
                 playerManager.getLimitCooldown(), playerManager.isTimeRunning(), playerManager.isTimePaused()
         };
 
+        AsyncDatabase database = DatabaseHandler.getDatabase();
         if (update) {
             database.update(keys, values, (error, result) -> {
                 if (error != null) {

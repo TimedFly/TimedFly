@@ -18,7 +18,7 @@ public class MessageUtil {
     public static String COMMAND_TFLY = "&e/tfly ";
     public static String DIVIDER = "&6&l------------------------------";
     public static String PLUGIN_NAME = "&c&lTimedFly";
-    public static String PLUGIN_PREFIX = "&c&lTimedFly > &7";
+    public static String PLUGIN_PREFIX = null;
 
     public static String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
@@ -49,7 +49,7 @@ public class MessageUtil {
     }
 
     public static void sendMessage(CommandSender to, String text, boolean prefix) {
-        to.sendMessage(color((prefix ? PLUGIN_PREFIX : "") + text));
+        to.sendMessage(color((prefix ? (PLUGIN_PREFIX != null ? PLUGIN_PREFIX : "&c&lTimedFly > &7") : "") + text));
     }
 
     public static void sendMessage(CommandSender to, String text) {
@@ -73,7 +73,7 @@ public class MessageUtil {
     }
 
     public static void sendMessage(Player to, String text, boolean prefix) {
-        to.sendMessage(color((prefix ? PLUGIN_PREFIX : "") + text));
+        to.sendMessage(color((prefix ? (PLUGIN_PREFIX != null ? PLUGIN_PREFIX : "&c&lTimedFly > &7") : "") + text));
     }
 
     public static void sendMessage(Player to, String text) {
@@ -144,5 +144,9 @@ public class MessageUtil {
         IntStream.of(amount).forEach((i) -> stringBuilder.append(" "));
 
         sendMessage(to, stringBuilder.append(text).toString(), false);
+    }
+
+    public static void setPluginName() {
+        PLUGIN_NAME = Config.getConfig("config").get().getString("Prefix");
     }
 }

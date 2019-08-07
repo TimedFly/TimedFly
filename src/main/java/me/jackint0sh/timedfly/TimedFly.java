@@ -13,7 +13,6 @@ import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.versions.Default;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -39,12 +38,10 @@ public final class TimedFly extends JavaPlugin {
         this.initializeStoreItems();
         this.initializeTimer();
 
+        MessageUtil.setPluginName();
+
         Bukkit.getOnlinePlayers().forEach(player -> {
-            PlayerListener.handlePlayerQuery(
-                    DatabaseHandler.getDatabase(),
-                    PlayerManager.getCachedPlayer(player.getUniqueId()),
-                    false
-            );
+            PlayerListener.handlePlayerQuery(PlayerManager.getCachedPlayer(player.getUniqueId()), false);
         });
 
         MessageUtil.sendConsoleMessage("&cAssets loaded. Plugin ready!");
@@ -59,9 +56,7 @@ public final class TimedFly extends JavaPlugin {
                 player.closeInventory();
             }
             PlayerListener.handlePlayerQuery(
-                    DatabaseHandler.getDatabase(),
-                    PlayerManager.getCachedPlayer(player.getUniqueId()).setTimeRunning(false),
-                    true
+                    PlayerManager.getCachedPlayer(player.getUniqueId()).setTimeRunning(false), true
             );
         });
 
@@ -77,8 +72,6 @@ public final class TimedFly extends JavaPlugin {
         Bukkit.getPluginCommand("timedfly").setTabCompleter(new TabCompleter(Arguments.Type.TIMEDFLY));
         Bukkit.getPluginCommand("tfly").setTabCompleter(new TabCompleter(Arguments.Type.TFLY));
 
-        Bukkit.getPluginManager().registerEvents(new CustomCommand(), this);
-
         MessageUtil.sendConsoleMessage("&cCommands successfully loaded!");
     }
 
@@ -90,6 +83,7 @@ public final class TimedFly extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new AttackListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getPluginManager().registerEvents(new TimedFlyListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CustomCommand(), this);
 
         MessageUtil.sendConsoleMessage("&cEvent listeners successfully loaded!");
     }
