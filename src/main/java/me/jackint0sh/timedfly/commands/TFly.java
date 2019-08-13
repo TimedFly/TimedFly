@@ -2,6 +2,7 @@ package me.jackint0sh.timedfly.commands;
 
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
 import me.jackint0sh.timedfly.managers.PlayerManager;
+import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.Permissions;
 import me.jackint0sh.timedfly.utilities.TimeParser;
@@ -22,6 +23,10 @@ public class TFly implements CommandExecutor {
         if (args.length == 0) {
             if (sender instanceof Player) {
                 try {
+                    if (!Config.getConfig("config").get().getBoolean("Gui.Enable")) {
+                        MessageUtil.sendMessage(sender, "Wait, that's illegal!");
+                        return true;
+                    }
                     FlightStore.create((Player) sender);
                 } catch (NullPointerException e) {
                     MessageUtil.sendError((Player) sender, e);
@@ -99,12 +104,12 @@ public class TFly implements CommandExecutor {
             }
         } else {
             if (b) {
-                if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_ADD_OTHERS, Permissions.FLY_ADD)) {
+                if (!PlayerManager.hasAnyPermission(sender, Permissions.FLY_ADD_OTHERS, Permissions.FLY_ADD)) {
                     MessageUtil.sendNoPermission(sender);
                     return;
                 }
             } else {
-                if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_SET_OTHERS, Permissions.FLY_SET)) {
+                if (!PlayerManager.hasAnyPermission(sender, Permissions.FLY_SET_OTHERS, Permissions.FLY_SET)) {
                     MessageUtil.sendNoPermission(sender);
                     return;
                 }
