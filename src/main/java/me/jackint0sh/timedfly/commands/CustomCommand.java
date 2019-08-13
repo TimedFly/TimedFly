@@ -28,8 +28,6 @@ public class CustomCommand implements Listener {
         if (commands.stream().anyMatch(command::equals)) {
             final Player player = event.getPlayer();
             final PlayerManager playerManager = PlayerManager.getCachedPlayer(event.getPlayer().getUniqueId());
-            final boolean userPerm = Config.getConfig("config").get().getBoolean("CustomCommands.UsePermission.Enable");
-            final String perm = Config.getConfig("config").get().getString("CustomCommands.UsePermission.Permission");
 
             if (PlayerManager.hasPermission(player, Permissions.SKIP_STORE)) {
                 if (!player.getAllowFlight()) {
@@ -44,7 +42,12 @@ public class CustomCommand implements Listener {
                 return;
             }
 
-            if (userPerm && !player.hasPermission(perm)) {
+            if (!Config.getConfig("config").get().getBoolean("Gui.Enable")) return;
+
+            final String perm = Config.getConfig("config").get().getString("CustomCommands.UsePermission.Permission");
+            final boolean userPerm = Config.getConfig("config").get().getBoolean("CustomCommands.UsePermission.Enable");
+
+            if (userPerm && !PlayerManager.hasPermission(player, perm)) {
                 MessageUtil.sendNoPermission(player);
                 event.setCancelled(true);
                 return;
@@ -54,5 +57,4 @@ public class CustomCommand implements Listener {
             event.setCancelled(true);
         }
     }
-
 }
