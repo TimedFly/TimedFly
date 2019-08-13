@@ -60,6 +60,16 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    private void onWorldChange(PlayerChangedWorldEvent event) {
+        Player player = event.getPlayer();
+        PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+        if (playerManager == null) return;
+        if (playerManager.hasTime() && playerManager.isTimeRunning()) {
+            player.setAllowFlight(true);
+        }
+    }
+
+    @EventHandler
     public void onGround(PlayerMoveEvent event) {
         if (event.isCancelled()) return;
         if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Ground")) return;
@@ -71,9 +81,9 @@ public class PlayerListener implements Listener {
 
         if (player.isOnGround() && playerManager != null) {
             playerManager.setOnFloor(true);
-            if (playerManager.hasTime() && playerManager.isTimeRunning() && !playerManager.isAttacking()) {
+            if (playerManager.hasTime() && !playerManager.isAttacking()) {
                 if (!player.getAllowFlight()) player.setAllowFlight(true);
-                playerManager.setTimeRunning(false);
+                if (playerManager.isTimeRunning()) playerManager.setTimeRunning(false);
             }
         }
     }
@@ -106,8 +116,6 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null) {
-            AsyncDatabase database = DatabaseHandler.getDatabase();
-
             if (!handlePlayerQuery(playerManager, false)) {
                 MessageUtil.sendError("Could not handle player's data.");
             }
