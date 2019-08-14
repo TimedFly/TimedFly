@@ -9,6 +9,7 @@ import me.jackint0sh.timedfly.listeners.*;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.managers.TimerManager;
 import me.jackint0sh.timedfly.utilities.Config;
+import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.versions.Default;
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 public final class TimedFly extends JavaPlugin {
 
@@ -32,6 +34,7 @@ public final class TimedFly extends JavaPlugin {
         if (!this.initializeSupportedVersion()) return;
         this.initializeConfigurations();
         if (!DatabaseHandler.initialize(this)) return;
+        this.initializeLanguages();
         this.initializeHooks();
         this.registerCommands();
         this.registerEvents();
@@ -106,7 +109,7 @@ public final class TimedFly extends JavaPlugin {
             return;
         }
 
-        MessageUtil.sendConsoleMessage("&cConfiguration files successfully loaded!!!");
+        MessageUtil.sendConsoleMessage("&cConfiguration files successfully loaded!");
     }
 
     private void initializeStoreItems() {
@@ -114,7 +117,7 @@ public final class TimedFly extends JavaPlugin {
 
         itemsConfig.get().getConfigurationSection("Items").getKeys(false).forEach(FlyItem::new);
 
-        MessageUtil.sendConsoleMessage("&cStore's Items loaded from file...");
+        MessageUtil.sendConsoleMessage("&cStore's Items loaded from file!");
     }
 
     private void initializeHooks() {
@@ -126,7 +129,7 @@ public final class TimedFly extends JavaPlugin {
         Hooks.enableLevelExp();
         Hooks.hookPapi(this);
 
-        MessageUtil.sendConsoleMessage("&cAll plugins hooked...");
+        MessageUtil.sendConsoleMessage("&cAll plugins hooked!");
     }
 
     private boolean initializeSupportedVersion() {
@@ -151,5 +154,12 @@ public final class TimedFly extends JavaPlugin {
         }
 
         return true;
+    }
+
+    private void initializeLanguages() {
+        MessageUtil.sendConsoleMessage("Loading languages...");
+        Languages.createFiles();
+        Languages.loadLang();
+        MessageUtil.sendConsoleMessage("Languages loaded!");
     }
 }

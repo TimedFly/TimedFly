@@ -32,10 +32,10 @@ public class CustomCommand implements Listener {
             if (PlayerManager.hasPermission(player, Permissions.SKIP_STORE)) {
                 if (!player.getAllowFlight()) {
                     player.setAllowFlight(true);
-                    MessageUtil.sendMessage(player, "&7Flight &aenabled.");
+                    MessageUtil.sendTranslation(player, "fly.on");
                 } else {
                     player.setAllowFlight(false);
-                    MessageUtil.sendMessage(player, "&7Flight &cdisabled.");
+                    MessageUtil.sendTranslation(player, "fly.off");
                 }
                 playerManager.setManualFly(player.getAllowFlight());
                 event.setCancelled(true);

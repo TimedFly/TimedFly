@@ -29,9 +29,10 @@ public class MessageUtil {
         String timeLeft = TimeParser.toReadableString(playerManager.getTimeLeft());
         String initialTime = TimeParser.toReadableString(playerManager.getInitialTime());
 
-        if (timeLeft.isEmpty()) timeLeft = "No Time";
-        if (initialTime.isEmpty()) initialTime = "No Time";
+        if (timeLeft.isEmpty()) timeLeft = Languages.getString("fly.time.no_time");
+        if (initialTime.isEmpty()) initialTime = Languages.getString("fly.time.no_time");
 
+        assert timeLeft != null && initialTime != null;
         return MessageUtil.color(text)
                 .replace("[player_name]", player.getName())
                 .replace("[time_left]", timeLeft)
@@ -130,11 +131,40 @@ public class MessageUtil {
     }
 
     public static void sendNoPermission(CommandSender to) {
-        sendMessage(to, "&cYou don't have permission to do this!", true);
+        sendTranslation(to, "error.no_perms");
     }
 
     public static void sendNoPermission(Player to) {
-        sendMessage(to, "&cYou don't have permission to do this!", true);
+        sendTranslation(to, "error.no_perms");
+    }
+
+    public static void sendTranslation(Player to, String path) {
+        sendTranslation(to, Languages.getString(path), null);
+    }
+
+    public static void sendTranslation(CommandSender to, String path) {
+        sendTranslation(to, Languages.getString(path), null);
+    }
+
+    public static void sendTranslation(Player to, String path, String[][] replace) {
+        String translation = Languages.getString(path);
+        if (translation == null) return;
+        if (replace != null) {
+            Arrays.stream(replace).forEach(strings -> {
+                sendMessage(to, translation.replace(strings[0], strings[1]), true);
+            });
+            return;
+        } else sendMessage(to, translation, true);
+    }
+
+    public static void sendTranslation(CommandSender to, String path, String[][] replace) {
+        String translation = Languages.getString(path);
+        if (translation == null) return;
+        if (replace != null) {
+            Arrays.stream(replace).forEach(strings -> {
+                sendMessage(to, translation.replace(strings[0], strings[1]), true);
+            });
+        } else sendMessage(to, translation, true);
     }
 
     public static void sendCenteredMessage(CommandSender to, String text, int width) {

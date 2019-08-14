@@ -48,10 +48,10 @@ public class Main implements CommandExecutor {
                     if (PlayerManager.hasAnyPermission(player, Permissions.CREATOR_OPEN, Permissions.CREATOR_ALL)) {
                         FlyItemCreator.openMenu(player);
                     } else MessageUtil.sendNoPermission(player);
-                } else MessageUtil.sendError("Only players allowed!");
+                } else MessageUtil.sendTranslation(sender, "error.player.not_player");;
                 break;
             default:
-                MessageUtil.sendMessage(sender, "Command not found. Try using " + MessageUtil.COMMAND_TIMEDFLY + "help");
+                MessageUtil.sendTranslation(sender, "error.not_found.command");
                 break;
         }
         return true;

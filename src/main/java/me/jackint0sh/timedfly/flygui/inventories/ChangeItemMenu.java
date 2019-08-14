@@ -4,6 +4,7 @@ import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyItemCreator;
 import me.jackint0sh.timedfly.flygui.Item;
+import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,12 +22,12 @@ public class ChangeItemMenu {
     public static Inventory create(Player player, boolean b) {
         AtomicBoolean cancelled = new AtomicBoolean(false);
         Item pane = new Item(Material.GRAY_STAINED_GLASS_PANE)
-                .setName("&e")
-                .setLore("&cClose Inventory", "&cWhen finished!", "&7");
+                .setName(Languages.getString("item_editor.close.title"))
+                .setLore(Languages.getStringArray("item_editor.close.lore"));
 
         Item cancel = new Item(Material.REDSTONE_BLOCK)
-                .setName("&aCancel")
-                .setLore("&7", "&eClick here to cancel and go back", "&7")
+                .setName(Languages.getString("item_editor.cancel.title"))
+                .setLore(Languages.getStringArray("item_editor.cancel.lore"))
                 .onClick(event -> {
                     cancelled.set(true);
                     FlyItemCreator.clearState(FlyItemCreator.StateType.INNER_STATE, player);
@@ -50,7 +51,10 @@ public class ChangeItemMenu {
             flyItem.setMaterial(item.getType().name());
             FlyItemCreator.setCurrentFlyItem(player, flyItem);
 
-            MessageUtil.sendMessage(player, "Material changed from: &e" + materialBefore + "&7 to: &e" + flyItem.getMaterial());
+            MessageUtil.sendTranslation(player, "item_editor.change_item.changed", new String[][]{
+                    new String[]{"[old_material]", materialBefore},
+                    new String[]{"[new_material]", flyItem.getMaterial()}
+            });
 
             FlyItemCreator.clearState(FlyItemCreator.StateType.INNER_STATE, player);
             Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0],

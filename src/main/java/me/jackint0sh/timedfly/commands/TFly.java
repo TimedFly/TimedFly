@@ -24,14 +24,14 @@ public class TFly implements CommandExecutor {
             if (sender instanceof Player) {
                 try {
                     if (!Config.getConfig("config").get().getBoolean("Gui.Enable")) {
-                        MessageUtil.sendMessage(sender, "Wait, that's illegal!");
+                        MessageUtil.sendTranslation(sender, "error.disabled.gui");
                         return true;
                     }
                     FlightStore.create((Player) sender);
                 } catch (NullPointerException e) {
                     MessageUtil.sendError((Player) sender, e);
                 }
-            } else MessageUtil.sendConsoleMessage("&cOnly players can use this command!");
+            } else MessageUtil.sendTranslation(sender, "error.player.not_player");
             return true;
         }
 
@@ -43,7 +43,7 @@ public class TFly implements CommandExecutor {
             case "add":
             case "a":
                 if (args.length < 2) {
-                    MessageUtil.sendMessage(sender, "&cUsage: " + Arguments.TFly.ADD.getUsage());
+                    MessageUtil.sendTranslation(sender, "error.usage", new String[][]{{"[usage]", Arguments.TFly.ADD.getUsage()}});
                     return true;
                 }
                 handleTimeArg(args, sender, true);
@@ -51,7 +51,7 @@ public class TFly implements CommandExecutor {
             case "set":
             case "s":
                 if (args.length < 2) {
-                    MessageUtil.sendMessage(sender, "&cUsage: " + Arguments.TFly.SET.getUsage());
+                    MessageUtil.sendTranslation(sender, "error.usage", new String[][]{{"[usage]", Arguments.TFly.SET.getUsage()}});
                     return true;
                 }
                 handleTimeArg(args, sender, false);
@@ -65,6 +65,9 @@ public class TFly implements CommandExecutor {
             case "toggle":
                 toggleTimer(args, sender, 3);
                 break;
+            default:
+                MessageUtil.sendTranslation(sender, "error.not_found.command");
+                break;
         }
         return true;
     }
@@ -74,19 +77,21 @@ public class TFly implements CommandExecutor {
         int to = args.length - 1;
         if (TimeParser.isParsable(args[args.length - 1])) {
             if (!(sender instanceof Player)) {
-                MessageUtil.sendMessage(sender, "Only players can do this.");
+                MessageUtil.sendTranslation(sender, "error.player.not_player");
                 return;
             }
             player = (Player) sender;
             to = args.length;
         } else if (player == null) {
-            MessageUtil.sendError(sender, "That player is not online!");
+            MessageUtil.sendTranslation(sender, "error.player.not_online");
             return;
         }
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
         if (playerManager == null) {
-            MessageUtil.sendError(player, "Something went wrong on line: " + new Throwable().getStackTrace()[0].getLineNumber());
+            MessageUtil.sendTranslation(player, "error.unknown", new String[][]{{
+                    "[line]", new Throwable().getStackTrace()[0].getLineNumber() + ""
+            }});
             return;
         }
 
@@ -119,23 +124,31 @@ public class TFly implements CommandExecutor {
         try {
             String timeString = String.join("", Arrays.copyOfRange(args, 1, to));
             long time = TimeParser.parse(timeString);
-            String text, from;
+            String self, other;
 
             if (b) {
                 playerManager.addTime(time);
-                text = "Time added successfully: " + timeString;
-                from = "&c" + sender.getName() + "&7 added &e" + timeString + "&7 to your time.";
+                self = "fly.time.add.self";
+                other = "fly.time.add.other";
             } else {
                 playerManager.setTime(time);
-                text = "Time successfully set to: " + timeString;
-                from = "&c" + sender.getName() + "&7 set your time to: &e" + timeString;
+                self = "fly.time.set.self";
+                other = "fly.time.set.other";
             }
 
             playerManager.startTimer();
 
-            if (!player.equals(sender)) MessageUtil.sendMessage(player, from);
+            if (!player.equals(sender)) MessageUtil.sendTranslation(player, other, new String[][]{
+                    new String[]{"[user_name]", sender.getName()},
+                    new String[]{"[time]", timeString},
+                    new String[]{"[time_left]", playerManager.getTimeLeft() + ""}
+            });
 
-            MessageUtil.sendMessage(player, text);
+            MessageUtil.sendTranslation(player, self, new String[][]{
+                    new String[]{"[user_name]", sender.getName()},
+                    new String[]{"[time]", timeString},
+                    new String[]{"[time_left]", playerManager.getTimeLeft() + ""}
+            });
         } catch (TimeParser.TimeFormatException e) {
             MessageUtil.sendError(player, e);
         }
@@ -146,12 +159,12 @@ public class TFly implements CommandExecutor {
         if (args.length > 1) {
             player = Bukkit.getPlayerExact(args[args.length - 1]);
             if (player == null) {
-                MessageUtil.sendError(sender, "That player is not online!");
+                MessageUtil.sendTranslation(sender, "error.player.not_online");
                 return;
             }
         } else {
             if (!(sender instanceof Player)) {
-                MessageUtil.sendMessage(sender, "Only players can do this.");
+                MessageUtil.sendTranslation(sender, "error.player.not_player");
                 return;
             }
             player = (Player) sender;
@@ -159,7 +172,9 @@ public class TFly implements CommandExecutor {
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
         if (playerManager == null) {
-            MessageUtil.sendError(player, "Something went wrong on line: " + new Throwable().getStackTrace()[0].getLineNumber());
+            MessageUtil.sendTranslation(player, "error.unknown", new String[][]{{
+                    "[line]", new Throwable().getStackTrace()[0].getLineNumber() + ""
+            }});
             return;
         }
 
@@ -175,8 +190,8 @@ public class TFly implements CommandExecutor {
             }
         }
 
-        if (playerManager.getTimeLeft() < 1) {
-            if (playerManager.isTimePaused()) MessageUtil.sendMessage(player, "The timer in not running...");
+        if (!playerManager.hasTime()) {
+            MessageUtil.sendTranslation(player, "error.not_running");
             return;
         }
 
@@ -187,8 +202,8 @@ public class TFly implements CommandExecutor {
             else playerManager.pauseTimer();
         }
 
-        if (playerManager.isTimePaused()) MessageUtil.sendMessage(player, "The timer has been paused!");
-        else MessageUtil.sendMessage(player, "The timer has been resumed!");
+        if (playerManager.isTimePaused()) MessageUtil.sendTranslation(player, "fly.time.toggle.pause");
+        else MessageUtil.sendMessage(player, "fly.time.toggle.resume");
 
     }
 

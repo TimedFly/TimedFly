@@ -5,6 +5,7 @@ import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyItemCreator;
 import me.jackint0sh.timedfly.flygui.Item;
 import me.jackint0sh.timedfly.utilities.Config;
+import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,9 +20,9 @@ public class ConfirmationMenu {
     private static FlyInventory inventory = new FlyInventory(InventoryType.HOPPER, MessageUtil.color("&cConfirm"));
 
     public static Inventory create(Player player, boolean b) {
-        Item yes = new Item(Material.EMERALD).setName("&aYES")
+        Item yes = new Item(Material.EMERALD).setName(Languages.getString("item_editor.confirm.yes"))
                 .onClick(event -> handleConfirmation(player, true));
-        Item no = new Item(Material.REDSTONE).setName("&aNO")
+        Item no = new Item(Material.REDSTONE).setName(Languages.getString("item_editor.confirm.no"))
                 .onClick(event -> handleConfirmation(player, false));
 
         inventory.setItem(yes, 1);
@@ -40,14 +41,14 @@ public class ConfirmationMenu {
         if (b) {
             if (FlyItemCreator.getState(player) == FlyItemCreator.State.DELETE_ITEM) {
                 handleDelete(player);
-                MessageUtil.sendMessage(player, "Successfully deleted!");
+                MessageUtil.sendTranslation(player, "item_editor.confirm.deleted");
                 FlyItemCreator.removeCurrentFlyItem(player);
                 FlyItemCreator.clearStates(player);
                 player.closeInventory();
                 return;
             } else if (FlyItemCreator.getInnerState(player) == FlyItemCreator.InnerState.SAVE_ITEM) {
                 handleSave(player);
-                MessageUtil.sendMessage(player, "Successfully saved!");
+                MessageUtil.sendTranslation(player, "item_editor.confirm.saved");
                 FlyItemCreator.removeCurrentFlyItem(player);
                 FlyItemCreator.clearStates(player);
                 player.closeInventory();

@@ -46,9 +46,9 @@ CustomCommands:
 Gui:
   Enable: true
   # Custom name of the inventory
-  DisplayName: 'TimedFly'
-  # Rows of the inventory (must be multiple of 9, ex: 9, 18... etc. Use -1 to automatically set the slot size)
-  Slots: -1
+  DisplayName: "&cTimedFly Store"
+  # Rows of the inventory (Use -1 to automatically set the slot size)
+  Rows: -1
 
 StopTimerOn:
   # If true the players time will be saved with the player leaves the server
@@ -145,6 +145,9 @@ Check-For-Updates:
   # Auto download new updates
   Auto-Download: false
 
-# Choose your own message file (if file name is lang_en.yml use the work after lang_ in this case will be en
-# Current languages es, sp, hu, de, you can create your own and send it to me so I added for default.
-Lang: en
+# Choose your own message file, if the language is not found english will be used.
+# Current languages english, spanish, hu, de, you can create your own and send it to me.
+# Do not edit any of the languages because they will get re-generated on every restart.
+  # this is to update the file in case there are new values.
+  # If you want to use your own make another file with the name you want.
+Language: english

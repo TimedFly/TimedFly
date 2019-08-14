@@ -9,6 +9,7 @@ import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.Permissions;
 import me.jackint0sh.timedfly.utilities.TimeParser;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -96,6 +97,24 @@ public class PlayerManager {
                 || player.hasPermission(permission.getPermission());
     }
 
+    public static boolean hasPermission(Player player, String permission) {
+        return player.isOp()
+                || player.hasPermission(Permissions.ADMIN.getPermission())
+                || player.hasPermission(permission);
+    }
+
+    public static boolean hasPermission(CommandSender sender, Permissions permission) {
+        return sender.isOp()
+                || sender.hasPermission(Permissions.ADMIN.getPermission())
+                || sender.hasPermission(permission.getPermission());
+    }
+
+    public static boolean hasPermission(CommandSender sender, String permission) {
+        return sender.isOp()
+                || sender.hasPermission(Permissions.ADMIN.getPermission())
+                || sender.hasPermission(permission);
+    }
+
     private static boolean hasPermissions(Player player, boolean and, Permissions... permissions) {
         if (player.isOp() || player.hasPermission(Permissions.ADMIN.getPermission())) return true;
 
@@ -108,12 +127,32 @@ public class PlayerManager {
         return hasPerm;
     }
 
+    private static boolean hasPermissions(CommandSender sender, boolean and, Permissions... permissions) {
+        if (sender.isOp() || sender.hasPermission(Permissions.ADMIN.getPermission())) return true;
+
+        boolean hasPerm;
+        if (and) {
+            hasPerm = Arrays.stream(permissions).allMatch(permission -> PlayerManager.hasPermission(sender, permission));
+        } else {
+            hasPerm = Arrays.stream(permissions).anyMatch(permission -> PlayerManager.hasPermission(sender, permission));
+        }
+        return hasPerm;
+    }
+
     public static boolean hasAllPermissions(Player player, Permissions... permissions) {
         return hasPermissions(player, true, permissions);
     }
 
+    public static boolean hasAllPermissions(CommandSender sender, Permissions... permissions) {
+        return hasPermissions(sender, true, permissions);
+    }
+
     public static boolean hasAnyPermission(Player player, Permissions... permissions) {
         return hasPermissions(player, false, permissions);
+    }
+
+    public static boolean hasAnyPermission(CommandSender sender, Permissions... permissions) {
+        return hasPermissions(sender, false, permissions);
     }
 
     public void enterAttackMode() {
@@ -125,7 +164,7 @@ public class PlayerManager {
             this.player.setFlying(false);
             this.setAttacking(true).disableFallDamage();
 
-            MessageUtil.sendMessage(this.player, "Entering attack mode. Flight disabled!");
+            MessageUtil.sendTranslation(this.player, "fly.time.attack_mode.flight_disabled");
         }
 
         if (attackTimer != null) attackTimer.cancel();
@@ -135,7 +174,7 @@ public class PlayerManager {
                 if (!this.hasTime()) return;
                 this.player.setAllowFlight(true);
                 this.setAttacking(false);
-                MessageUtil.sendMessage(this.player, "Exiting attack mode. Flight re-enabled!");
+                MessageUtil.sendTranslation(this.player, "fly.time.attack_mode.flight_enabled");
             }, TimeParser.parse(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown")));
         } catch (TimeParser.TimeFormatException e) {
             MessageUtil.sendError(player, e);

@@ -2,7 +2,6 @@ package me.jackint0sh.timedfly.database;
 
 import me.jackint0sh.timedfly.interfaces.AsyncDatabase;
 import me.jackint0sh.timedfly.interfaces.Callback;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.DriverManager;

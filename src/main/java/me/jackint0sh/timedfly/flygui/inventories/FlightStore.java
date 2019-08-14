@@ -21,7 +21,12 @@ import java.util.stream.Collectors;
 public class FlightStore {
 
     public static void create(Player player) throws NullPointerException {
-        FlyInventory inventory = new FlyInventory(6, MessageUtil.color("&cTimedFly Store"));
+        String name = MessageUtil.color(Config.getConfig("config").get().getString("Gui.DisplayName"));
+        int rows = Config.getConfig("config").get().getInt("Gui.Rows");
+
+        if (rows == -1) rows = 6; // TODO: implement dynamic rows
+
+        FlyInventory inventory = new FlyInventory(rows, name);
         inventory.setItems(createContents(player));
         player.openInventory(inventory.getInventory());
     }
@@ -62,6 +67,7 @@ public class FlightStore {
                         .replace("[currency]", item.getCurrency().name())
                         .replace("[balance]", CurrencyManager.balance(player, item.getCurrency()) + "")
                 )
+                .glow(item.isGlow())
                 .setLore(MessageUtil.replacePlaceholders(player, item.getLore())
                         .stream().map(string -> string
                                 .replace("[time]", item.getTime())
@@ -73,7 +79,9 @@ public class FlightStore {
                 .onClick(event -> {
                     PlayerManager playerManager = PlayerManager.getCachedPlayer(event.getWhoClicked().getUniqueId());
                     if (playerManager == null) {
-                        MessageUtil.sendError(player, "Something went wrong on line: " + new Throwable().getStackTrace()[0].getLineNumber());
+                        MessageUtil.sendTranslation(player, "error.unknown", new String[][]{{
+                                "[line]", new Throwable().getStackTrace()[0].getLineNumber() + ""
+                        }});
                         return;
                     }
                     if (type == 1) {
@@ -86,15 +94,19 @@ public class FlightStore {
                         try {
                             if (playerManager.passedCurrentTimeLimit()) {
                                 if (!playerManager.resetCurrentTimeLimit()) {
-                                    MessageUtil.sendError(player, "You already reached the time limit you can buy.");
-                                    MessageUtil.sendError(player, "You have to wait &e" + playerManager.getLimitCooldownString() + "&c.");
+                                    MessageUtil.sendTranslation(player, "error.time_limit.reached");
+                                    MessageUtil.sendTranslation(player, "error.time_limit.cooldown", new String[][]{{
+                                            "[cooldown]", playerManager.getLimitCooldownString()
+                                    }});
                                 }
                                 return;
                             }
 
                             if (CurrencyManager.has(player, item.getPrice(), item.getCurrency())) {
                                 if (!CurrencyManager.withdraw(player, item.getPrice(), item.getCurrency())) {
-                                    MessageUtil.sendError(player, "Something went wrong while trying to perform this action!");
+                                    MessageUtil.sendTranslation(player, "error.unknown", new String[][]{{
+                                        "[line]", new Throwable().getStackTrace()[0].getLineNumber() + ""
+                                    }});
                                     return;
                                 }
                                 long time = TimeParser.parse(item.getTime());
@@ -106,9 +118,11 @@ public class FlightStore {
                                         .updateStore()
                                         .startTimer();
 
-                                MessageUtil.sendMessage(player, "You've added &e" + item.getTime() + " &7to your timer!");
+                                MessageUtil.sendTranslation(player, "fly.time.bought");
                             } else {
-                                MessageUtil.sendError(player, "You don't have enough money!");
+                                MessageUtil.sendTranslation(player, "error.no_money", new String[][]{{
+                                        "[time]", item.getTime()
+                                }});
                                 player.closeInventory();
                             }
                         } catch (Exception e) {
