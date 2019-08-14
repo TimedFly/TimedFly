@@ -1,0 +1,111 @@
+{
+  "language": "english",
+  "version": "1.0",
+  "fly": {
+    "on": "&7Flight &aenabled.",
+    "off": "&7Flight &cdisabled.",
+    "time": {
+      "no_time":"No Time",
+      "time_left": "&aYou have &e[time_left]&a left!",
+      "announcer": {
+        "title": "&eTime left:",
+        "subtitle": "&c[time_left]",
+        "chat": "&aYou have &e[time_left]&a left!"
+      },
+      "flight_end": {
+        "chat": "&cFlight time ended.",
+        "title":"&cFlight time ended.",
+        "subtitle": "&eBuy more on the store.",
+        "action_bar": "&cFlight time ended."
+      },
+      "flight_pause": {
+        "chat": "&cFlight time paused.",
+        "title":"&cFlight time paused.",
+        "subtitle": "[time_left]",
+        "action_bar": "&cFlight time paused."
+      },
+      "bought": "You've added &e[time] &7to your timer!",
+      "add": {
+        "self": "Time added successfully: [time]",
+        "other": "&c[user_name]&7 added &e[time]&7 to your time."
+      },
+      "set": {
+        "self": "Time set successfully: [time]",
+        "other": "&c[user_name]&7 set your time to &e[time]&7."
+      },
+      "toggle": {
+        "resume": "The timer has been resumed!",
+        "pause": "The timer has been paused!"
+      },
+      "attack_mode": {
+        "flight_disabled": "&7Entering &eattack mode&7. Flight &cdisabled&7!",
+        "flight_enabled": "&7Exiting &eattack mode&7. Flight &are-enabled&7!"
+      }
+    }
+  },
+  "time_string": {
+    "plural": {
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
+    },
+    "singular": {
+      "day": "Day",
+      "hour": "Hour",
+      "minute": "Minute",
+      "second": "Second"
+    }
+  },
+  "item_editor": {
+    "confirm": {
+      "yes": "&aYES",
+      "no": "&aNO",
+      "deleted": "&7Successfully &cdeleted&7!",
+      "saved": "&7Successfully &asaved&7!"
+    },
+    "close": {
+      "title": "&e",
+      "lore": [
+        "&7",
+        "&cClose Inventory",
+        "&cWhen finished!",
+        "&7"
+      ]
+    },
+    "cancel": {
+      "title": "&aCancel",
+      "lore": [
+        "&7",
+        "&eClick here to cancel and go back",
+        "&7"
+      ]
+    },
+    "change_item": {
+      "changed": "&7Material changed from: &e[old_material] &7to: &e[new_material]"
+    }
+  },
+  "error": {
+    "unknown": "Something went wrong on line: [line]",
+    "usage": "&cUsage: [usage]",
+    "no_perms": "&cYou don't have permission to do this!",
+    "no_money": "&cYou don't have enough money!",
+    "time_limit": {
+      "limit": "&cYou already reached the time limit you can buy.",
+      "cooldown": "&cYou have to wait &e[cooldown]&c."
+    },
+    "disabled": {
+      "gui": "&cWait, that's illegal!"
+    },
+    "player": {
+      "not_online": "&cThat player is not online!",
+      "not_player": "&cOnly players can do this."
+    },
+    "not_found": {
+      "command": "&cCommand not found. Try using /tf help or /tfly help"
+    },
+    "fly": {
+      "not_running": "Your timer in not running..."
+    }
+  }
+}
