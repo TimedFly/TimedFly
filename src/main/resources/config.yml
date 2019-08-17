@@ -109,6 +109,7 @@ LimitMaxTime:
 # Display some messages on Title/Actionbar.
 Messages:
   Title: true
+  Chat: true
   ActionBar: true
   # Announce the time left chosen below to the player (time in seconds)
   Announcer:

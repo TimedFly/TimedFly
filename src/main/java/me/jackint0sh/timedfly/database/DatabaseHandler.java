@@ -7,13 +7,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DatabaseHandler {
 
     private static AsyncDatabase database;
+    private static Plugin plugin = Bukkit.getPluginManager().getPlugin("TimedFly");
 
-    public static boolean initialize(Plugin plugin) {
+    public static boolean initialize() {
         MessageUtil.sendConsoleMessage("&cConnecting to database...");
 
         FileConfiguration config = Config.getConfig("config").get();
@@ -65,6 +67,7 @@ public class DatabaseHandler {
                 break;
         }
 
+        if (database instanceof SQL) ((SQL) database).startProcess();
         database.createTable((e, r) -> {
             if (e != null) e.printStackTrace();
         });
@@ -73,5 +76,18 @@ public class DatabaseHandler {
 
     public static AsyncDatabase getDatabase() {
         return database;
+    }
+
+    public static void close() {
+        if (database instanceof SQL) {
+            SQL sql = (SQL) database;
+            sql.queue.add(connection -> {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 }

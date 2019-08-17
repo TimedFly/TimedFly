@@ -2,25 +2,35 @@ package me.jackint0sh.timedfly.database;
 
 import me.jackint0sh.timedfly.interfaces.AsyncDatabase;
 import me.jackint0sh.timedfly.interfaces.Callback;
+import me.jackint0sh.timedfly.utilities.PluginTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 public abstract class SQL implements AsyncDatabase {
 
     private Plugin plugin;
-    Connection connection;
+    Connection conn;
+    BlockingDeque<Consumer<Connection>> queue;
+    ReentrantLock lock;
 
     SQL(Plugin plugin) {
         this.plugin = plugin;
+        this.queue = new LinkedBlockingDeque<>();
+        this.lock = new ReentrantLock();
     }
 
     @Override
     public void createTable(Callback<Boolean> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        PluginTask.runAsync(() -> queue.add(connection -> {
             if (!isConnected(callback)) return;
 
             String sql = "CREATE TABLE IF NOT EXISTS " + table + " ("
@@ -40,13 +50,9 @@ public abstract class SQL implements AsyncDatabase {
                 statement = connection.prepareStatement(sql);
                 boolean execute = statement.execute();
 
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    callback.handle(null, execute);
-                });
+                PluginTask.run(() -> callback.handle(null, execute));
             } catch (SQLException e) {
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    callback.handle(e, false);
-                });
+                PluginTask.run(() -> callback.handle(e, false));
             } finally {
                 try {
                     if (statement != null) statement.close();
@@ -54,12 +60,12 @@ public abstract class SQL implements AsyncDatabase {
                     e.printStackTrace();
                 }
             }
-        });
+        }));
     }
 
     @Override
     public void select(String key, String whereKey, Object whereValue, Callback<Map<String, Object>> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        PluginTask.runAsync(() -> queue.add(connection -> {
             if (!isConnected(callback)) return;
 
             String sql = "SELECT " + key + " FROM " + table;
@@ -80,13 +86,9 @@ public abstract class SQL implements AsyncDatabase {
                     result.put(colName, execute.getObject(colName));
                 }
 
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    callback.handle(null, result);
-                });
+                PluginTask.run(() -> callback.handle(null, result));
             } catch (SQLException e) {
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    callback.handle(e, null);
-                });
+                PluginTask.run(() -> callback.handle(e, null));
             } finally {
                 try {
                     if (statement != null) statement.close();
@@ -99,12 +101,12 @@ public abstract class SQL implements AsyncDatabase {
                     e.printStackTrace();
                 }
             }
-        });
+        }));
     }
 
     @Override
     public void insert(String[] keys, Object[] values, Callback<Object> callback) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        PluginTask.runAsync(() -> queue.add(connection -> {
             if (!isConnected(callback)) return;
 
             if (keys.length != values.length) {
@@ -130,13 +132,11 @@ public abstract class SQL implements AsyncDatabase {
                 for (int i = 0; i < keys.length; i++) this.set(values[i], i + 1, statement);
                 this.set(values[0], values.length + 1, statement);
                 boolean execute = statement.execute();
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    callback.handle(null, execute);
-                });
+                System.out.println(Arrays.toString(keys));
+                System.out.println(Arrays.toString(values));
+                PluginTask.run(() -> callback.handle(null, execute));
             } catch (SQLException e) {
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    callback.handle(e, null);
-                });
+                PluginTask.run(() -> callback.handle(e, null));
             } finally {
                 try {
                     if (statement != null) statement.close();
@@ -144,64 +144,50 @@ public abstract class SQL implements AsyncDatabase {
                     e.printStackTrace();
                 }
             }
-        });
+        }));
     }
 
     @Override
     public void update(String[] keys, Object[] values, String whereKey, Object whereValue, Callback<Object> callback) {
-        if (!plugin.isEnabled()) {
-            runUpdate(keys, values, whereKey, whereValue, callback);
-            return;
-        }
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> runUpdate(keys, values, whereKey, whereValue, callback));
-    }
+        PluginTask.runAsync(() -> queue.add(connection -> {
+            if (!isConnected(callback)) return;
 
-    private void runUpdate(String[] keys, Object[] values, String whereKey, Object whereValue, Callback<Object> callback) {
-        if (!isConnected(callback)) return;
-
-        if (keys.length != values.length) {
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                callback.handle(new Exception("Mismatch on keys and values length."), null);
-            });
-            return;
-        }
-
-        String sql = "UPDATE " + table + " SET ";
-        for (int i = 0; i < keys.length; i++) {
-            sql += keys[i] + " = ?";
-            if (i < keys.length - 1) sql += ",";
-        }
-
-        sql += " WHERE " + whereKey + " = ?;";
-
-        PreparedStatement statement = null;
-        try {
-            statement = connection.prepareStatement(sql);
-            for (int i = 0; i < keys.length; i++) this.set(values[i], i + 1, statement);
-            this.set(whereValue, values.length + 1, statement);
-            int update = statement.executeUpdate();
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                callback.handle(null, update);
-            });
-        } catch (SQLException e) {
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                callback.handle(e, null);
-            });
-        } finally {
-            try {
-                if (statement != null) statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (keys.length != values.length) {
+                PluginTask.run(() -> callback.handle(new Exception("Mismatch on keys and values length."), null));
+                return;
             }
-        }
+
+            String sql = "UPDATE " + table + " SET ";
+            for (int i = 0; i < keys.length; i++) {
+                sql += keys[i] + " = ?";
+                if (i < keys.length - 1) sql += ",";
+            }
+
+            sql += " WHERE " + whereKey + " = ?;";
+
+            PreparedStatement statement = null;
+            try {
+                statement = connection.prepareStatement(sql);
+                for (int i = 0; i < keys.length; i++) this.set(values[i], i + 1, statement);
+                this.set(whereValue, values.length + 1, statement);
+                int update = statement.executeUpdate();
+                PluginTask.run(() -> callback.handle(null, update));
+            } catch (SQLException e) {
+                PluginTask.run(() -> callback.handle(e, null));
+            } finally {
+                try {
+                    if (statement != null) statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
     }
 
     private <T> boolean isConnected(Callback<T> callback) {
         try {
-            if (connection == null || connection.isClosed()) {
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    callback.handle(new Exception("Database not connected!"), null);
-                });
+            if (conn == null || conn.isClosed()) {
+                PluginTask.run(() -> callback.handle(new Exception("Database not connected!"), null));
                 return false;
             }
         } catch (SQLException e) {
@@ -216,5 +202,21 @@ public abstract class SQL implements AsyncDatabase {
         else if (o instanceof Boolean) statement.setBoolean(index, (Boolean) o);
         else if (o instanceof Long) statement.setLong(index, (Long) o);
         else if (o instanceof Integer) statement.setInt(index, (Integer) o);
+    }
+
+    public void startProcess() {
+        PluginTask.runAsync(() -> {
+            while (plugin.isEnabled()) {
+                try {
+                    Consumer<Connection> runnable = queue.take();
+                    lock.lock();
+                    runnable.accept(conn);
+                } catch (Exception e) {
+                    // Ignore this
+                } finally {
+                    lock.unlock();
+                }
+            }
+        });
     }
 }

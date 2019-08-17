@@ -94,7 +94,7 @@ public class FlightStore {
                         try {
                             if (playerManager.passedCurrentTimeLimit()) {
                                 if (!playerManager.resetCurrentTimeLimit()) {
-                                    MessageUtil.sendTranslation(player, "error.time_limit.reached");
+                                    MessageUtil.sendTranslation(player, "error.time_limit.limit");
                                     MessageUtil.sendTranslation(player, "error.time_limit.cooldown", new String[][]{{
                                             "[cooldown]", playerManager.getLimitCooldownString()
                                     }});
@@ -105,7 +105,7 @@ public class FlightStore {
                             if (CurrencyManager.has(player, item.getPrice(), item.getCurrency())) {
                                 if (!CurrencyManager.withdraw(player, item.getPrice(), item.getCurrency())) {
                                     MessageUtil.sendTranslation(player, "error.unknown", new String[][]{{
-                                        "[line]", new Throwable().getStackTrace()[0].getLineNumber() + ""
+                                            "[line]", new Throwable().getStackTrace()[0].getLineNumber() + ""
                                     }});
                                     return;
                                 }
@@ -118,11 +118,15 @@ public class FlightStore {
                                         .updateStore()
                                         .startTimer();
 
-                                MessageUtil.sendTranslation(player, "fly.time.bought");
+                                MessageUtil.sendTranslation(player, "fly.time.bought", new String[][]{
+                                        new String[]{"[time]", item.getTime()},
+                                        new String[]{"[price]", item.getPrice() + ""}
+                                });
                             } else {
-                                MessageUtil.sendTranslation(player, "error.no_money", new String[][]{{
-                                        "[time]", item.getTime()
-                                }});
+                                MessageUtil.sendTranslation(player, "error.no_money", new String[][]{
+                                        new String[]{"[time]", item.getTime()},
+                                        new String[]{"[price]", item.getPrice() + ""}
+                                });
                                 player.closeInventory();
                             }
                         } catch (Exception e) {

@@ -18,7 +18,7 @@
         "subtitle": "&eBuy more on the store.",
         "action_bar": "&cFlight time ended."
       },
-      "flight_pause": {
+      "flight_paused": {
         "chat": "&cFlight time paused.",
         "title":"&cFlight time paused.",
         "subtitle": "[time_left]",

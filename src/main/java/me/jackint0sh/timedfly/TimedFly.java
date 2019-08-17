@@ -19,7 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 public final class TimedFly extends JavaPlugin {
 
@@ -33,7 +32,7 @@ public final class TimedFly extends JavaPlugin {
 
         if (!this.initializeSupportedVersion()) return;
         this.initializeConfigurations();
-        if (!DatabaseHandler.initialize(this)) return;
+        if (!DatabaseHandler.initialize()) return;
         this.initializeLanguages();
         this.initializeHooks();
         this.registerCommands();
@@ -54,15 +53,16 @@ public final class TimedFly extends JavaPlugin {
     public void onDisable() {
         MessageUtil.sendConsoleMessage("&cShutting down TimedFly...");
 
+        System.out.println(Bukkit.getOnlinePlayers());
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (FlyInventory.inventories.containsKey(player.getOpenInventory().getTitle())) {
                 player.closeInventory();
             }
-            PlayerListener.handlePlayerQuery(
-                    PlayerManager.getCachedPlayer(player.getUniqueId()).setTimeRunning(false), true
-            );
+            PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId()).setTimeRunning(false);
+            PlayerListener.handlePlayerQuery(playerManager, true);
         });
 
+        DatabaseHandler.close();
         MessageUtil.sendConsoleMessage("&cTimedFly disabled!");
     }
 

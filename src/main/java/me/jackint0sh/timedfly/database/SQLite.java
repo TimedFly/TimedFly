@@ -30,7 +30,7 @@ public class SQLite extends SQL {
         }
 
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + "/SQLite.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + "/SQLite.db");
             callback.handle(null, null);
         } catch (SQLException e) {
             callback.handle(e, null);

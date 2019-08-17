@@ -139,32 +139,29 @@ public class MessageUtil {
     }
 
     public static void sendTranslation(Player to, String path) {
-        sendTranslation(to, Languages.getString(path), null);
+        sendTranslation(to, path, null);
     }
 
     public static void sendTranslation(CommandSender to, String path) {
-        sendTranslation(to, Languages.getString(path), null);
+        sendTranslation(to, path, null);
     }
 
     public static void sendTranslation(Player to, String path, String[][] replace) {
         String translation = Languages.getString(path);
         if (translation == null) return;
         if (replace != null) {
-            Arrays.stream(replace).forEach(strings -> {
-                sendMessage(to, translation.replace(strings[0], strings[1]), true);
-            });
-            return;
-        } else sendMessage(to, translation, true);
+            for (String[] strings : replace) translation = translation.replace(strings[0], strings[1]);
+        }
+        sendMessage(to, translation, true);
     }
 
     public static void sendTranslation(CommandSender to, String path, String[][] replace) {
         String translation = Languages.getString(path);
         if (translation == null) return;
         if (replace != null) {
-            Arrays.stream(replace).forEach(strings -> {
-                sendMessage(to, translation.replace(strings[0], strings[1]), true);
-            });
-        } else sendMessage(to, translation, true);
+            for (String[] strings : replace) translation = translation.replace(strings[0], strings[1]);
+        }
+        sendMessage(to, translation, true);
     }
 
     public static void sendCenteredMessage(CommandSender to, String text, int width) {

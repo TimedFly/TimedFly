@@ -144,7 +144,7 @@ public class TFly implements CommandExecutor {
                     new String[]{"[time_left]", playerManager.getTimeLeft() + ""}
             });
 
-            MessageUtil.sendTranslation(player, self, new String[][]{
+            MessageUtil.sendTranslation(sender, self, new String[][]{
                     new String[]{"[user_name]", sender.getName()},
                     new String[]{"[time]", timeString},
                     new String[]{"[time_left]", playerManager.getTimeLeft() + ""}

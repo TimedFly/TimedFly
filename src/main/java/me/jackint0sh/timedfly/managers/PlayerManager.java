@@ -162,7 +162,7 @@ public class PlayerManager {
 
             this.player.setAllowFlight(false);
             this.player.setFlying(false);
-            this.setAttacking(true).disableFallDamage();
+            this.setAttacking(true).setTimeRunning(false).disableFallDamage();
 
             MessageUtil.sendTranslation(this.player, "fly.time.attack_mode.flight_disabled");
         }
@@ -173,7 +173,7 @@ public class PlayerManager {
             attackTimer = Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
                 if (!this.hasTime()) return;
                 this.player.setAllowFlight(true);
-                this.setAttacking(false);
+                this.setAttacking(false).setTimeRunning(true);
                 MessageUtil.sendTranslation(this.player, "fly.time.attack_mode.flight_enabled");
             }, TimeParser.parse(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown")));
         } catch (TimeParser.TimeFormatException e) {

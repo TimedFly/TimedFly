@@ -76,7 +76,7 @@ public class TimedFlyListener implements Listener {
         String title, subtitle, chat, action_bar;
         String timeLeft = TimeParser.toReadableString(playerManager.getTimeLeft());
 
-        if (playerManager.hasTime()) {
+        if (!playerManager.hasTime()) {
             title = Languages.getString("fly.time.flight_end.title").replace("[time_left]", timeLeft);
             subtitle = Languages.getString("fly.time.flight_end.subtitle").replace("[time_left]", timeLeft);
             chat = Languages.getString("fly.time.flight_end.chat").replace("[time_left]", timeLeft);

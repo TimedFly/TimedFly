@@ -116,6 +116,7 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null) {
+            playerManager.setPlayer(player);
             if (!handlePlayerQuery(playerManager, false)) {
                 MessageUtil.sendError("Could not handle player's data.");
             }
@@ -141,12 +142,12 @@ public class PlayerListener implements Listener {
         AtomicBoolean bool = new AtomicBoolean(true);
         String[] keys = {
                 "UUID", "Name", "TimeLeft", "InitialTime", "CurrentTimeLimit",
-                "TimeLimitCooldownExpires", "TimeRunning", "TimePaused"
+                "TimeLimitCooldownExpires", "TimeRunning", "TimePaused", "SaveDate"
         };
         Object[] values = {
                 playerManager.getPlayerUuid().toString(), playerManager.getPlayer().getName(), playerManager.getTimeLeft(),
                 playerManager.getInitialTime(), playerManager.getCurrentTimeLimit(),
-                playerManager.getLimitCooldown(), playerManager.isTimeRunning(), playerManager.isTimePaused()
+                playerManager.getLimitCooldown(), playerManager.isTimeRunning(), playerManager.isTimePaused(), "CURRENT_TIMESTAMP"
         };
 
         AsyncDatabase database = DatabaseHandler.getDatabase();
