@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.sql.*;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
@@ -132,8 +131,6 @@ public abstract class SQL implements AsyncDatabase {
                 for (int i = 0; i < keys.length; i++) this.set(values[i], i + 1, statement);
                 this.set(values[0], values.length + 1, statement);
                 boolean execute = statement.execute();
-                System.out.println(Arrays.toString(keys));
-                System.out.println(Arrays.toString(values));
                 PluginTask.run(() -> callback.handle(null, execute));
             } catch (SQLException e) {
                 PluginTask.run(() -> callback.handle(e, null));

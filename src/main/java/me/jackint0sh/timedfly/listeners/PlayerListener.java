@@ -184,7 +184,12 @@ public class PlayerListener implements Listener {
                     if (limitCooldown instanceof Long) playerManager.setLimitCooldown((Long) limitCooldown);
                     else if (limitCooldown instanceof Integer) playerManager.setLimitCooldown((Integer) limitCooldown);
 
-                    if (playerManager.isTimePaused() || !playerManager.isTimeRunning()) {
+                    long time = 0;
+                    if (!playerManager.isTimePaused() || playerManager.isTimeRunning()) {
+                        time = playerManager.getTimeLeft();
+                    }
+
+                    if (time <= 0) {
                         Object timeLeft = r.get("TimeLeft");
                         if (timeLeft instanceof Long) playerManager.setTimeLeft((Long) timeLeft);
                         else if (timeLeft instanceof Integer) playerManager.setTimeLeft((Integer) timeLeft);
