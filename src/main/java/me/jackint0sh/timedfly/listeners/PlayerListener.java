@@ -116,10 +116,10 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null) {
-            playerManager.setPlayer(player);
             if (!handlePlayerQuery(playerManager, false)) {
                 MessageUtil.sendError("Could not handle player's data.");
             }
+            playerManager.setPlayer(player);
         }
     }
 
@@ -129,12 +129,13 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
         if (playerManager != null) {
-            if (!handlePlayerQuery(playerManager, true)) {
-                MessageUtil.sendError("Could not update player's data.");
-            }
             if (Config.getConfig("config").get().getBoolean("StopTimerOn.Leave")) {
                 playerManager.setTimeRunning(false);
             }
+            if (!handlePlayerQuery(playerManager, true)) {
+                MessageUtil.sendError("Could not update player's data.");
+            }
+            if (!playerManager.isTimeRunning()) PlayerManager.getPlayerCache().remove(player.getUniqueId());
         }
     }
 
@@ -164,15 +165,13 @@ public class PlayerListener implements Listener {
                     error.printStackTrace();
                     bool.set(false);
                 }
-                Player player = playerManager.getPlayer();
-                database.select("*", "UUID", player.getUniqueId(), (e, r) -> {
+                database.select("*", "UUID", playerManager.getPlayerUuid().toString(), (e, r) -> {
                     if (e != null) {
                         e.printStackTrace();
                         bool.set(false);
                         return;
                     }
-                    playerManager.setPlayer(player)
-                            .setTimeRunning((Integer) r.get("TimeRunning") != 0)
+                    playerManager.setTimeRunning((Integer) r.get("TimeRunning") != 0)
                             .setTimePaused((Integer) r.get("TimePaused") != 0);
 
                     Object initialTime = r.get("InitialTime");
@@ -184,12 +183,7 @@ public class PlayerListener implements Listener {
                     if (limitCooldown instanceof Long) playerManager.setLimitCooldown((Long) limitCooldown);
                     else if (limitCooldown instanceof Integer) playerManager.setLimitCooldown((Integer) limitCooldown);
 
-                    long time = 0;
-                    if (!playerManager.isTimePaused() || playerManager.isTimeRunning()) {
-                        time = playerManager.getTimeLeft();
-                    }
-
-                    if (time <= 0) {
+                    if (!playerManager.isTimeRunning()) {
                         Object timeLeft = r.get("TimeLeft");
                         if (timeLeft instanceof Long) playerManager.setTimeLeft((Long) timeLeft);
                         else if (timeLeft instanceof Integer) playerManager.setTimeLeft((Integer) timeLeft);
@@ -201,6 +195,7 @@ public class PlayerListener implements Listener {
                         else if (limit instanceof Integer) playerManager.setCurrentTimeLimit((Integer) limit);
                     }
 
+                    Player player = playerManager.getPlayer();
                     if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
                     playerManager.setOnFloor(player.isOnGround());
                     if (!playerManager.isTimePaused() && playerManager.hasTime()) {
@@ -212,7 +207,6 @@ public class PlayerListener implements Listener {
                         playerManager.startTimer();
                     } else if (!playerManager.hasTime() && playerManager.isTimeRunning()) playerManager.stopTimer();
                 });
-
             });
         }
         return bool.get();

@@ -35,6 +35,7 @@ public class PlayerManager {
     private boolean timeRunning;
     private boolean timePaused;
     private boolean manualFly;
+    private boolean cached;
 
     private PlayerManager(UUID playerUuid) {
         this(playerUuid, 0, 0, false, true, false);
@@ -376,6 +377,15 @@ public class PlayerManager {
         return this;
     }
 
+    public boolean isManualFly() {
+        return manualFly;
+    }
+
+    public PlayerManager setManualFly(boolean manualFly) {
+        this.manualFly = manualFly;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "PlayerManager{" +
@@ -386,19 +396,14 @@ public class PlayerManager {
                 ", player=" + player +
                 ", timeLeft=" + timeLeft +
                 ", initialTime=" + initialTime +
+                ", currentTimeLimit=" + currentTimeLimit +
+                ", limitCoolDown=" + limitCoolDown +
                 ", hasTime=" + hasTime +
                 ", onFloor=" + onFloor +
                 ", timeRunning=" + timeRunning +
                 ", timePaused=" + timePaused +
+                ", manualFly=" + manualFly +
+                ", cached=" + cached +
                 '}';
-    }
-
-    public boolean isManualFly() {
-        return manualFly;
-    }
-
-    public PlayerManager setManualFly(boolean manualFly) {
-        this.manualFly = manualFly;
-        return this;
     }
 }

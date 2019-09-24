@@ -53,7 +53,6 @@ public final class TimedFly extends JavaPlugin {
     public void onDisable() {
         MessageUtil.sendConsoleMessage("&cShutting down TimedFly...");
 
-        System.out.println(Bukkit.getOnlinePlayers());
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (FlyInventory.inventories.containsKey(player.getOpenInventory().getTitle())) {
                 player.closeInventory();

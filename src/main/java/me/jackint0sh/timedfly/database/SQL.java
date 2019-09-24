@@ -17,9 +17,9 @@ import java.util.function.Consumer;
 public abstract class SQL implements AsyncDatabase {
 
     private Plugin plugin;
+    private ReentrantLock lock;
     Connection conn;
     BlockingDeque<Consumer<Connection>> queue;
-    ReentrantLock lock;
 
     SQL(Plugin plugin) {
         this.plugin = plugin;
@@ -68,14 +68,15 @@ public abstract class SQL implements AsyncDatabase {
             if (!isConnected(callback)) return;
 
             String sql = "SELECT " + key + " FROM " + table;
-            if (whereKey == null || whereValue == null) sql += " WHERE " + whereKey + " = " + whereValue + ";";
+            if (whereKey != null || whereValue != null) sql += " WHERE " + whereKey + " = ?;";
             else sql += ";";
 
             PreparedStatement statement = null;
             ResultSet execute = null;
             try {
                 statement = connection.prepareStatement(sql);
-                this.set(whereValue, 1, statement);
+                if (sql.contains("?")) this.set(whereValue, 1, statement);
+                System.out.println("select");
                 execute = statement.executeQuery();
                 ResultSetMetaData metaData = execute.getMetaData();
                 Map<String, Object> result = new Hashtable<>();
@@ -130,6 +131,7 @@ public abstract class SQL implements AsyncDatabase {
                 statement = connection.prepareStatement(sql);
                 for (int i = 0; i < keys.length; i++) this.set(values[i], i + 1, statement);
                 this.set(values[0], values.length + 1, statement);
+                System.out.println("insert");
                 boolean execute = statement.execute();
                 PluginTask.run(() -> callback.handle(null, execute));
             } catch (SQLException e) {
@@ -161,13 +163,13 @@ public abstract class SQL implements AsyncDatabase {
             }
 
             sql += " WHERE " + whereKey + " = ?;";
-
             PreparedStatement statement = null;
+
             try {
                 statement = connection.prepareStatement(sql);
                 for (int i = 0; i < keys.length; i++) this.set(values[i], i + 1, statement);
                 this.set(whereValue, values.length + 1, statement);
-                int update = statement.executeUpdate();
+                long update = statement.executeUpdate();
                 PluginTask.run(() -> callback.handle(null, update));
             } catch (SQLException e) {
                 PluginTask.run(() -> callback.handle(e, null));
