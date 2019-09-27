@@ -203,7 +203,7 @@ public class TFly implements CommandExecutor {
         }
 
         if (playerManager.isTimePaused()) MessageUtil.sendTranslation(player, "fly.time.toggle.pause");
-        else MessageUtil.sendMessage(player, "fly.time.toggle.resume");
+        else MessageUtil.sendTranslation(player, "fly.time.toggle.resume");
 
     }
 

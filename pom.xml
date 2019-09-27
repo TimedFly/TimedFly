@@ -6,7 +6,7 @@
 
     <groupId>me.jackint0sh.timedfly</groupId>
     <artifactId>TimedFly</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>4.0.1-BETA</version>
     <packaging>jar</packaging>
     <description>Fly for a limited amount of time by paying some cash</description>
     <properties>
