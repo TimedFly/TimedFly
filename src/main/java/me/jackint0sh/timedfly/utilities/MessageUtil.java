@@ -152,7 +152,7 @@ public class MessageUtil {
         if (replace != null) {
             for (String[] strings : replace) translation = translation.replace(strings[0], strings[1]);
         }
-        sendMessage(to, translation, true);
+        sendMessage(to, replacePlaceholders(to, translation), true);
     }
 
     public static void sendTranslation(CommandSender to, String path, String[][] replace) {

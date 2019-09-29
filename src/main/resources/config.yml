@@ -128,9 +128,9 @@ Messages:
 # A list of world in which you want the plugin to be Enable.
 World-List:
   # Available types:
-  # enable: the plugin will work in worlds listed
-  # disable: the plugin will not work in worlds listed
-  # all: the plugin will work in all worlds
+  #   enable: the plugin will work in worlds listed
+  #   disable: the plugin will not work in worlds listed
+  #   all: the plugin will work in all worlds
   Type: 'all'
   Worlds:
     - 'world'

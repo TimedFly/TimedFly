@@ -45,8 +45,8 @@ public class Config {
         fileConfiguration.save(file);
     }
 
-    public void reload() throws IOException {
-        save();
+    public void reload(boolean save) throws IOException {
+        if (save) save();
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
         Config.configMap.put(name, this);
     }

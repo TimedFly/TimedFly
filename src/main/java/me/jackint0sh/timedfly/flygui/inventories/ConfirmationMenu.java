@@ -8,6 +8,7 @@ import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -88,7 +89,7 @@ public class ConfirmationMenu {
         FlyItem.setConfigItem(flyItem);
 
         try {
-            config.reload();
+            config.reload(true);
         } catch (IOException e) {
             MessageUtil.sendError(player, e);
         }
@@ -101,7 +102,7 @@ public class ConfirmationMenu {
         config.get().set("Items." + flyItem.getKey(), null);
         FlyItem.removeConfigItem(flyItem.getKey());
         try {
-            config.reload();
+            config.reload(true);
         } catch (IOException e) {
             MessageUtil.sendError(player, e);
         }

@@ -88,7 +88,7 @@ public class Main implements CommandExecutor {
     private void reload(CommandSender sender) {
         try {
             for (Config config : Config.getConfigs().values()) {
-                config.reload();
+                config.reload(false);
                 if (config.getName().equals("items.yml")) {
                     config.get().getConfigurationSection("Items").getKeys(false).forEach(FlyItem::new);
                 }
