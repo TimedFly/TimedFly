@@ -4,3 +4,4 @@ target/
 *.log
 *.iml
 dependencies/*
+dependency-reduced-pom.xml

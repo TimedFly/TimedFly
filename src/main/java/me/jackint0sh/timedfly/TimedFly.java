@@ -12,6 +12,7 @@ import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.versions.Default;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,6 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class TimedFly extends JavaPlugin {
 
@@ -41,6 +44,14 @@ public final class TimedFly extends JavaPlugin {
         this.initializeTimer();
 
         MessageUtil.setPluginName();
+
+        Metrics metrics = new Metrics(this);
+        metrics.addCustomChart(new Metrics.MultiLineChart("players_and_servers", () -> {
+            Map<String, Integer> valueMap = new HashMap<>();
+            valueMap.put("servers", 1);
+            valueMap.put("players", Bukkit.getOnlinePlayers().size());
+            return valueMap;
+        }));
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             PlayerListener.handlePlayerQuery(PlayerManager.getCachedPlayer(player.getUniqueId()), false);
