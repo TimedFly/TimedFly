@@ -4,6 +4,7 @@ import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyItemCreator;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.utilities.Config;
+import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.Permissions;
 import org.bukkit.Bukkit;
@@ -93,6 +94,7 @@ public class Main implements CommandExecutor {
                     config.get().getConfigurationSection("Items").getKeys(false).forEach(FlyItem::new);
                 }
             }
+            Languages.loadLang();
         } catch (IOException e) {
             if (sender instanceof Player)
                 MessageUtil.sendError((Player) sender, "Couldn't reload the plugin. Check the console...");
