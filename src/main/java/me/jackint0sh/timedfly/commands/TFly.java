@@ -191,7 +191,7 @@ public class TFly implements CommandExecutor {
         }
 
         if (!playerManager.hasTime()) {
-            MessageUtil.sendTranslation(player, "error.not_running");
+            MessageUtil.sendTranslation(player, "error.fly.not_running");
             return;
         }
 
