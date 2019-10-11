@@ -95,6 +95,7 @@ public class Main implements CommandExecutor {
                 }
             }
             Languages.loadLang();
+            MessageUtil.setPluginName();
         } catch (IOException e) {
             if (sender instanceof Player)
                 MessageUtil.sendError((Player) sender, "Couldn't reload the plugin. Check the console...");

@@ -174,6 +174,6 @@ public class MessageUtil {
     }
 
     public static void setPluginName() {
-        PLUGIN_NAME = Config.getConfig("config").get().getString("Prefix");
+        PLUGIN_PREFIX = Config.getConfig("config").get().getString("Prefix");
     }
 }
