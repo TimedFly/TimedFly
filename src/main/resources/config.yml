@@ -71,6 +71,10 @@ StopTimerOn:
   # Do not use if you are running the plugin with multiple servers liked via MySQL
   BlackListedWorld: false
 
+Modules:
+  # If "false" fly will be toggled by using the custom command, instead of using "/tfly toggle"
+  ToggleCommandOnly: true
+
 # If true players with "timedfly.fly.skipstore" will toggle flight mode if a command from OpenMenuCommand is used.
 ToogleFlight: false
 

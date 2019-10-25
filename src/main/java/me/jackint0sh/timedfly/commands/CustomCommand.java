@@ -53,6 +53,11 @@ public class CustomCommand implements Listener {
                 return;
             }
 
+            if (playerManager.hasTime() && !Config.getConfig("config").get().getBoolean("Modules.ToggleCommandOnly")) {
+                TFly.toggleTimer(null, player, TFly.ToggleType.TOGGLE);
+                event.setCancelled(true);
+                return;
+            }
             FlightStore.create(player);
             event.setCancelled(true);
         }

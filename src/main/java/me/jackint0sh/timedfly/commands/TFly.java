@@ -57,13 +57,13 @@ public class TFly implements CommandExecutor {
                 handleTimeArg(args, sender, false);
                 break;
             case "pause":
-                toggleTimer(args, sender, 1);
+                toggleTimer(args, sender, ToggleType.PAUSE);
                 break;
             case "resume":
-                toggleTimer(args, sender, 2);
+                toggleTimer(args, sender, ToggleType.RESUME);
                 break;
             case "toggle":
-                toggleTimer(args, sender, 3);
+                toggleTimer(args, sender, ToggleType.TOGGLE);
                 break;
             default:
                 MessageUtil.sendTranslation(sender, "error.not_found.command");
@@ -154,9 +154,9 @@ public class TFly implements CommandExecutor {
         }
     }
 
-    private void toggleTimer(String[] args, CommandSender sender, int type) {
+    static void toggleTimer(String[] args, CommandSender sender, ToggleType type) {
         Player player;
-        if (args.length > 1) {
+        if (args != null && args.length > 1) {
             player = Bukkit.getPlayerExact(args[args.length - 1]);
             if (player == null) {
                 MessageUtil.sendTranslation(sender, "error.player.not_online");
@@ -195,9 +195,9 @@ public class TFly implements CommandExecutor {
             return;
         }
 
-        if (type == 1) playerManager.pauseTimer();
-        else if (type == 2) playerManager.resumeTimer();
-        else if (type == 3) {
+        if (type.equals(ToggleType.PAUSE)) playerManager.pauseTimer();
+        else if (type.equals(ToggleType.RESUME)) playerManager.resumeTimer();
+        else if (type.equals(ToggleType.TOGGLE)) {
             if (playerManager.isTimePaused()) playerManager.resumeTimer();
             else playerManager.pauseTimer();
         }
@@ -221,5 +221,9 @@ public class TFly implements CommandExecutor {
         MessageUtil.sendMessages(sender, commands, false);
         MessageUtil.sendMessage(sender, tFlyPre + Arguments.TimedFly.HELP.getUsage() + " &7- " + Arguments.TimedFly.HELP.getDescription(), false);
         MessageUtil.sendMessage(sender, MessageUtil.DIVIDER, false);
+    }
+
+    enum ToggleType {
+        PAUSE, RESUME, TOGGLE
     }
 }
