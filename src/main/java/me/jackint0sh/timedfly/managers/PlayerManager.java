@@ -36,6 +36,7 @@ public class PlayerManager {
     private boolean timePaused;
     private boolean manualFly;
     private boolean cached;
+    private String lastItemUsed;
 
     private PlayerManager(UUID playerUuid) {
         this(playerUuid, 0, 0, false, true, false);
@@ -383,6 +384,15 @@ public class PlayerManager {
 
     public PlayerManager setManualFly(boolean manualFly) {
         this.manualFly = manualFly;
+        return this;
+    }
+
+    public String getLastItemUsed() {
+        return lastItemUsed;
+    }
+
+    public PlayerManager setLastItemUsed(String lastItemUsed) {
+        this.lastItemUsed = lastItemUsed;
         return this;
     }
 

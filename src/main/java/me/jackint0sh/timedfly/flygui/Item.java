@@ -38,6 +38,12 @@ public class Item extends ItemStack {
         this.setName(flyItem.getName());
         this.setDurability((short) flyItem.getData());
         this.setAmount(flyItem.getAmount());
+        this.setKey(flyItem.getKey());
+    }
+
+    public Item setKey(String key) {
+        ServerVersion.getSupportedVersion().setNBT(this, "key", key);
+        return this;
     }
 
     public Item(String material) {

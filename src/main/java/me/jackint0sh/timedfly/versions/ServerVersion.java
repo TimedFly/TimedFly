@@ -26,6 +26,8 @@ public abstract class ServerVersion {
 
     public abstract boolean hasTag(ItemStack itemStack, String key);
 
+    public abstract String getTag(ItemStack itemStack, String key);
+
     public static ServerVersion getSupportedVersion() {
         return serverVersion;
     }

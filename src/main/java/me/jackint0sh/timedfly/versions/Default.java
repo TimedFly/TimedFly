@@ -30,4 +30,9 @@ public class Default extends ServerVersion {
     public boolean hasTag(ItemStack itemStack, String key) {
         return false;
     }
+
+    @Override
+    public String getTag(ItemStack itemStack, String key) {
+        return null;
+    }
 }

@@ -21,6 +21,7 @@ public class FlyItem {
     private int price;
     private List<String> lore;
     private List<String> onClick;
+    private List<String> onFlyDisable;
     private boolean hideAttributes;
     private boolean hideEnchants;
     private boolean hidePlaceOn;
@@ -28,6 +29,8 @@ public class FlyItem {
     private boolean hideUnbreakable;
     private boolean glow;
     private boolean usePerms;
+    private boolean enableOnClick;
+    private boolean enableOnFlyDisable;
     private Currency currency;
     private static Map<String, FlyItem> configItemMap = new HashMap<>();
 
@@ -65,7 +68,8 @@ public class FlyItem {
         this.amount = config.getInt(itemKey + ".Amount");
         this.price = config.getInt(itemKey + ".Price");
         this.lore = config.getStringList(itemKey + ".Lore");
-        this.onClick = config.getStringList(itemKey + ".OnClick");
+        this.onClick = config.getStringList(itemKey + ".OnClick.Commands");
+        this.enableOnClick = config.getBoolean(itemKey + ".OnClick.Enable");
         this.hideAttributes = config.getBoolean(itemKey + ".Hide_Attributes");
         this.hideEnchants = config.getBoolean(itemKey + ".Hide_Enchants");
         this.hidePlaceOn = config.getBoolean(itemKey + ".Hide_Place_On");
@@ -73,6 +77,8 @@ public class FlyItem {
         this.hideUnbreakable = config.getBoolean(itemKey + ".Hide_Unbreakable");
         this.glow = config.getBoolean(itemKey + ".Glow");
         this.usePerms = config.getBoolean(itemKey + ".UsePermission");
+        this.onFlyDisable = config.getStringList(itemKey + ".OnFlyDisable.Commands");
+        this.enableOnFlyDisable = config.getBoolean(itemKey + ".OnFlyDisable.Enable");
         this.currency = CurrencyManager.getCurrency(config.getString(itemKey + ".Currency"));
 
         FlyItem.configItemMap.put(key, this);
@@ -285,6 +291,33 @@ public class FlyItem {
 
     public void setCurrency(String currency) {
         this.currency = CurrencyManager.getCurrency(currency);
+    }
+
+    public List<String> getOnFlyDisable() {
+        return onFlyDisable;
+    }
+
+    public FlyItem setOnFlyDisable(List<String> onFlyDisable) {
+        this.onFlyDisable = onFlyDisable;
+        return this;
+    }
+
+    public boolean isEnableOnClick() {
+        return enableOnClick;
+    }
+
+    public FlyItem setEnableOnClick(boolean enableOnClick) {
+        this.enableOnClick = enableOnClick;
+        return this;
+    }
+
+    public boolean isEnableOnFlyDisable() {
+        return enableOnFlyDisable;
+    }
+
+    public FlyItem setEnableOnFlyDisable(boolean enableOnFlyDisable) {
+        this.enableOnFlyDisable = enableOnFlyDisable;
+        return this;
     }
 
     @Override

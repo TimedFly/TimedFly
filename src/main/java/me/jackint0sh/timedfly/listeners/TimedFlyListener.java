@@ -3,6 +3,7 @@ package me.jackint0sh.timedfly.listeners;
 import me.jackint0sh.timedfly.events.TimedFlyEndEvent;
 import me.jackint0sh.timedfly.events.TimedFlyRunningEvent;
 import me.jackint0sh.timedfly.events.TimedFlyStartEvent;
+import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.Languages;
@@ -99,6 +100,8 @@ public class TimedFlyListener implements Listener {
         if (Config.getConfig("config").get().getBoolean("Messages.Chat")) {
             MessageUtil.sendMessage(player, chat);
         }
+
+        InventoryListener.runCommands(FlyItem.getConfigItem(event.getItemKey()), "onFlyDisable", player);
 
         PlayerListener.handlePlayerQuery(playerManager, true);
     }

@@ -24,6 +24,10 @@ public class TimedFlyEndEvent extends Event {
         return player;
     }
 
+    public String getItemKey() {
+        return playerManager.getLastItemUsed();
+    }
+
     @Override
     public HandlerList getHandlers() {
         return handlers;

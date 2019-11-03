@@ -4,12 +4,14 @@ import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.FlyItemCreator;
 import me.jackint0sh.timedfly.flygui.Item;
+import me.jackint0sh.timedfly.listeners.InventoryListener;
 import me.jackint0sh.timedfly.managers.CurrencyManager;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.Permissions;
 import me.jackint0sh.timedfly.utilities.TimeParser;
+import me.jackint0sh.timedfly.versions.ServerVersion;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -122,6 +124,8 @@ public class FlightStore {
                                         new String[]{"[time]", item.getTime()},
                                         new String[]{"[price]", item.getPrice() + ""}
                                 });
+                                InventoryListener.runCommands(item, "onClick", event.getWhoClicked());
+                                playerManager.setLastItemUsed(item.getKey());
                             } else {
                                 MessageUtil.sendTranslation(player, "error.no_money", new String[][]{
                                         new String[]{"[time]", item.getTime()},
@@ -145,7 +149,8 @@ public class FlightStore {
                         } else MessageUtil.sendNoPermission(player);
 
                     }
-                })));
+                })
+                .setKey(item.getKey())));
 
         return items.toArray(new Item[0]);
     }

@@ -61,4 +61,12 @@ public class v1_13_R1 extends ServerVersion {
         if (tag == null) return false;
         return !tag.getString(key).isEmpty();
     }
+
+    @Override
+    public String getTag(org.bukkit.inventory.ItemStack itemStack, String key) {
+        ItemStack stack = CraftItemStack.asNMSCopy(itemStack);
+        NBTTagCompound tag = stack.getTag();
+        if (tag == null) return null;
+        return tag.getString(key);
+    }
 }
