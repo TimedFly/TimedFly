@@ -74,8 +74,12 @@ public class TimeParser {
         if (days > 0) {
             result.append(days);
 
-            if (longWord) result.append(days > 1 ? " days " : " day ");
-            else result.append("d ");
+            final String plural = Languages.getString("time_string.plural.days");
+            final String singular = Languages.getString("time_string.singular.days");
+            final String sshort = Languages.getString("time_string.short.days");
+
+            if (longWord) result.append(" ").append(days > 1 ? plural : singular).append(" ");
+            else result.append(sshort).append(" ");
 
             time -= TimeUnit.DAYS.toMillis(days);
             if (cut) return result.toString().trim();
@@ -85,8 +89,12 @@ public class TimeParser {
         if (hours > 0) {
             result.append(hours);
 
-            if (longWord) result.append(hours > 1 ? " hours " : " hour ");
-            else result.append("h ");
+            final String plural = Languages.getString("time_string.plural.hours");
+            final String singular = Languages.getString("time_string.singular.hours");
+            final String sshort = Languages.getString("time_string.short.hours");
+
+            if (longWord) result.append(" ").append(hours > 1 ? plural : singular).append(" ");
+            else result.append(sshort).append(" ");
 
             time -= TimeUnit.HOURS.toMillis(hours);
             if (cut) return result.toString().trim();
@@ -96,8 +104,12 @@ public class TimeParser {
         if (minutes > 0) {
             result.append(minutes);
 
-            if (longWord) result.append(minutes > 1 ? " minutes " : " minute ");
-            else result.append("m ");
+            final String plural = Languages.getString("time_string.plural.minutes");
+            final String singular = Languages.getString("time_string.singular.minutes");
+            final String sshort = Languages.getString("time_string.short.minutes");
+
+            if (longWord) result.append(" ").append(minutes > 1 ? plural : singular).append(" ");
+            else result.append(sshort).append(" ");
 
             time -= TimeUnit.MINUTES.toMillis(minutes);
             if (cut) return result.toString().trim();
@@ -107,8 +119,12 @@ public class TimeParser {
         if (seconds > 0) {
             result.append(seconds);
 
-            if (longWord) result.append(seconds > 1 ? " seconds " : " second ");
-            else result.append("s ");
+            final String plural = Languages.getString("time_string.plural.seconds");
+            final String singular = Languages.getString("time_string.singular.seconds");
+            final String sshort = Languages.getString("time_string.short.seconds");
+
+            if (longWord) result.append(" ").append(seconds > 1 ? plural : singular).append(" ");
+            else result.append(sshort).append(" ");
         }
 
         return result.toString().trim();

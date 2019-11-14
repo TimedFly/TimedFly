@@ -2,6 +2,7 @@ package me.jackint0sh.timedfly.hooks;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.jackint0sh.timedfly.managers.PlayerManager;
+import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.TimeParser;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -51,19 +52,19 @@ public class PlaceholderAPI extends PlaceholderExpansion {
             switch (identifier) {
                 case "timeleft":
                 case "timeleft_long":
-                    if (timeLeft <= 0) return "No Time Left";
+                    if (timeLeft <= 0) return Languages.getString("fly.time.no_time");
                     return TimeParser.toReadableString(timeLeft);
                 case "timeleft_short":
-                    if (timeLeft <= 0) return "No Time Left";
+                    if (timeLeft <= 0) return Languages.getString("fly.time.no_time");
                     return TimeParser.toReadableString(timeLeft, false);
                 case "timeleft_ms":
                     return timeLeft + "";
                 case "timeleft_cut":
                 case "timeleft_cut_long":
-                    if (timeLeft <= 0) return "No Time Left";
+                    if (timeLeft <= 0) return Languages.getString("fly.time.no_time");
                     return TimeParser.toReadableString(timeLeft, true, true);
                 case "timeleft_cut_short":
-                    if (timeLeft <= 0) return "No Time Left";
+                    if (timeLeft <= 0) return Languages.getString("fly.time.no_time");
                     return TimeParser.toReadableString(timeLeft, false, true);
                 default:
                     return null;

@@ -51,10 +51,16 @@
       "seconds": "Seconds"
     },
     "singular": {
-      "day": "Day",
-      "hour": "Hour",
-      "minute": "Minute",
-      "second": "Second"
+      "days": "Day",
+      "hours": "Hour",
+      "minutes": "Minute",
+      "seconds": "Second"
+    },
+    "short": {
+      "days": "d",
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "s"
     }
   },
   "item_editor": {
