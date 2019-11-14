@@ -35,7 +35,7 @@ public class PlayerManager {
     private boolean timeRunning;
     private boolean timePaused;
     private boolean manualFly;
-    private boolean cached;
+    private boolean fromPlugin;
     private String lastItemUsed;
 
     private PlayerManager(UUID playerUuid) {
@@ -396,6 +396,15 @@ public class PlayerManager {
         return this;
     }
 
+    public boolean isFromPlugin() {
+        return fromPlugin;
+    }
+
+    public PlayerManager setFromPlugin(boolean fromPlugin) {
+        this.fromPlugin = fromPlugin;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "PlayerManager{" +
@@ -413,7 +422,7 @@ public class PlayerManager {
                 ", timeRunning=" + timeRunning +
                 ", timePaused=" + timePaused +
                 ", manualFly=" + manualFly +
-                ", cached=" + cached +
+                ", fromPlugin=" + fromPlugin +
                 '}';
     }
 }

@@ -23,8 +23,9 @@ public class PlayerListener implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+        if (playerManager == null || !playerManager.isFromPlugin()) return;
 
-        if (playerManager != null && playerManager.isTimeRunning()) {
+        if (playerManager.isTimeRunning()) {
             Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
                 playerManager.setOnFloor(true).startTimer();
             }, 2);
@@ -50,7 +51,8 @@ public class PlayerListener implements Listener {
         if (event.isCancelled()) return;
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-        if (playerManager != null && (event.getNewGameMode() == GameMode.SURVIVAL || event.getNewGameMode() == GameMode.ADVENTURE)) {
+        if (playerManager == null || !playerManager.isFromPlugin()) return;
+        if (event.getNewGameMode() == GameMode.SURVIVAL || event.getNewGameMode() == GameMode.ADVENTURE) {
             Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
                 if (playerManager.getTimeLeft() > 0 && !playerManager.isTimePaused()) {
                     playerManager.setOnFloor(true).startTimer();
@@ -63,7 +65,7 @@ public class PlayerListener implements Listener {
     private void onWorldChange(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-        if (playerManager == null) return;
+        if (playerManager == null || !playerManager.isFromPlugin()) return;
         if (playerManager.hasTime() && playerManager.isTimeRunning()) {
             player.setAllowFlight(true);
         }
@@ -78,8 +80,9 @@ public class PlayerListener implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+        if (playerManager == null || !playerManager.isFromPlugin()) return;
 
-        if (player.isOnGround() && playerManager != null) {
+        if (player.isOnGround()) {
             playerManager.setOnFloor(true);
             if (playerManager.hasTime() && !playerManager.isAttacking()) {
                 if (!player.getAllowFlight()) player.setAllowFlight(true);
@@ -97,7 +100,9 @@ public class PlayerListener implements Listener {
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
-        if (playerManager != null && playerManager.isOnFloor() && !playerManager.isManualFly()) {
+        if (playerManager == null || !playerManager.isFromPlugin()) return;
+
+        if (playerManager.isOnFloor() && !playerManager.isManualFly()) {
             if (!playerManager.hasTime()) {
                 event.setCancelled(true);
                 playerManager.stopTimer();

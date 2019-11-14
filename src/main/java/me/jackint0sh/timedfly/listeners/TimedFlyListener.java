@@ -21,7 +21,7 @@ public class TimedFlyListener implements Listener {
 
     @EventHandler
     private void onFlyStart(TimedFlyStartEvent event) {
-
+        event.getPlayerManager().setFromPlugin(true);
     }
 
     @EventHandler
@@ -104,6 +104,7 @@ public class TimedFlyListener implements Listener {
         InventoryListener.runCommands(FlyItem.getConfigItem(event.getItemKey()), "onFlyDisable", player);
 
         PlayerListener.handlePlayerQuery(playerManager, true);
+        playerManager.setFromPlugin(false);
     }
 
 }

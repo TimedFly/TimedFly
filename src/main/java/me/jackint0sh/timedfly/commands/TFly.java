@@ -137,6 +137,7 @@ public class TFly implements CommandExecutor {
             }
 
             playerManager.startTimer();
+            playerManager.setFromPlugin(true);
 
             if (!player.equals(sender)) MessageUtil.sendTranslation(player, other, new String[][]{
                     new String[]{"[user_name]", sender.getName()},
@@ -195,11 +196,20 @@ public class TFly implements CommandExecutor {
             return;
         }
 
-        if (type.equals(ToggleType.PAUSE)) playerManager.pauseTimer();
-        else if (type.equals(ToggleType.RESUME)) playerManager.resumeTimer();
-        else if (type.equals(ToggleType.TOGGLE)) {
-            if (playerManager.isTimePaused()) playerManager.resumeTimer();
-            else playerManager.pauseTimer();
+        if (type.equals(ToggleType.PAUSE)) {
+            playerManager.pauseTimer();
+            playerManager.setFromPlugin(false);
+        } else if (type.equals(ToggleType.RESUME)) {
+            playerManager.resumeTimer();
+            playerManager.setFromPlugin(true);
+        } else if (type.equals(ToggleType.TOGGLE)) {
+            if (playerManager.isTimePaused()) {
+                playerManager.resumeTimer();
+                playerManager.setFromPlugin(true);
+            } else {
+                playerManager.pauseTimer();
+                playerManager.setFromPlugin(false);
+            }
         }
 
         if (playerManager.isTimePaused()) MessageUtil.sendTranslation(player, "fly.time.toggle.pause");
