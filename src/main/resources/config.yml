@@ -19,6 +19,8 @@ Refunds:
 Database:
   # Type: sqlite for flatfile, and mysql or mongodb for an external database.
   Type: 'sqlite'
+  # Disable this if you're getting errors saying something about default values.
+  UseDefaultValues: true
   # Only edit if Type is 'mysql' or 'mongodb'.
   Server:
     # name of your database

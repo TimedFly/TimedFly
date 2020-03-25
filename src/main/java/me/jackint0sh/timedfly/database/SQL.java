@@ -2,6 +2,7 @@ package me.jackint0sh.timedfly.database;
 
 import me.jackint0sh.timedfly.interfaces.AsyncDatabase;
 import me.jackint0sh.timedfly.interfaces.Callback;
+import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.PluginTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -31,19 +32,34 @@ public abstract class SQL implements AsyncDatabase {
     public void createTable(Callback<Boolean> callback) {
         PluginTask.runAsync(() -> queue.add(connection -> {
             if (!isConnected(callback)) return;
-
-            String sql = "CREATE TABLE IF NOT EXISTS " + table + " ("
-                    + "	id INTEGER PRIMARY KEY,"
-                    + "	UUID TEXT NOT NULL,"
-                    + "	Name TEXT NOT NULL,"
-                    + "	TimeLeft LONG DEFAULT 0,"
-                    + "	InitialTime LONG DEFAULT 0,"
-                    + "	CurrentTimeLimit LONG DEFAULT 0,"
-                    + "	TimeLimitCooldownExpires LONG DEFAULT 0,"
-                    + " TimeRunning BOOLEAN DEFAULT false,"
-                    + " TimePaused BOOLEAN DEFAULT false,"
-                    + " SaveDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-                    + ");";
+            String sql;
+            if (Config.getConfig("config").get().getBoolean("Database.UseDefaultValues")) {
+                sql = "CREATE TABLE IF NOT EXISTS " + table + " ("
+                        + "	id INTEGER PRIMARY KEY,"
+                        + "	UUID TEXT NOT NULL,"
+                        + "	Name TEXT NOT NULL,"
+                        + "	TimeLeft LONG DEFAULT 0,"
+                        + "	InitialTime LONG DEFAULT 0,"
+                        + "	CurrentTimeLimit LONG DEFAULT 0,"
+                        + "	TimeLimitCooldownExpires LONG DEFAULT 0,"
+                        + " TimeRunning BOOLEAN DEFAULT false,"
+                        + " TimePaused BOOLEAN DEFAULT false,"
+                        + " SaveDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+                        + ");";
+            } else {
+                sql = "CREATE TABLE IF NOT EXISTS " + table + " ("
+                        + "	id INTEGER PRIMARY KEY,"
+                        + "	UUID TEXT NOT NULL,"
+                        + "	Name TEXT NOT NULL,"
+                        + "	TimeLeft LONG,"
+                        + "	InitialTime LONG,"
+                        + "	CurrentTimeLimit LONG,"
+                        + "	TimeLimitCooldownExpires LONG,"
+                        + " TimeRunning BOOLEAN,"
+                        + " TimePaused BOOLEAN,"
+                        + " SaveDate TIMESTAMP"
+                        + ");";
+            }
             PreparedStatement statement = null;
             try {
                 statement = connection.prepareStatement(sql);
@@ -76,7 +92,6 @@ public abstract class SQL implements AsyncDatabase {
             try {
                 statement = connection.prepareStatement(sql);
                 if (sql.contains("?")) this.set(whereValue, 1, statement);
-                System.out.println("select");
                 execute = statement.executeQuery();
                 ResultSetMetaData metaData = execute.getMetaData();
                 Map<String, Object> result = new Hashtable<>();
@@ -131,7 +146,6 @@ public abstract class SQL implements AsyncDatabase {
                 statement = connection.prepareStatement(sql);
                 for (int i = 0; i < keys.length; i++) this.set(values[i], i + 1, statement);
                 this.set(values[0], values.length + 1, statement);
-                System.out.println("insert");
                 boolean execute = statement.execute();
                 PluginTask.run(() -> callback.handle(null, execute));
             } catch (SQLException e) {
