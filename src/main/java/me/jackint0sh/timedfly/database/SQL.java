@@ -31,7 +31,7 @@ public abstract class SQL implements AsyncDatabase {
     @Override
     public void createTable(Callback<Boolean> callback) {
         PluginTask.runAsync(() -> queue.add(connection -> {
-            if (!isConnected(callback)) return;
+            if (isNotConnected(callback)) return;
             String sql;
             if (Config.getConfig("config").get().getBoolean("Database.UseDefaultValues")) {
                 sql = "CREATE TABLE IF NOT EXISTS " + table + " ("
@@ -81,7 +81,7 @@ public abstract class SQL implements AsyncDatabase {
     @Override
     public void select(String key, String whereKey, Object whereValue, Callback<Map<String, Object>> callback) {
         PluginTask.runAsync(() -> queue.add(connection -> {
-            if (!isConnected(callback)) return;
+            if (isNotConnected(callback)) return;
 
             String sql = "SELECT " + key + " FROM " + table;
             if (whereKey != null || whereValue != null) sql += " WHERE " + whereKey + " = ?;";
@@ -122,7 +122,7 @@ public abstract class SQL implements AsyncDatabase {
     @Override
     public void insert(String[] keys, Object[] values, Callback<Object> callback) {
         PluginTask.runAsync(() -> queue.add(connection -> {
-            if (!isConnected(callback)) return;
+            if (isNotConnected(callback)) return;
 
             if (keys.length != values.length) {
                 Bukkit.getScheduler().runTask(plugin, () -> {
@@ -131,15 +131,12 @@ public abstract class SQL implements AsyncDatabase {
                 return;
             }
 
-            String sql = "INSERT INTO " + table + " (" + String.join(",", keys) + ") " +
-                    "SELECT * FROM (SELECT ";
+            String sql = "INSERT INTO " + table + " (" + String.join(",", keys) + ") VALUES (";
             for (int i = 0; i < keys.length; i++) {
                 sql += "?";
                 if (i < keys.length - 1) sql += ",";
             }
-            sql += ") AS tmp WHERE NOT EXISTS (" +
-                    "SELECT " + keys[0] + " FROM " + table + " WHERE " + keys[0] + " = ?" +
-                    ") LIMIT 1;";
+            sql += ");";
 
             PreparedStatement statement = null;
             try {
@@ -163,7 +160,7 @@ public abstract class SQL implements AsyncDatabase {
     @Override
     public void update(String[] keys, Object[] values, String whereKey, Object whereValue, Callback<Object> callback) {
         PluginTask.runAsync(() -> queue.add(connection -> {
-            if (!isConnected(callback)) return;
+            if (isNotConnected(callback)) return;
 
             if (keys.length != values.length) {
                 PluginTask.run(() -> callback.handle(new Exception("Mismatch on keys and values length."), null));
@@ -197,17 +194,17 @@ public abstract class SQL implements AsyncDatabase {
         }));
     }
 
-    private <T> boolean isConnected(Callback<T> callback) {
+    private <T> boolean isNotConnected(Callback<T> callback) {
         try {
             if (conn == null || conn.isClosed()) {
                 PluginTask.run(() -> callback.handle(new Exception("Database not connected!"), null));
-                return false;
+                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void set(Object o, int index, PreparedStatement statement) throws SQLException {

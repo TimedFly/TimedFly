@@ -165,53 +165,54 @@ public class PlayerListener implements Listener {
                 }
             });
         } else {
-            database.insert(keys, values, (error, result) -> {
-                if (error != null) {
-                    error.printStackTrace();
+            database.select("*", "UUID", playerManager.getPlayerUuid().toString(), (e, r) -> {
+                if (e != null) {
+                    e.printStackTrace();
                     bool.set(false);
+
+                    if (r == null || r.isEmpty()) {
+                        database.insert(keys, values, (error, result) -> {
+                            if (error != null) {
+                                error.printStackTrace();
+                                bool.set(false);
+                            }
+                        });
+                    }
+                    return;
                 }
-                database.select("*", "UUID", playerManager.getPlayerUuid().toString(), (e, r) -> {
-                    if (e != null) {
-                        e.printStackTrace();
-                        bool.set(false);
-                        return;
+
+                playerManager.setTimeRunning((Integer) r.get("TimeRunning") != 0)
+                        .setTimePaused((Integer) r.get("TimePaused") != 0);
+
+                Object initialTime = r.get("InitialTime");
+                Object limitCooldown = r.get("TimeLimitCooldownExpires");
+
+                playerManager.setInitialTime(Long.parseLong(String.valueOf(initialTime)));
+
+                playerManager.setLimitCooldown(Long.parseLong(String.valueOf(limitCooldown)));
+
+                if (!playerManager.isTimeRunning()) {
+                    Object timeLeft = r.get("TimeLeft");
+                    System.out.println(timeLeft);
+                    playerManager.setTimeLeft(Long.parseLong(String.valueOf(timeLeft)));
+                }
+
+                if (!playerManager.resetCurrentTimeLimit()) {
+                    Object limit = r.get("CurrentTimeLimit");
+                    playerManager.setCurrentTimeLimit(Long.parseLong(String.valueOf(limit)));
+                }
+
+                Player player = playerManager.getPlayer();
+                if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+                playerManager.setOnFloor(player.isOnGround());
+                if (!playerManager.isTimePaused() && playerManager.hasTime()) {
+                    if (Config.getConfig("config").get().getBoolean("JoinFlying.Enable")) {
+                        int height = Config.getConfig("config").get().getInt("JoinFlying.Height");
+                        player.teleport(player.getLocation().add(0, height, 0));
+                        playerManager.setOnFloor(false);
                     }
-                    playerManager.setTimeRunning((Integer) r.get("TimeRunning") != 0)
-                            .setTimePaused((Integer) r.get("TimePaused") != 0);
-
-                    Object initialTime = r.get("InitialTime");
-                    Object limitCooldown = r.get("TimeLimitCooldownExpires");
-
-                    if (initialTime instanceof Long) playerManager.setInitialTime((Long) initialTime);
-                    else if (initialTime instanceof Integer) playerManager.setInitialTime((Integer) initialTime);
-
-                    if (limitCooldown instanceof Long) playerManager.setLimitCooldown((Long) limitCooldown);
-                    else if (limitCooldown instanceof Integer) playerManager.setLimitCooldown((Integer) limitCooldown);
-
-                    if (!playerManager.isTimeRunning()) {
-                        Object timeLeft = r.get("TimeLeft");
-                        if (timeLeft instanceof Long) playerManager.setTimeLeft((Long) timeLeft);
-                        else if (timeLeft instanceof Integer) playerManager.setTimeLeft((Integer) timeLeft);
-                    }
-
-                    if (!playerManager.resetCurrentTimeLimit()) {
-                        Object limit = r.get("CurrentTimeLimit");
-                        if (limit instanceof Long) playerManager.setCurrentTimeLimit((Long) limit);
-                        else if (limit instanceof Integer) playerManager.setCurrentTimeLimit((Integer) limit);
-                    }
-
-                    Player player = playerManager.getPlayer();
-                    if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
-                    playerManager.setOnFloor(player.isOnGround());
-                    if (!playerManager.isTimePaused() && playerManager.hasTime()) {
-                        if (Config.getConfig("config").get().getBoolean("JoinFlying.Enable")) {
-                            int height = Config.getConfig("config").get().getInt("JoinFlying.Height");
-                            player.teleport(player.getLocation().add(0, height, 0));
-                            playerManager.setOnFloor(false);
-                        }
-                        playerManager.startTimer();
-                    } else if (!playerManager.hasTime() && playerManager.isTimeRunning()) playerManager.stopTimer();
-                });
+                    playerManager.startTimer();
+                } else if (!playerManager.hasTime() && playerManager.isTimeRunning()) playerManager.stopTimer();
             });
         }
         return bool.get();

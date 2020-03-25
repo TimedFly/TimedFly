@@ -305,7 +305,7 @@ public class PlayerManager {
     }
 
     public boolean isTimeRunning() {
-        return hasTime || timeRunning;
+        return hasTime && timeRunning;
     }
 
     public PlayerManager setTimeRunning(boolean timeRunning) {
