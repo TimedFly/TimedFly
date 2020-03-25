@@ -6,7 +6,7 @@
 
     <groupId>me.jackint0sh.timedfly</groupId>
     <artifactId>TimedFly</artifactId>
-    <version>4.1.0-BETA</version>
+    <version>4.1.1-BETA</version>
     <packaging>jar</packaging>
     <description>Fly for a limited amount of time by paying some cash</description>
     <properties>
@@ -89,59 +89,65 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.14.4-R0.1-SNAPSHOT</version>
+            <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
+            <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.10.3</version>
+            <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.5</version>
+            <version>LATEST</version>
             <scope>compile</scope>
         </dependency>
 
-        <!-- To install this use:
-            mvn install:install-file \
-              -Dfile=./dependencies/<Jar File> \
-              -DgroupId=<group-id> \
-              -DartifactId=<artifact-id> \
-              -Dversion=<version> \
-              -Dpackaging=jar \
-              -DgeneratePom=true
-         -->
-        <dependency>
-            <groupId>dependency.jars</groupId>
-            <artifactId>TokenManager</artifactId>
-            <version>3.2.3</version>
-            <scope>provided</scope>
-        </dependency>
+        <!--Local Dependencies-->
 
         <dependency>
-            <groupId>dependency.jars</groupId>
+            <groupId>local.playerpoints</groupId>
             <artifactId>PlayerPoints</artifactId>
-            <version>2.1.5</version>
-            <scope>provided</scope>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/dependencies/PlayerPoints.jar</systemPath>
         </dependency>
 
         <dependency>
-            <groupId>dependency.jars</groupId>
-            <artifactId>Spigot-NMS</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
+            <groupId>local.tokensmanager</groupId>
+            <artifactId>TokenManager</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/dependencies/TokenManager.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>local.spigot.nms</groupId>
+            <artifactId>SpigotNMS</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/dependencies/all-spigot-nms.jar</systemPath>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>com.sample</groupId>
+            <artifactId>sample</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/Name_Your_JAR.jar</systemPath>
+        </dependency>
+        -->
     </dependencies>
 </project>
