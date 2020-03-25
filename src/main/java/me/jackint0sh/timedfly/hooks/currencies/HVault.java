@@ -5,11 +5,11 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.entity.Player;
 
-public class Vault implements Currency {
+public class HVault implements Currency {
 
     private Economy economy;
 
-    public Vault(Economy economy) {
+    public HVault(Economy economy) {
         this.economy = economy;
     }
 

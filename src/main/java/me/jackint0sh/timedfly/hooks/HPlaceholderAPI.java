@@ -7,12 +7,12 @@ import me.jackint0sh.timedfly.utilities.TimeParser;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-public class PlaceholderAPI extends PlaceholderExpansion {
+public class HPlaceholderAPI extends PlaceholderExpansion {
 
 
     private Plugin plugin;
 
-    PlaceholderAPI(Plugin plugin) {
+    HPlaceholderAPI(Plugin plugin) {
         this.plugin = plugin;
     }
 

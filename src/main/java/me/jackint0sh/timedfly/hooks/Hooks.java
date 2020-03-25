@@ -28,7 +28,7 @@ public class Hooks {
             if (econ == null) {
                 MessageUtil.sendError("Something went wrong while hooking to Vault!");
             } else {
-                CurrencyManager.addCurrency(new Vault(econ));
+                CurrencyManager.addCurrency(new HVault(econ));
                 MessageUtil.sendConsoleMessage("&cHooked to Vault!");
             }
         }
@@ -36,21 +36,21 @@ public class Hooks {
 
     public static void hookPapi(Plugin plugin) {
         if (isPluginEnabled("PlaceholderAPI")) {
-            new PlaceholderAPI(plugin).register();
+            new HPlaceholderAPI(plugin).register();
             MessageUtil.sendConsoleMessage("&cHooked to PlaceholderAPI!");
         }
     }
 
     public static void hookPlayerPoints() {
         if (isPluginEnabled("PlayerPoints")) {
-            CurrencyManager.addCurrency(new PlayerPoints());
+            CurrencyManager.addCurrency(new HPlayerPoints());
             MessageUtil.sendConsoleMessage("&cHooked to PlayerPoints!");
         }
     }
 
     public static void hookTokenManager() {
         if (isPluginEnabled("TokenManager")) {
-            CurrencyManager.addCurrency(new TokenManager());
+            CurrencyManager.addCurrency(new HTokenManager());
             MessageUtil.sendConsoleMessage("&cHooked to TokenManager!");
         }
     }

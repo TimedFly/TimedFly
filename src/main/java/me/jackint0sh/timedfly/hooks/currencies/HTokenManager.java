@@ -2,11 +2,12 @@ package me.jackint0sh.timedfly.hooks.currencies;
 
 import me.jackint0sh.timedfly.hooks.Hooks;
 import me.jackint0sh.timedfly.interfaces.Currency;
+import me.realized.tokenmanager.api.TokenManager;
 import org.bukkit.entity.Player;
 
-public class TokenManager implements Currency {
+public class HTokenManager implements Currency {
 
-    private me.realized.tokenmanager.api.TokenManager tokenManager = (me.realized.tokenmanager.api.TokenManager) Hooks.getPlugin("TokenManager");
+    private TokenManager tokenManager = (TokenManager) Hooks.getPlugin("TokenManager");
 
     @Override
     public String name() {

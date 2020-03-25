@@ -2,12 +2,14 @@ package me.jackint0sh.timedfly.hooks.currencies;
 
 import me.jackint0sh.timedfly.hooks.Hooks;
 import me.jackint0sh.timedfly.interfaces.Currency;
+import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.entity.Player;
 
-public class PlayerPoints implements Currency {
+public class HPlayerPoints implements Currency {
 
-    private PlayerPointsAPI playerPointsAPI = (PlayerPointsAPI) Hooks.getPlugin("PlayerPoints");
+    private PlayerPoints playerPoints = (PlayerPoints) Hooks.getPlugin("PlayerPoints");
+    private PlayerPointsAPI api = playerPoints.getAPI();
 
     @Override
     public String name() {
@@ -16,21 +18,21 @@ public class PlayerPoints implements Currency {
 
     @Override
     public boolean withdraw(Player player, int amount) {
-        return playerPointsAPI.take(player.getUniqueId(), amount);
+        return api.take(player.getUniqueId(), amount);
     }
 
     @Override
     public boolean deposit(Player player, int amount) {
-        return playerPointsAPI.give(player.getUniqueId(), amount);
+        return api.give(player.getUniqueId(), amount);
     }
 
     @Override
     public boolean has(Player player, int amount) {
-        return playerPointsAPI.look(player.getUniqueId()) >= amount;
+        return api.look(player.getUniqueId()) >= amount;
     }
 
     @Override
     public int balance(Player player) {
-        return playerPointsAPI.look(player.getUniqueId());
+        return api.look(player.getUniqueId());
     }
 }
