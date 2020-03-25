@@ -46,12 +46,20 @@ public class TFly implements CommandExecutor {
                     MessageUtil.sendTranslation(sender, "error.usage", new String[][]{{"[usage]", Arguments.TFly.ADD.getUsage()}});
                     return true;
                 }
+                if (args[args.length - 1].equals("*")) {
+                    Bukkit.getOnlinePlayers().forEach(player -> handleTimeArg(args, player, true));
+                    return true;
+                }
                 handleTimeArg(args, sender, true);
                 break;
             case "set":
             case "s":
                 if (args.length < 2) {
                     MessageUtil.sendTranslation(sender, "error.usage", new String[][]{{"[usage]", Arguments.TFly.SET.getUsage()}});
+                    return true;
+                }
+                if (args[args.length - 1].equals("*")) {
+                    Bukkit.getOnlinePlayers().forEach(player -> handleTimeArg(args, player, false));
                     return true;
                 }
                 handleTimeArg(args, sender, false);
