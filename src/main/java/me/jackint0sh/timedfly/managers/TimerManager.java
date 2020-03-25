@@ -24,7 +24,7 @@ public class TimerManager {
             return;
         }
 
-        timer = new Timer().runTaskTimer(Bukkit.getPluginManager().getPlugins()[0], 0, 20);
+        timer = new Timer().runTaskTimer(Bukkit.getPluginManager().getPlugins()[0], 20, 20);
         MessageUtil.sendConsoleMessage("&cFly timer initialized!");
     }
 
@@ -41,19 +41,19 @@ public class TimerManager {
     private static class Timer extends BukkitRunnable {
         @Override
         public void run() {
-            if (PlayerManager.getPlayersTimeLeft() < 0) {
-                MessageUtil.sendConsoleMessage("&cThere are no players with a timer running.");
-                TimerManager.stop();
-            }
-
             for (UUID uuid : PlayerManager.getPlayerCache().keySet()) {
                 PlayerManager playerManager = PlayerManager.getCachedPlayer(uuid);
 
                 if (!playerManager.isTimeRunning()) continue;
 
-                if (playerManager.getTimeLeft() <= 0) playerManager.stopTimer();
+                if (!playerManager.hasTime()) playerManager.stopTimer();
                 playerManager.decreaseTime().updateStore();
                 Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(playerManager));
+            }
+
+            if (PlayerManager.getPlayersTimeLeft() < 0) {
+                MessageUtil.sendConsoleMessage("&cThere are no players with a timer running.");
+                TimerManager.stop();
             }
         }
     }
