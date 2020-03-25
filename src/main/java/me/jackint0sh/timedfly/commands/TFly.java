@@ -81,8 +81,10 @@ public class TFly implements CommandExecutor {
     }
 
     private void handleTimeArg(String[] args, CommandSender sender, boolean b) {
-        Player player = Bukkit.getPlayerExact(args[args.length - 1]);
         int to = args.length - 1;
+        Player player = Bukkit.getPlayerExact(args[to]);
+
+        if (args[to].equals("*")) player = (Player) sender;
         if (TimeParser.isParsable(args[args.length - 1])) {
             if (!(sender instanceof Player)) {
                 MessageUtil.sendTranslation(sender, "error.player.not_player");

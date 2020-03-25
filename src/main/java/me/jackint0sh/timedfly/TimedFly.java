@@ -45,7 +45,7 @@ public final class TimedFly extends JavaPlugin {
 
         MessageUtil.setPluginName();
 
-        Metrics metrics = new Metrics(this);
+        Metrics metrics = new Metrics(this, 48668);
         metrics.addCustomChart(new Metrics.MultiLineChart("players_and_servers", () -> {
             Map<String, Integer> valueMap = new HashMap<>();
             valueMap.put("servers", 1);
