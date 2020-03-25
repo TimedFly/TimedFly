@@ -1,0 +1,108 @@
+{
+	"language": "italian",
+	"version": "1.0",
+	"fly": {
+		"on": "&eVolo &aabilitato",
+		"off": "&eVolo &cdisabilitato",
+		"time": {
+			"no_time": "&aNon hai acquistato del tempo",
+			"time_left": "&eTempo rimasto&7: &a[time_left]&a",
+			"announcer": {
+				"title": "&eTempo rimasto&7:",
+				"subtitle": "&a[time_left]",
+				"chat": "&eTempo rimasto&7: &a[time_left]&a"
+			},
+			"flight_end": {
+				"chat": "&cVolo finito",
+				"title": "&cVolo finito",
+				"subtitle": "&6Compra del tempo nel negozio",
+				"action_bar": "&cVolo finito"
+			},
+			"flight_paused": {
+				"chat": "&6Volo in pausa",
+				"title": "&6Volo in pausa",
+				"subtitle": "[time_left]",
+				"action_bar": "&6Volo in pausa"
+			},
+			"bought": "&eHai aggiunto &a[time]&e al timer",
+			"add": {
+				"self": "&eTempo aggiunto&7: &a[time]",
+				"other": "&d[user_name]&e ha aggiunto &a[time]&e al tuo timer"
+			},
+			"set": {
+				"self": "&eTempo impostato&7: &a[time]",
+				"other": "&d[user_name]&e ha impostato il tuo timer a &a[time]"
+			},
+			"toggle": {
+				"resume": "&aTimer ripreso",
+				"pause": "&6Timer in pausa"
+			},
+			"attack_mode": {
+				"flight_disabled": "&6Sei in attacco, volo &cdisabilitato",
+				"flight_enabled": "&6Stai uscendo dall'attacco, volo &ari-abilitato"
+			}
+		}
+	},
+	"time_string": {
+		"plural": {
+			"days": "giorni",
+			"hours": "ore",
+			"minutes": "minuti",
+			"seconds": "secondi"
+		},
+		"singular": {
+			"days": "giorno",
+			"hours": "ora",
+			"minutes": "minuto",
+			"seconds": "secondo"
+		},
+		"short": {
+			"days": "d",
+			"hours": "h",
+			"minutes": "m",
+			"seconds": "s"
+		}
+	},
+	"item_editor": {
+		"confirm": {
+			"yes": "&aSi",
+			"no": "&aNo",
+			"deleted": "&eItem &ccancellato",
+			"saved": "&eItem &asalvato"
+		},
+		"close": {
+			"title": "&d",
+			"lore": ["&e", "&cChiudi l'Inventario", "&cQuando hai finito", "&e"]
+		},
+		"cancel": {
+			"title": "&aAnnulla",
+			"lore": ["&e", "&eClick per annullare e tornare indietro", "&e"]
+		},
+		"change_item": {
+			"changed": "&eItem cambiato&7: &a[old_material] &7-> &a[new_material]"
+		}
+	},
+	"error": {
+		"unknown": "&cQualcosa è andato storto alla riga&7:&r [line]",
+		"usage": "&6Uso: &a[usage]",
+		"no_perms": "&cNon hai il permesso",
+		"no_money": "&cNon hai abbastanza soldi",
+		"time_limit": {
+			"limit": "&cHai già raggiunto il massimo tempo acquistabile",
+			"cooldown": "&cDevi aspettare ancora &a[cooldown]"
+		},
+		"disabled": {
+			"gui": "&cAspetta, non si può!"
+		},
+		"player": {
+			"not_online": "&cPlayer offline",
+			"not_player": "&cSolo i giocatori possono farlo"
+		},
+		"not_found": {
+			"command": "&cComando non trovato. Usa /tf help o /tfly help"
+		},
+		"fly": {
+			"not_running": "&6Timer non attivo..."
+		}
+	}
+}
