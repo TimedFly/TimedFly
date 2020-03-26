@@ -1,0 +1,117 @@
+{
+  "language": "romanian",
+  "version": "1.0",
+  "fly": {
+    "on": "&7Zbor &aactivat.",
+    "off": "&7Zbor &cdezactivat.",
+    "time": {
+      "no_time": "Niciun timp",
+      "time_left": "&aMai ai &e[time_left]&a ramase!",
+      "announcer": {
+        "title": "&eTimp ramas:",
+        "subtitle": "&f[time_left]",
+        "chat": "&aMai ai &e[time_left]&a ramas!"
+      },
+      "flight_end": {
+        "chat": "&cTimpul de zbor s-a terminat.",
+        "title": "&cTimpul de zbor s-a terminat.",
+        "subtitle": "&eCumpara mai mult la magazin",
+        "action_bar": "&cTimpul de zbot s-a terminat"
+      },
+      "flight_paused": {
+        "chat": "&cTimul de zbor a fost pus in pauza.",
+        "title": "&cTimpul de zbor a fost pus in pauza.",
+        "subtitle": "[time_left]",
+        "action_bar": "&cTimpul de zbor a fost pus in pauza"
+      },
+      "bought": "&7Ai adaugat &e[time] &7la timer-ul tau!",
+      "add": {
+        "self": "Time added successfully: [time]",
+        "other": "&c[user_name]&7 ti-a adaugat &e[time]&7 timpului tau de zbor"
+      },
+      "set": {
+        "self": "Timp setat cu succes: [time]",
+        "other": "&c[user_name]&7 ti-a setat timpul de zbor la &e[time]&7."
+      },
+      "toggle": {
+        "resume": "Timpul de zbor a fost reluat!",
+        "pause": "Timpul de zbor a fost pus in pauza"
+      },
+      "attack_mode": {
+        "flight_disabled": "&7Ai intrat in &emodul de atac&7. Zbor &cdezactivat&7!",
+        "flight_enabled": "&7Ai iesit din &emodeul de atac&7. Zbor &areluat&7!"
+      }
+    }
+  },
+  "time_string": {
+    "plural": {
+      "days": "Zile",
+      "hours": "Ore",
+      "minutes": "Minute",
+      "seconds": "Secunde"
+    },
+    "singular": {
+      "days": "Zi",
+      "hours": "Ora",
+      "minutes": "Minut",
+      "seconds": "Secunda"
+    },
+    "short": {
+      "days": "z",
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "s"
+    }
+  },
+  "item_editor": {
+    "confirm": {
+      "yes": "&aDA",
+      "no": "&aNU",
+      "deleted": "&cSters&7 cu succes!",
+      "saved": "&aSalvat&7 cu succes!"
+    },
+    "close": {
+      "title": "&e",
+      "lore": [
+        "&7",
+        "&cInchide inventarul",
+        "&cCand ai terminat!",
+        "&7"
+      ]
+    },
+    "cancel": {
+      "title": "&aSterge",
+      "lore": [
+        "&7",
+        "&eApasa aici pentru a anula si a te intoarce inapoi",
+        "&7"
+      ]
+    },
+    "change_item": {
+      "changed": "&7Material schimbat de la: &e[old_material] &7la: &e[new_material]"
+    }
+  },
+  "error": {
+    "unknown": "Ceva nu a mers bine la linia: [line]",
+    "usage": "&cFoloseste: [usage]",
+    "no_perms": "&cNu ai permisiunea pentru a face asta!",
+    "no_money": "&cNu ai bani suficienti!",
+    "time_limit": {
+      "limit": "&cAi atins limita de cumparare.",
+      "cooldown": "&cTrebuie sa astepti &e[cooldown]&c."
+    },
+    "disabled": {
+      "gui": "&cStai, asta nu este legal!"
+    },
+    "player": {
+      "not_online": "&cAcest jucator nu este online!",
+      "not_player": "&cNumai jucatorii pot face asta!"
+    },
+    "not_found": {
+      "command": "&cComanda nu a fost gasita. Incearca /tf help sau /tfly help"
+    },
+    "fly": {
+      "not_running": "Timpul tau nu este pornit..."
+    }
+  }
+}

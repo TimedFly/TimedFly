@@ -5,7 +5,7 @@
     "on": "&7Flight &aenabled.",
     "off": "&7Flight &cdisabled.",
     "time": {
-      "no_time":"No Time",
+      "no_time": "No Time",
       "time_left": "&aYou have &e[time_left]&a left!",
       "announcer": {
         "title": "&eTime left:",
@@ -14,13 +14,13 @@
       },
       "flight_end": {
         "chat": "&cFlight time ended.",
-        "title":"&cFlight time ended.",
+        "title": "&cFlight time ended.",
         "subtitle": "&eBuy more on the store.",
         "action_bar": "&cFlight time ended."
       },
       "flight_paused": {
         "chat": "&cFlight time paused.",
-        "title":"&cFlight time paused.",
+        "title": "&cFlight time paused.",
         "subtitle": "[time_left]",
         "action_bar": "&cFlight time paused."
       },
