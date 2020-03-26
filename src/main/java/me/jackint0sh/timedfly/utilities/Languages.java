@@ -72,21 +72,25 @@ public class Languages {
     }
 
     private static JsonElement get(String[] path, JsonElement element, JsonElement defElement) {
-        if (element == null) return null;
-        if (!element.isJsonObject()) return element;
+        try {
+            if (element == null) return null;
+            if (!element.isJsonObject()) return element;
 
-        JsonObject object = element.getAsJsonObject();
-        JsonObject def = defElement.getAsJsonObject();
+            JsonObject object = element.getAsJsonObject();
+            JsonObject def = defElement.getAsJsonObject();
 
-        JsonElement el = object.get(path[0]);
-        JsonElement df = def.get(path[0]);
+            JsonElement el = object.get(path[0]);
+            JsonElement df = def.get(path[0]);
 
-        if (!object.has(path[0]) || el == null) {
-            if (!files.get(lang).getAsJsonObject().get("language").getAsString().equals("english")) {
-                if (def.has(path[0])) el = df;
-                else return null;
-            } else return null;
-        } else if (!el.isJsonObject()) return el;
-        return get(Arrays.copyOfRange(path, 1, path.length), el, df);
+            if (!object.has(path[0]) || el == null) {
+                if (!files.get(lang).getAsJsonObject().get("language").getAsString().equals("english")) {
+                    if (def.has(path[0])) el = df;
+                    else return null;
+                } else return null;
+            } else if (!el.isJsonObject()) return el;
+            return get(Arrays.copyOfRange(path, 1, path.length), el, df);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
