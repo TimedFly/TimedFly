@@ -6,7 +6,10 @@
     "off": "&7Flight &cdisabled.",
     "time": {
       "no_time": "No Time",
-      "time_left": "&aYou have &e[time_left]&a left!",
+      "time_left": {
+        "self": "&aYou have &e[time_left]&a left!",
+        "others": "&e[target]&a has &e[time_left]&a left!"
+      },
       "announcer": {
         "title": "&eTime left:",
         "subtitle": "&c[time_left]",

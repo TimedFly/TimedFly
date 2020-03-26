@@ -2,10 +2,7 @@ package me.jackint0sh.timedfly.commands;
 
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
 import me.jackint0sh.timedfly.managers.PlayerManager;
-import me.jackint0sh.timedfly.utilities.Config;
-import me.jackint0sh.timedfly.utilities.MessageUtil;
-import me.jackint0sh.timedfly.utilities.Permissions;
-import me.jackint0sh.timedfly.utilities.TimeParser;
+import me.jackint0sh.timedfly.utilities.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -227,20 +224,29 @@ public class TFly implements CommandExecutor {
     }
 
     private void timeLeft(String[] args, CommandSender sender) {
-        Player player = (Player) sender;
-        if (args.length > 1) player = Bukkit.getPlayerExact(args[1]);
+        Player player;
+        if (args.length > 1) {
+            player = Bukkit.getPlayerExact(args[1]);
+            if (isPlayerNotOnline(player, sender)) return;
 
-        if (isPlayerNotOnline(player, sender)) return;
+            PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
 
-        PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-        if (playerManager == null) {
-            MessageUtil.sendTranslation(player, "error.unknown", new String[][]{{
-                    "[line]", new Throwable().getStackTrace()[0].getLineNumber() + ""
-            }});
-            return;
+            String timeLeft = TimeParser.toReadableString(playerManager.getTimeLeft());
+            if (timeLeft.isEmpty()) timeLeft = Languages.getString("fly.time.no_time");
+
+            MessageUtil.sendTranslation(sender, "fly.time.time_left.others", new String[][]{
+                    new String[]{"[target]", player.getName()},
+                    new String[]{"[time_left]", timeLeft}
+            });
+        } else {
+            if (sender instanceof Player) {
+                player = (Player) sender;
+                MessageUtil.sendTranslation(player, "fly.time.time_left.self");
+            } else {
+                MessageUtil.sendTranslation(sender, "error.usage", new String[][]{{"[usage]", Arguments.TFly.TIMELEFT.getUsage()}});
+            }
         }
 
-        MessageUtil.sendTranslation(sender, "fly.time.time_left");
     }
 
     private static boolean isPlayerNotOnline(@Nullable Player player, CommandSender sender) {

@@ -31,7 +31,7 @@ public class TimedFlyListener implements Listener {
         if (player == null || !player.isOnline()) return;
 
         String timeLeft = TimeParser.toReadableString(playerManager.getTimeLeft());
-        String translate = Languages.getString("fly.time.time_left");
+        String translate = Languages.getString("fly.time.time_left.self");
 
         if (Config.getConfig("config").get().getBoolean("Messages.ActionBar") && playerManager.getTimeLeft() > 0) {
             if (translate != null) {
