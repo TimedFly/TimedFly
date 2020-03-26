@@ -1,10 +1,12 @@
 package me.jackint0sh.timedfly.managers;
 
+import me.jackint0sh.timedfly.hooks.currencies.Item;
 import me.jackint0sh.timedfly.hooks.currencies.NoCurrency;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.interfaces.Currency;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,10 @@ public class CurrencyManager {
 
     public static void addCurrency(Currency currency) {
         CurrencyManager.currencies.put(currency.name(), currency);
+    }
+
+    public static void addCurrencies(Currency... currency) {
+        Arrays.stream(currency).forEach(CurrencyManager::addCurrency);
     }
 
     public static Currency getCurrency(String currency) {

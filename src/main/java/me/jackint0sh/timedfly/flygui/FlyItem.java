@@ -1,8 +1,10 @@
 package me.jackint0sh.timedfly.flygui;
 
+import me.jackint0sh.timedfly.hooks.currencies.Item;
 import me.jackint0sh.timedfly.managers.CurrencyManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.interfaces.Currency;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
@@ -32,6 +34,7 @@ public class FlyItem {
     private boolean enableOnClick;
     private boolean enableOnFlyDisable;
     private Currency currency;
+    private Material currency_item;
     private static Map<String, FlyItem> configItemMap = new HashMap<>();
 
     public FlyItem() {
@@ -79,7 +82,8 @@ public class FlyItem {
         this.usePerms = config.getBoolean(itemKey + ".UsePermission");
         this.onFlyDisable = config.getStringList(itemKey + ".OnFlyDisable.Commands");
         this.enableOnFlyDisable = config.getBoolean(itemKey + ".OnFlyDisable.Enable");
-        this.currency = CurrencyManager.getCurrency(config.getString(itemKey + ".Currency"));
+        this.currency = CurrencyManager.getCurrency(config.getString(itemKey + ".Currency.Type"));
+        this.currency_item = Material.valueOf(config.getString(itemKey + ".Currency.Item").toUpperCase());
 
         FlyItem.configItemMap.put(key, this);
     }
@@ -286,7 +290,10 @@ public class FlyItem {
     }
 
     public Currency getCurrency() {
-        return currency;
+        if (this.currency instanceof Item) {
+            ((Item) this.currency).setMaterial(this.currency_item);
+        }
+        return this.currency;
     }
 
     public void setCurrency(String currency) {

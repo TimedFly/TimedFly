@@ -11,7 +11,6 @@ import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.Permissions;
 import me.jackint0sh.timedfly.utilities.TimeParser;
-import me.jackint0sh.timedfly.versions.ServerVersion;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

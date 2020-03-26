@@ -40,4 +40,7 @@ Items:
     Price: 2000 # Price of the item, using the desired currency.
     Time: '15 minutes' # Time to be added to the player who buys it
     Cooldown: '1h' # Sets a cooldown for when the item can be used again
-    Currency: 'vault' # Available currencies: none, vault, tokenmanager, playerpoints, levels, exp
+    Currency:
+      Type: 'vault' # Available currencies: none, vault, tokenmanager, playerpoints, levels, exp, item
+      # If the TYPE is 'item' what's bellow will take effect
+      Item: DIAMOND

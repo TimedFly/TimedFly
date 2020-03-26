@@ -13,7 +13,7 @@ public class Hooks {
 
     public static boolean isPluginEnabled(String pluginName) {
         PluginManager manager = Bukkit.getPluginManager();
-        return manager.isPluginEnabled(pluginName)&& manager.getPlugin(pluginName) != null;
+        return manager.isPluginEnabled(pluginName) && manager.getPlugin(pluginName) != null;
     }
 
     public static Plugin getPlugin(String pluginName) {
@@ -55,9 +55,12 @@ public class Hooks {
         }
     }
 
-    public static void enableLevelExp() {
-        new Levels();
-        new Exp();
+    public static void registerOtherCurrencies() {
+        CurrencyManager.addCurrencies(
+                new Levels(),
+                new Exp(),
+                new Item()
+        );
     }
 
 }
