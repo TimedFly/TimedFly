@@ -8,6 +8,7 @@ import me.jackint0sh.timedfly.hooks.Hooks;
 import me.jackint0sh.timedfly.listeners.*;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import me.jackint0sh.timedfly.managers.TimerManager;
+import me.jackint0sh.timedfly.managers.UpdateManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
@@ -27,9 +28,12 @@ public final class TimedFly extends JavaPlugin {
 
     public static boolean debug = true;
     private Config itemsConfig;
+    private UpdateManager updateManager;
 
     @Override
     public void onEnable() {
+        updateManager = new UpdateManager(48668, this.getDescription().getVersion());
+
         MessageUtil.sendConsoleMessage("&cWelcome to TimedFly");
         MessageUtil.sendConsoleMessage("&cLoading assets...");
 
@@ -58,6 +62,12 @@ public final class TimedFly extends JavaPlugin {
         });
 
         MessageUtil.sendConsoleMessage("&cAssets loaded. Plugin ready!");
+
+        try {
+            updateManager.checkForUpdate(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -94,7 +104,7 @@ public final class TimedFly extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
         Bukkit.getPluginManager().registerEvents(new AttackListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(updateManager), this);
         Bukkit.getPluginManager().registerEvents(new TimedFlyListener(), this);
         Bukkit.getPluginManager().registerEvents(new CustomCommand(), this);
 

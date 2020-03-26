@@ -3,8 +3,10 @@ package me.jackint0sh.timedfly.listeners;
 import me.jackint0sh.timedfly.database.DatabaseHandler;
 import me.jackint0sh.timedfly.interfaces.AsyncDatabase;
 import me.jackint0sh.timedfly.managers.PlayerManager;
+import me.jackint0sh.timedfly.managers.UpdateManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
+import me.jackint0sh.timedfly.utilities.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -13,9 +15,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerListener implements Listener {
+
+    private UpdateManager updateManager;
+
+    public PlayerListener(UpdateManager updateManager) {
+        this.updateManager = updateManager;
+    }
 
     @EventHandler
     public void onReSpawn(PlayerRespawnEvent event) {
@@ -125,6 +134,14 @@ public class PlayerListener implements Listener {
                 MessageUtil.sendError("Could not handle player's data.");
             }
             playerManager.setPlayer(player);
+        }
+
+        if (PlayerManager.hasAllPermissions(player, Permissions.GET_UPDATE)) {
+            try {
+                updateManager.checkForUpdate(player);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

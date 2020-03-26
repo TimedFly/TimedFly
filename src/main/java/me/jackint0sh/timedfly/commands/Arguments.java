@@ -40,7 +40,8 @@ public class Arguments {
         ADD("add <time> [target]", "Add flight time to a player"),
         PAUSE("pause [target]", "Pause the timer of a player."),
         RESUME("resume [target]", "Resume the timer of a player."),
-        TOGGLE("toggle [target]", "Toggles stop & resume of a player.");
+        TOGGLE("toggle [target]", "Toggles stop & resume of a player."),
+        TIMELEFT("timeleft [target]", "Get the time left of a player.");
 
         private String usage;
         private String description;

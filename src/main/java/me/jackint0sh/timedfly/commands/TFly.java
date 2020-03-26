@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -64,6 +65,10 @@ public class TFly implements CommandExecutor {
                 }
                 handleTimeArg(args, sender, false);
                 break;
+            case "timeleft":
+            case "tl":
+                timeLeft(args, sender);
+                break;
             case "pause":
                 toggleTimer(args, sender, ToggleType.PAUSE);
                 break;
@@ -92,10 +97,7 @@ public class TFly implements CommandExecutor {
             }
             player = (Player) sender;
             to = args.length;
-        } else if (player == null) {
-            MessageUtil.sendTranslation(sender, "error.player.not_online");
-            return;
-        }
+        } else if (isPlayerNotOnline(player, sender)) return;
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
         if (playerManager == null) {
@@ -169,10 +171,7 @@ public class TFly implements CommandExecutor {
         Player player;
         if (args != null && args.length > 1) {
             player = Bukkit.getPlayerExact(args[args.length - 1]);
-            if (player == null) {
-                MessageUtil.sendTranslation(sender, "error.player.not_online");
-                return;
-            }
+            if (isPlayerNotOnline(player, sender)) return;
         } else {
             if (!(sender instanceof Player)) {
                 MessageUtil.sendTranslation(sender, "error.player.not_player");
@@ -225,6 +224,32 @@ public class TFly implements CommandExecutor {
         if (playerManager.isTimePaused()) MessageUtil.sendTranslation(player, "fly.time.toggle.pause");
         else MessageUtil.sendTranslation(player, "fly.time.toggle.resume");
 
+    }
+
+    private void timeLeft(String[] args, CommandSender sender) {
+        Player player = (Player) sender;
+        if (args.length > 1) player = Bukkit.getPlayerExact(args[1]);
+
+        if (isPlayerNotOnline(player, sender)) return;
+
+        PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
+        if (playerManager == null) {
+            MessageUtil.sendTranslation(player, "error.unknown", new String[][]{{
+                    "[line]", new Throwable().getStackTrace()[0].getLineNumber() + ""
+            }});
+            return;
+        }
+
+        MessageUtil.sendTranslation(sender, "fly.time.time_left");
+    }
+
+    private static boolean isPlayerNotOnline(@Nullable Player player, CommandSender sender) {
+        if (player == null) {
+            MessageUtil.sendTranslation(sender, "error.player.not_online");
+            return true;
+        }
+
+        return false;
     }
 
     private void help(CommandSender sender) {

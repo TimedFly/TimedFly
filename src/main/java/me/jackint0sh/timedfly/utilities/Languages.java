@@ -37,6 +37,18 @@ public class Languages {
         });
     }
 
+    public static Object get(String path) {
+        String not_found = "Path '" + path + "' not found!";
+        String[] paths = {path};
+        if (path.contains(".")) paths = path.split("\\.");
+
+        JsonElement element = get(paths, files.get(lang), files.get("english"));
+        if (element == null || element.isJsonObject()) return not_found;
+        else if (element.isJsonNull()) return null;
+        else if (!element.isJsonArray()) return element.getAsString();
+        else return new Gson().fromJson(element, String[].class);
+    }
+
     public static String getString(String path) {
         String not_found = "Path '" + path + "' not found!";
         String[] paths = {path};

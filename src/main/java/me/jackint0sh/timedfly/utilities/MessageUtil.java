@@ -1,11 +1,15 @@
 package me.jackint0sh.timedfly.utilities;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import me.jackint0sh.timedfly.managers.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +28,11 @@ public class MessageUtil {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
-    public static String replacePlaceholders(Player player, String text) {
+    public static String replacePlaceholders(CommandSender sender, String text) {
+
+        if (!(sender instanceof Player)) return text;
+
+        Player player = (Player) sender;
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
         String timeLeft = TimeParser.toReadableString(playerManager.getTimeLeft());
         String initialTime = TimeParser.toReadableString(playerManager.getInitialTime());
@@ -45,8 +53,11 @@ public class MessageUtil {
                 ;
     }
 
-    public static List<String> replacePlaceholders(Player player, List<String> text) {
-        return text.stream().map(m -> MessageUtil.replacePlaceholders(player, m)).collect(Collectors.toList());
+    public static List<String> replacePlaceholders(CommandSender sender, List<String> text) {
+        return text
+                .stream()
+                .map(m -> MessageUtil.replacePlaceholders(sender, m))
+                .collect(Collectors.toList());
     }
 
     public static void sendMessage(CommandSender to, String text, boolean prefix) {
@@ -147,21 +158,29 @@ public class MessageUtil {
     }
 
     public static void sendTranslation(Player to, String path, String[][] replace) {
-        String translation = Languages.getString(path);
-        if (translation == null) return;
-        if (replace != null) {
-            for (String[] strings : replace) translation = translation.replace(strings[0], strings[1]);
-        }
-        sendMessage(to, replacePlaceholders(to, translation), true);
+        sendTranslation((CommandSender) to, path, replace);
     }
 
     public static void sendTranslation(CommandSender to, String path, String[][] replace) {
-        String translation = Languages.getString(path);
-        if (translation == null) return;
-        if (replace != null) {
-            for (String[] strings : replace) translation = translation.replace(strings[0], strings[1]);
+        Object translationObject = Languages.get(path);
+        List<String> translation = new ArrayList<>();
+
+        if (translationObject instanceof String) translation.add((String) translationObject);
+        else if (translationObject instanceof String[]) {
+            translation = Arrays.asList((String[]) translationObject);
         }
-        sendMessage(to, translation, true);
+
+        //String translation = Languages.getString(path);
+        if (translation.isEmpty()) return;
+        if (replace != null) {
+            for (String[] strings : replace) {
+                translation = translation
+                        .stream()
+                        .map(string -> string.replace(strings[0], strings[1]))
+                        .collect(Collectors.toList());
+            }
+        }
+        sendMessages(to, replacePlaceholders(to, translation), true);
     }
 
     public static void sendCenteredMessage(CommandSender to, String text, int width) {

@@ -113,5 +113,14 @@
     "fly": {
       "not_running": "Your timer in not running..."
     }
+  },
+  "update": {
+    "checking_for_update": "&7Checking for updates...",
+    "new_update": [
+      "&7There is new update out &c[version]",
+      "&7Please download it now here:",
+      "&c[url]"
+    ],
+    "no_new_update": "&7No new updates at this time"
   }
 }
