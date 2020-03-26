@@ -81,7 +81,10 @@ public abstract class SQL implements AsyncDatabase {
     @Override
     public void select(String key, String whereKey, Object whereValue, Callback<Map<String, Object>> callback) {
         PluginTask.runAsync(() -> queue.add(connection -> {
-            if (isNotConnected(callback)) return;
+            if (isNotConnected(callback)) {
+                PluginTask.run(() -> callback.handle(new Exception("Database not connected!"), null));
+                return;
+            }
 
             String sql = "SELECT " + key + " FROM " + table;
             if (whereKey != null || whereValue != null) sql += " WHERE " + whereKey + " = ?;";
@@ -122,7 +125,10 @@ public abstract class SQL implements AsyncDatabase {
     @Override
     public void insert(String[] keys, Object[] values, Callback<Object> callback) {
         PluginTask.runAsync(() -> queue.add(connection -> {
-            if (isNotConnected(callback)) return;
+            if (isNotConnected(callback)) {
+                PluginTask.run(() -> callback.handle(new Exception("Database not connected!"), null));
+                return;
+            }
 
             if (keys.length != values.length) {
                 Bukkit.getScheduler().runTask(plugin, () -> {
@@ -141,8 +147,11 @@ public abstract class SQL implements AsyncDatabase {
             PreparedStatement statement = null;
             try {
                 statement = connection.prepareStatement(sql);
-                for (int i = 0; i < keys.length; i++) this.set(values[i], i + 1, statement);
-                this.set(values[0], values.length + 1, statement);
+
+                for (int i = 0; i < keys.length; i++) {
+                    this.set(values[i], i + 1, statement);
+                }
+
                 boolean execute = statement.execute();
                 PluginTask.run(() -> callback.handle(null, execute));
             } catch (SQLException e) {
@@ -160,7 +169,10 @@ public abstract class SQL implements AsyncDatabase {
     @Override
     public void update(String[] keys, Object[] values, String whereKey, Object whereValue, Callback<Object> callback) {
         PluginTask.runAsync(() -> queue.add(connection -> {
-            if (isNotConnected(callback)) return;
+            if (isNotConnected(callback)) {
+                PluginTask.run(() -> callback.handle(new Exception("Database not connected!"), null));
+                return;
+            }
 
             if (keys.length != values.length) {
                 PluginTask.run(() -> callback.handle(new Exception("Mismatch on keys and values length."), null));
