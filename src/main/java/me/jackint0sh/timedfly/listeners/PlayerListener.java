@@ -210,7 +210,6 @@ public class PlayerListener implements Listener {
 
                 if (!playerManager.isTimeRunning()) {
                     Object timeLeft = r.get("TimeLeft");
-                    System.out.println(timeLeft);
                     playerManager.setTimeLeft(Long.parseLong(String.valueOf(timeLeft)));
                 }
 
