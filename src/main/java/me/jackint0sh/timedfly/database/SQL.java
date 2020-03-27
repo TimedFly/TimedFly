@@ -97,6 +97,12 @@ public abstract class SQL implements AsyncDatabase {
                 if (sql.contains("?")) this.set(whereValue, 1, statement);
                 execute = statement.executeQuery();
                 ResultSetMetaData metaData = execute.getMetaData();
+
+                if (execute.isClosed()) {
+                    PluginTask.run(() -> callback.handle(new Exception("Player not on database. Adding them..."), null));
+                    return;
+                }
+
                 Map<String, Object> result = new Hashtable<>();
 
                 for (int i = 1; i <= metaData.getColumnCount(); i++) {

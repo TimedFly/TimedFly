@@ -21,8 +21,6 @@ public class Item implements Currency {
 
     @Override
     public boolean withdraw(Player player, int amount) {
-        if (!has(player, amount)) return true;
-
         Inventory inventory = player.getInventory();
         int balance = balance(player);
         ItemStack itemStack = new ItemStack(material);
