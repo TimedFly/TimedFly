@@ -83,6 +83,8 @@ ToogleFlight: false
 # Set to true if you want to getFileConfiguration a message in the console saying who bought flight time.
 LogConsoleOnBuy: false
 
+AutoStopTimer: true
+
 # If true a bossbar will appear when a player buys time (only servers v1.9 and above)
 BossBarTimer:
   Enable: false

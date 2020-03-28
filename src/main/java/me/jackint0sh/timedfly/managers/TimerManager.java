@@ -1,6 +1,7 @@
 package me.jackint0sh.timedfly.managers;
 
 import me.jackint0sh.timedfly.events.TimedFlyRunningEvent;
+import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -51,7 +52,7 @@ public class TimerManager {
                 Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(playerManager));
             }
 
-            if (PlayerManager.getPlayersTimeLeft() < 0) {
+            if (Config.getConfig("config").get().getBoolean("AutoStopTimer") && PlayerManager.getPlayersTimeLeft() < 0) {
                 MessageUtil.sendConsoleMessage("&cThere are no players with a timer running.");
                 TimerManager.stop();
             }
