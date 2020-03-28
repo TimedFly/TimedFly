@@ -114,6 +114,7 @@ public class FlightStore {
 
                                 playerManager
                                         .setManualFly(false)
+                                        .setFromPlugin(true)
                                         .addTime(time)
                                         .addCurrentTimeLimit(time)
                                         .updateStore()

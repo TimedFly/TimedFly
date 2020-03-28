@@ -83,7 +83,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onGround(PlayerMoveEvent event) {
         if (event.isCancelled()) return;
-        if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Ground")) return;
 
         Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
@@ -93,6 +92,7 @@ public class PlayerListener implements Listener {
 
         if (player.isOnGround()) {
             playerManager.setOnFloor(true);
+            if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Ground")) return;
             if (playerManager.hasTime() && !playerManager.isAttacking()) {
                 if (!player.getAllowFlight()) player.setAllowFlight(true);
                 if (playerManager.isTimeRunning()) playerManager.setTimeRunning(false);
@@ -108,7 +108,6 @@ public class PlayerListener implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
 
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-
         if (playerManager == null || !playerManager.isFromPlugin()) return;
 
         if (playerManager.isOnFloor() && !playerManager.isManualFly()) {
