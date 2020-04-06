@@ -42,6 +42,8 @@
         "pause": "The timer has been paused!"
       },
       "attack_mode": {
+        "time_changed": "&cYour fly time change but your &eattack mode&c is currently active.",
+        "currently_active": "&cYou can't do this while &eattack mode&c is currently active.",
         "flight_disabled": "&7Entering &eattack mode&7. Flight &cdisabled&7!",
         "flight_enabled": "&7Exiting &eattack mode&7. Flight &are-enabled&7!"
       }

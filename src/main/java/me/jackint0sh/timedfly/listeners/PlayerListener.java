@@ -227,7 +227,7 @@ public class PlayerListener implements Listener {
                         player.teleport(player.getLocation().add(0, height, 0));
                         playerManager.setOnFloor(false);
                     }
-                    playerManager.startTimer();
+                    if (!playerManager.isAttacking()) playerManager.startTimer();
                 } else if (!playerManager.hasTime() && playerManager.isTimeRunning()) playerManager.stopTimer();
             });
         }

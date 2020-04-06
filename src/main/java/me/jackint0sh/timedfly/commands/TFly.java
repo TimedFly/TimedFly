@@ -145,6 +145,10 @@ public class TFly implements CommandExecutor {
                 other = "fly.time.set.other";
             }
 
+            if (playerManager.isAttacking()) {
+                MessageUtil.sendTranslation(player, "fly.time.attack_mode.time_changed");
+                return;
+            }
             if (!playerManager.handleWorldChange(null)) return;
 
             playerManager.startTimer();
@@ -187,6 +191,10 @@ public class TFly implements CommandExecutor {
             return;
         }
 
+        if (playerManager.isAttacking()) {
+            MessageUtil.sendTranslation(player, "fly.time.attack_mode.currently_active");
+            return;
+        }
         if (!playerManager.handleWorldChange(null)) return;
 
         if (player.equals(sender)) {

@@ -4,10 +4,7 @@ import me.jackint0sh.timedfly.events.TimedFlyEndEvent;
 import me.jackint0sh.timedfly.events.TimedFlyStartEvent;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.inventories.FlightStore;
-import me.jackint0sh.timedfly.utilities.Config;
-import me.jackint0sh.timedfly.utilities.MessageUtil;
-import me.jackint0sh.timedfly.utilities.Permissions;
-import me.jackint0sh.timedfly.utilities.TimeParser;
+import me.jackint0sh.timedfly.utilities.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -171,6 +168,7 @@ public class PlayerManager {
     public void enterAttackMode() {
         if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Attack.Enable")) return;
         if (this.hasPermission(Permissions.BYPASS_ATTACK)) return;
+
         if (!this.isAttacking() && this.isTimeRunning()) {
 
             this.player.setAllowFlight(false);
@@ -183,14 +181,16 @@ public class PlayerManager {
         if (attackTimer != null) attackTimer.cancel();
 
         try {
-            attackTimer = Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugins()[0], () -> {
-                if (!this.hasTime()) return;
-                this.player.setAllowFlight(true);
-                this.setAttacking(false).setTimeRunning(true);
-                MessageUtil.sendTranslation(this.player, "fly.time.attack_mode.flight_enabled");
-            }, TimeParser.parse(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown")));
+            long cooldown = TimeParser.parse(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown"));
+
+            attackTimer = PluginTask.runLater(() -> {
+                if (!hasTime()) return;
+                setAttacking(false).setTimeRunning(true);
+                player.setAllowFlight(true);
+                MessageUtil.sendTranslation(player, "fly.time.attack_mode.flight_enabled");
+            }, cooldown / 100);
         } catch (TimeParser.TimeFormatException e) {
-            MessageUtil.sendError(player, e);
+            e.printStackTrace();
         }
     }
 
@@ -204,7 +204,7 @@ public class PlayerManager {
         switch (type) {
             case "enable":
                 if (this.worlds.stream().anyMatch(world -> to.getName().equals(world.getName()))) {
-                    startTimer();
+                    if (!isAttacking()) startTimer();
                     this.inBlacklistedWorld = false;
                     return true;
                 } else {
@@ -221,7 +221,7 @@ public class PlayerManager {
                     return false;
                 } else {
                     this.inBlacklistedWorld = false;
-                    startTimer();
+                    if (!isAttacking()) startTimer();
                     return true;
                 }
         }
