@@ -4,6 +4,7 @@ import me.jackint0sh.timedfly.hooks.currencies.Item;
 import me.jackint0sh.timedfly.managers.CurrencyManager;
 import me.jackint0sh.timedfly.utilities.Config;
 import me.jackint0sh.timedfly.interfaces.Currency;
+import me.jackint0sh.timedfly.utilities.MessageUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -51,41 +52,47 @@ public class FlyItem {
         this.time = "0";
         this.amount = 1;
         this.currency = CurrencyManager.getDefaultCurrency();
+        this.currency_item = Material.DIAMOND;
 
         FlyItem.configItemMap.put(key, this);
     }
 
     public FlyItem(String key) {
-        FileConfiguration config = Config.getConfig("items").get();
-        String itemKey = "Items." + key;
+        try {
+            FileConfiguration config = Config.getConfig("items").get();
+            String itemKey = "Items." + key;
 
-        this.key = key;
-        this.name = config.getString(itemKey + ".Name");
-        this.material = config.getString(itemKey + ".Material");
-        this.permission = config.getString(itemKey + ".Permission");
-        this.permissionMessage = config.getString(itemKey + ".PermissionMesssage");
-        this.time = config.getString(itemKey + ".Time");
-        this.cooldown = config.getString(itemKey + ".Cooldown");
-        this.slot = config.getInt(itemKey + ".Slot");
-        this.data = config.getInt(itemKey + ".Data");
-        this.amount = config.getInt(itemKey + ".Amount");
-        this.price = config.getInt(itemKey + ".Price");
-        this.lore = config.getStringList(itemKey + ".Lore");
-        this.onClick = config.getStringList(itemKey + ".OnClick.Commands");
-        this.enableOnClick = config.getBoolean(itemKey + ".OnClick.Enable");
-        this.hideAttributes = config.getBoolean(itemKey + ".Hide_Attributes");
-        this.hideEnchants = config.getBoolean(itemKey + ".Hide_Enchants");
-        this.hidePlaceOn = config.getBoolean(itemKey + ".Hide_Place_On");
-        this.hidePotionEffects = config.getBoolean(itemKey + ".Hide_Potion_Effects");
-        this.hideUnbreakable = config.getBoolean(itemKey + ".Hide_Unbreakable");
-        this.glow = config.getBoolean(itemKey + ".Glow");
-        this.usePerms = config.getBoolean(itemKey + ".UsePermission");
-        this.onFlyDisable = config.getStringList(itemKey + ".OnFlyDisable.Commands");
-        this.enableOnFlyDisable = config.getBoolean(itemKey + ".OnFlyDisable.Enable");
-        this.currency = CurrencyManager.getCurrency(config.getString(itemKey + ".Currency.Type"));
-        this.currency_item = Material.valueOf(config.getString(itemKey + ".Currency.Item").toUpperCase());
+            this.key = key;
+            this.name = config.getString(itemKey + ".Name");
+            this.material = config.getString(itemKey + ".Material");
+            this.permission = config.getString(itemKey + ".Permission");
+            this.permissionMessage = config.getString(itemKey + ".PermissionMesssage");
+            this.time = config.getString(itemKey + ".Time");
+            this.cooldown = config.getString(itemKey + ".Cooldown");
+            this.slot = config.getInt(itemKey + ".Slot");
+            this.data = config.getInt(itemKey + ".Data");
+            this.amount = config.getInt(itemKey + ".Amount");
+            this.price = config.getInt(itemKey + ".Price");
+            this.lore = config.getStringList(itemKey + ".Lore");
+            this.onClick = config.getStringList(itemKey + ".OnClick.Commands");
+            this.enableOnClick = config.getBoolean(itemKey + ".OnClick.Enable");
+            this.hideAttributes = config.getBoolean(itemKey + ".Hide_Attributes");
+            this.hideEnchants = config.getBoolean(itemKey + ".Hide_Enchants");
+            this.hidePlaceOn = config.getBoolean(itemKey + ".Hide_Place_On");
+            this.hidePotionEffects = config.getBoolean(itemKey + ".Hide_Potion_Effects");
+            this.hideUnbreakable = config.getBoolean(itemKey + ".Hide_Unbreakable");
+            this.glow = config.getBoolean(itemKey + ".Glow");
+            this.usePerms = config.getBoolean(itemKey + ".UsePermission");
+            this.onFlyDisable = config.getStringList(itemKey + ".OnFlyDisable.Commands");
+            this.enableOnFlyDisable = config.getBoolean(itemKey + ".OnFlyDisable.Enable");
+            this.currency = CurrencyManager.getCurrency(config.getString(itemKey + ".Currency.Type"));
+            this.currency_item = Material.matchMaterial(config.getString(itemKey + ".Currency.Item"));
 
-        FlyItem.configItemMap.put(key, this);
+            FlyItem.configItemMap.put(key, this);
+        } catch (Exception e) {
+            MessageUtil.sendConsoleMessage("There was an error while trying to add item with key: " + key);
+            e.printStackTrace();
+        }
     }
 
     public static FlyItem setConfigItem(FlyItem flyItem) {

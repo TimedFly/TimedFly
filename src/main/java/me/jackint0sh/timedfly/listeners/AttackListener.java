@@ -27,7 +27,7 @@ public class AttackListener implements Listener {
             damagerManager = PlayerManager.getCachedPlayer(event.getDamager().getUniqueId());
         }
         if (entity instanceof Player) {
-            damagedManager = PlayerManager.getCachedPlayer(event.getEntity().getUniqueId());
+            damagedManager = PlayerManager.getCachedPlayer(entity.getUniqueId());
         }
 
         if (damagedManager != null) damagedManager.enterAttackMode();

@@ -32,7 +32,7 @@
                 <configuration>
                     <relocations>
                         <relocation>
-                            <pattern>org.bstats</pattern>
+                            <pattern>org.bstats.bukkit</pattern>
                             <shadedPattern>me.jackint0sh.timedfly.hooks</shadedPattern>
                         </relocation>
                     </relocations>

@@ -57,6 +57,7 @@ public class PlayerManager {
     public void startTimer() {
         if (this.player.isOnline()) this.player.setAllowFlight(true);
         if (!this.isOnFloor()) {
+            this.fromPlugin = true;
             this.timeRunning = true;
             if (this.player.isOnline()) this.player.setFlying(true);
         }
@@ -66,6 +67,7 @@ public class PlayerManager {
 
     public void stopTimer() {
         this.timeRunning = false;
+        this.fromPlugin = false;
         if (this.player.isOnline()) {
             this.player.setAllowFlight(false);
             this.player.setFlying(false);
@@ -210,11 +212,7 @@ public class PlayerManager {
 
     public static PlayerManager getCachedPlayer(UUID uuid) {
         if (playerCache.get(uuid) != null) return playerCache.get(uuid);
-        else {
-            PlayerManager playerManager = new PlayerManager(uuid);
-            playerCache.put(uuid, playerManager);
-            return playerManager;
-        }
+        return playerCache.put(uuid, new PlayerManager(uuid));
     }
 
     public static Map<UUID, PlayerManager> getPlayerCache() {
