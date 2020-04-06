@@ -45,10 +45,14 @@ public class TFly implements CommandExecutor {
                     return true;
                 }
                 if (args[args.length - 1].equals("*")) {
-                    Bukkit.getOnlinePlayers().forEach(player -> handleTimeArg(args, player, true));
+                    if (PlayerManager.hasAnyPermission(sender, Permissions.FLY_ADD)) {
+                        Bukkit.getOnlinePlayers().forEach(player -> handleTimeArg(args, player, true, true));
+                    } else {
+                        MessageUtil.sendNoPermission(sender);
+                    }
                     return true;
                 }
-                handleTimeArg(args, sender, true);
+                handleTimeArg(args, sender, true, false);
                 break;
             case "set":
             case "s":
@@ -57,10 +61,14 @@ public class TFly implements CommandExecutor {
                     return true;
                 }
                 if (args[args.length - 1].equals("*")) {
-                    Bukkit.getOnlinePlayers().forEach(player -> handleTimeArg(args, player, false));
+                    if (PlayerManager.hasAnyPermission(sender, Permissions.FLY_SET)) {
+                        Bukkit.getOnlinePlayers().forEach(player -> handleTimeArg(args, player, false, true));
+                    } else {
+                        MessageUtil.sendNoPermission(sender);
+                    }
                     return true;
                 }
-                handleTimeArg(args, sender, false);
+                handleTimeArg(args, sender, false, false);
                 break;
             case "timeleft":
             case "tl":
@@ -82,7 +90,7 @@ public class TFly implements CommandExecutor {
         return true;
     }
 
-    private void handleTimeArg(String[] args, CommandSender sender, boolean b) {
+    private void handleTimeArg(String[] args, CommandSender sender, boolean b, boolean skipPerms) {
         int to = args.length - 1;
         Player player = Bukkit.getPlayerExact(args[to]);
 
@@ -104,28 +112,30 @@ public class TFly implements CommandExecutor {
             return;
         }
 
-        if (player.equals(sender)) {
-            if (b) {
-                if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_ADD_SELF, Permissions.FLY_ADD)) {
-                    MessageUtil.sendNoPermission(player);
-                    return;
+        if (!skipPerms) {
+            if (player.equals(sender)) {
+                if (b) {
+                    if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_ADD_SELF, Permissions.FLY_ADD)) {
+                        MessageUtil.sendNoPermission(player);
+                        return;
+                    }
+                } else {
+                    if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_SET_SELF, Permissions.FLY_SET)) {
+                        MessageUtil.sendNoPermission(player);
+                        return;
+                    }
                 }
             } else {
-                if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_SET_SELF, Permissions.FLY_SET)) {
-                    MessageUtil.sendNoPermission(player);
-                    return;
-                }
-            }
-        } else {
-            if (b) {
-                if (!PlayerManager.hasAnyPermission(sender, Permissions.FLY_ADD_OTHERS, Permissions.FLY_ADD)) {
-                    MessageUtil.sendNoPermission(sender);
-                    return;
-                }
-            } else {
-                if (!PlayerManager.hasAnyPermission(sender, Permissions.FLY_SET_OTHERS, Permissions.FLY_SET)) {
-                    MessageUtil.sendNoPermission(sender);
-                    return;
+                if (b) {
+                    if (!PlayerManager.hasAnyPermission(sender, Permissions.FLY_ADD_OTHERS, Permissions.FLY_ADD)) {
+                        MessageUtil.sendNoPermission(sender);
+                        return;
+                    }
+                } else {
+                    if (!PlayerManager.hasAnyPermission(sender, Permissions.FLY_SET_OTHERS, Permissions.FLY_SET)) {
+                        MessageUtil.sendNoPermission(sender);
+                        return;
+                    }
                 }
             }
         }
