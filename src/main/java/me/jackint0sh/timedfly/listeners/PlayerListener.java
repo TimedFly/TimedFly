@@ -108,7 +108,7 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
         if (playerManager == null || !playerManager.isFromPlugin()) return;
 
-        if (!playerManager.handleWorldChange(null)) return;
+        if (!playerManager.handleWorldChange(player.getWorld())) return;
 
         if (playerManager.isOnFloor() && !playerManager.isManualFly()) {
             if (!playerManager.hasTime()) {
