@@ -74,10 +74,8 @@ public class PlayerListener implements Listener {
     private void onWorldChange(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
-        if (playerManager == null || !playerManager.isFromPlugin()) return;
-        if (playerManager.hasTime() && playerManager.isTimeRunning()) {
-            player.setAllowFlight(true);
-        }
+        if (playerManager == null) return;
+        playerManager.handleWorldChange(event.getFrom());
     }
 
     @EventHandler
@@ -110,6 +108,8 @@ public class PlayerListener implements Listener {
         PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());
         if (playerManager == null || !playerManager.isFromPlugin()) return;
 
+        if (!playerManager.handleWorldChange(null)) return;
+
         if (playerManager.isOnFloor() && !playerManager.isManualFly()) {
             if (!playerManager.hasTime()) {
                 event.setCancelled(true);
@@ -133,6 +133,7 @@ public class PlayerListener implements Listener {
                 MessageUtil.sendError("Could not handle player's data.");
             }
             playerManager.setPlayer(player);
+            playerManager.handleWorldChange(null);
         }
 
         if (PlayerManager.hasAllPermissions(player, Permissions.GET_UPDATE)) {

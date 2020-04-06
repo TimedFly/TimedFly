@@ -9,14 +9,15 @@ import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.utilities.Permissions;
 import me.jackint0sh.timedfly.utilities.TimeParser;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class PlayerManager {
 
@@ -37,6 +38,8 @@ public class PlayerManager {
     private boolean manualFly;
     private boolean fromPlugin;
     private String lastItemUsed;
+    private boolean inBlacklistedWorld;
+    private List<World> worlds;
 
     private PlayerManager(UUID playerUuid) {
         this(playerUuid, 0, 0, false, true, false);
@@ -51,6 +54,12 @@ public class PlayerManager {
         this.timeRunning = timeRunning;
         this.player = Bukkit.getPlayer(playerUuid);
         this.currentTimeLimit = 0;
+        this.worlds = Config.getConfig("config").get()
+                .getStringList("World-List.Worlds")
+                .stream()
+                .map(Bukkit::getWorld)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         if (this.player == null) this.player = Bukkit.getOfflinePlayer(playerUuid).getPlayer();
     }
 
@@ -185,6 +194,44 @@ public class PlayerManager {
         }
     }
 
+    public boolean handleWorldChange(@Nullable World from) {
+        World to = player.getWorld();
+        if (from != null && from.getName().equals(to.getName())) return true;
+        String type = Config.getConfig("config").get().getString("World-List.Type");
+
+        if (type == null || type.equals("all") || !hasTime()) return true;
+
+        switch (type) {
+            case "enable":
+                if (this.worlds.stream().anyMatch(world -> to.getName().equals(world.getName()))) {
+                    startTimer();
+                    this.inBlacklistedWorld = false;
+                    return true;
+                } else {
+                    MessageUtil.sendTranslation(player, "fly.time.world_blacklisted");
+                    this.inBlacklistedWorld = true;
+                    stopTimer();
+                    return false;
+                }
+            case "disable":
+                if (worlds.stream().anyMatch(world -> to.getName().equals(world.getName()))) {
+                    MessageUtil.sendTranslation(player, "fly.time.world_blacklisted");
+                    this.inBlacklistedWorld = true;
+                    stopTimer();
+                    return false;
+                } else {
+                    this.inBlacklistedWorld = false;
+                    startTimer();
+                    return true;
+                }
+        }
+        return true;
+    }
+
+    public boolean isInBlacklistedWorld() {
+        return inBlacklistedWorld;
+    }
+
     public void disableFallDamage() {
         this.fallDamage = false;
     }
@@ -212,7 +259,8 @@ public class PlayerManager {
 
     public static PlayerManager getCachedPlayer(UUID uuid) {
         if (playerCache.get(uuid) != null) return playerCache.get(uuid);
-        return playerCache.put(uuid, new PlayerManager(uuid));
+        playerCache.put(uuid, new PlayerManager(uuid));
+        return playerCache.get(uuid);
     }
 
     public static Map<UUID, PlayerManager> getPlayerCache() {

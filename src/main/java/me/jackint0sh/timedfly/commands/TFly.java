@@ -145,6 +145,8 @@ public class TFly implements CommandExecutor {
                 other = "fly.time.set.other";
             }
 
+            if (!playerManager.handleWorldChange(null)) return;
+
             playerManager.startTimer();
             playerManager.setFromPlugin(true);
 
@@ -184,6 +186,8 @@ public class TFly implements CommandExecutor {
             }});
             return;
         }
+
+        if (!playerManager.handleWorldChange(null)) return;
 
         if (player.equals(sender)) {
             if (!PlayerManager.hasAnyPermission(player, Permissions.FLY_TOGGLE_SELF, Permissions.FLY_TOGGLE_SELF)) {

@@ -5,6 +5,7 @@
     "on": "&7Flight &aenabled.",
     "off": "&7Flight &cdisabled.",
     "time": {
+      "world_blacklisted": "&cThis world is currently blacklisted... You can't fly here",
       "no_time": "No Time",
       "time_left": {
         "self": "&aYou have &e[time_left]&a left!",
