@@ -199,7 +199,12 @@ public class PlayerManager {
         if (from != null && from.getName().equals(to.getName())) return true;
         String type = Config.getConfig("config").get().getString("World-List.Type");
 
-        if (type == null || type.equals("all") || !hasTime()) return true;
+        if (type == null  || !hasTime()) return true;
+        else if (type.equals("all")) {
+            if (!isAttacking()) startTimer();
+            this.inBlacklistedWorld = false;
+            return true;
+        }
 
         switch (type) {
             case "enable":
