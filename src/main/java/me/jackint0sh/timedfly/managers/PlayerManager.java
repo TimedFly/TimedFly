@@ -167,12 +167,12 @@ public class PlayerManager {
 
     public void enterAttackMode() {
         if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Attack.Enable")) return;
-        if (this.hasPermission(Permissions.BYPASS_ATTACK)) return;
+        if (this.hasPermission(Permissions.BYPASS_ATTACK) || this.inBlacklistedWorld) return;
 
         if (!this.isAttacking() && this.isTimeRunning()) {
-
             this.player.setAllowFlight(false);
             this.player.setFlying(false);
+
             this.setAttacking(true).setTimeRunning(false).disableFallDamage();
 
             MessageUtil.sendTranslation(this.player, "fly.time.attack_mode.flight_disabled");
@@ -184,7 +184,7 @@ public class PlayerManager {
             long cooldown = TimeParser.parse(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown"));
 
             attackTimer = PluginTask.runLater(() -> {
-                if (!hasTime()) return;
+                if (!hasTime() || this.inBlacklistedWorld) return;
                 setAttacking(false).setTimeRunning(true);
                 player.setAllowFlight(true);
                 MessageUtil.sendTranslation(player, "fly.time.attack_mode.flight_enabled");
@@ -199,7 +199,7 @@ public class PlayerManager {
         if (from != null && from.getName().equals(to.getName())) return true;
         String type = Config.getConfig("config").get().getString("World-List.Type");
 
-        if (type == null  || !hasTime()) return true;
+        if (type == null || !hasTime()) return true;
         else if (type.equals("all")) {
             if (!isAttacking()) startTimer();
             this.inBlacklistedWorld = false;
