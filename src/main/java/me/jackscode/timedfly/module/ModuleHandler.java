@@ -8,8 +8,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public class ModuleHandler {
 
@@ -68,12 +69,13 @@ public class ModuleHandler {
         }
     }
 
-    public Stream<Module> loadModules(Path path) {
+    public List<Module> loadModules(Path path) {
         try {
             return Files.list(path)
                     .map(Path::toFile)
                     .map(this::enableModules)
-                    .filter(Objects::nonNull);
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
             return null;

@@ -5,11 +5,11 @@ import me.jackscode.timedfly.module.ModuleHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.stream.Stream;
+import java.util.List;
 
 public final class TimedFly extends JavaPlugin {
 
-    private Stream<Module> modules;
+    private List<Module> modules;
 
     @Override
     public void onEnable() {
@@ -23,14 +23,22 @@ public final class TimedFly extends JavaPlugin {
     }
 
     private void handleModules() {
+        File dataFolder = new File(this.getDataFolder(), "/modules/");
+
+        if (!dataFolder.exists()) {
+            if (!dataFolder.mkdirs()) {
+                System.out.println("Could not make modules folder");
+                return;
+            }
+        }
+
         ModuleHandler moduleHandler = new ModuleHandler();
-        File dataFolder = new File(this.getDataFolder(), "modules/");
 
         modules = moduleHandler.loadModules(dataFolder.toPath());
 
         if (modules == null) {
             System.out.println("Could not load any modules... Something happened.");
-        } else if (modules.count() == 0) {
+        } else if (modules.isEmpty()) {
             System.out.println("There were no modules to load");
         }
     }
