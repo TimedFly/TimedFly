@@ -5,20 +5,21 @@ import me.jackscode.timedfly.module.ModuleHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.List;
+import java.util.stream.Stream;
 
 public final class TimedFly extends JavaPlugin {
 
-    private List<Module> modules;
+    private Stream<Module> modules;
 
     @Override
     public void onEnable() {
         handleModules();
+        modules.forEach(Module::onModuleEnable);
     }
 
     @Override
     public void onDisable() {
-
+        modules.forEach(Module::onModuleDisable);
     }
 
     private void handleModules() {
@@ -29,7 +30,7 @@ public final class TimedFly extends JavaPlugin {
 
         if (modules == null) {
             System.out.println("Could not load any modules... Something happened.");
-        } else if (modules.isEmpty()) {
+        } else if (modules.count() == 0) {
             System.out.println("There were no modules to load");
         }
     }

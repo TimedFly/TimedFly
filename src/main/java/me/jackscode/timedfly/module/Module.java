@@ -18,4 +18,15 @@ public abstract class Module {
      */
     public abstract String getDescription();
 
+    /**
+     * Gets called when the module gets enabled.
+     * Every implementation must have this method.
+     */
+    public abstract void onModuleEnable();
+
+    /**
+     * Gets called when the module gets disabled.
+     * Every implementation must have this method.
+     */
+    public abstract void onModuleDisable();
 }
