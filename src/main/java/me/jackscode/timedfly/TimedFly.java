@@ -1,7 +1,7 @@
 package me.jackscode.timedfly;
 
 import me.jackscode.timedfly.api.TimedFlyModule;
-import me.jackscode.timedfly.module.ModuleHandler;
+import me.jackscode.timedfly.handlers.ModuleHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

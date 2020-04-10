@@ -1,6 +1,7 @@
-package me.jackscode.timedfly.module;
+package me.jackscode.timedfly.handlers;
 
 import me.jackscode.timedfly.api.TimedFlyModule;
+import me.jackscode.timedfly.exceptions.ModuleException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;

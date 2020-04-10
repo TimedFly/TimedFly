@@ -1,4 +1,4 @@
-package me.jackscode.timedfly.module;
+package me.jackscode.timedfly.exceptions;
 
 public class ModuleException extends Exception {
     public ModuleException(String message) {
