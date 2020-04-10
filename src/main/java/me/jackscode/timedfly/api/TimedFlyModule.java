@@ -1,6 +1,6 @@
-package me.jackscode.timedfly.module;
+package me.jackscode.timedfly.api;
 
-public abstract class Module {
+public abstract class TimedFlyModule {
 
     /**
      * Get the name of the current module.

@@ -1,5 +1,6 @@
 package me.jackscode.timedfly.module;
 
+import me.jackscode.timedfly.api.TimedFlyModule;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class ModuleHandler {
 
-    public Module enableModules(File module) {
+    public TimedFlyModule enableModules(File module) {
         try {
             System.out.println("Attempting to load module: " + module.getName());
             // Prepare to load class
@@ -56,20 +57,20 @@ public class ModuleHandler {
             Object instance = constructor.newInstance();
 
             // Class must extend Module abstract class
-            if (!(instance instanceof Module)) {
+            if (!(instance instanceof TimedFlyModule)) {
                 throw new ModuleException(main + " must implement Module");
             }
 
             System.out.println("Module " + module.getName() + " has been loaded");
             // Return the instance as a Module
-            return (Module) instance;
+            return (TimedFlyModule) instance;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public List<Module> loadModules(Path path) {
+    public List<TimedFlyModule> loadModules(Path path) {
         try {
             return Files.list(path)
                     .map(Path::toFile)

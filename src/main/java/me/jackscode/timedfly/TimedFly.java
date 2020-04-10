@@ -1,6 +1,6 @@
 package me.jackscode.timedfly;
 
-import me.jackscode.timedfly.module.Module;
+import me.jackscode.timedfly.api.TimedFlyModule;
 import me.jackscode.timedfly.module.ModuleHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -9,17 +9,17 @@ import java.util.List;
 
 public final class TimedFly extends JavaPlugin {
 
-    private List<Module> modules;
+    private List<TimedFlyModule> timedFlyModules;
 
     @Override
     public void onEnable() {
         handleModules();
-        modules.forEach(Module::onModuleEnable);
+        timedFlyModules.forEach(TimedFlyModule::onModuleEnable);
     }
 
     @Override
     public void onDisable() {
-        modules.forEach(Module::onModuleDisable);
+        timedFlyModules.forEach(TimedFlyModule::onModuleDisable);
     }
 
     private void handleModules() {
@@ -34,11 +34,11 @@ public final class TimedFly extends JavaPlugin {
 
         ModuleHandler moduleHandler = new ModuleHandler();
 
-        modules = moduleHandler.loadModules(dataFolder.toPath());
+        timedFlyModules = moduleHandler.loadModules(dataFolder.toPath());
 
-        if (modules == null) {
+        if (timedFlyModules == null) {
             System.out.println("Could not load any modules... Something happened.");
-        } else if (modules.isEmpty()) {
+        } else if (timedFlyModules.isEmpty()) {
             System.out.println("There were no modules to load");
         }
     }
