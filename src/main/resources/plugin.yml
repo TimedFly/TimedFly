@@ -1,0 +1,6 @@
+name: ${project.name}
+version: ${project.version}
+main: me.jackscode.timedfly5.TimedFly
+api-version: 1.13
+authors: [By_Jack]
+description: Get Fly for a limited amount of time, but wait... you gotta pay first.

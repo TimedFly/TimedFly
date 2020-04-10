@@ -1,0 +1,8 @@
+# IDE files
+.idea/
+TimedFly5.iml
+
+# Test and compiled files
+out/
+target/
+*/test/
