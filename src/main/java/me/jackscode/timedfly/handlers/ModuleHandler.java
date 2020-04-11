@@ -34,11 +34,12 @@ public class ModuleHandler {
     }
 
     public TimedFlyModule enableModules(File fileModule) {
+        URLClassLoader classLoader = null;
         try {
             System.out.println("Attempting to load module: " + fileModule.getName());
 
             // Prepare to load class
-            URLClassLoader classLoader = new URLClassLoader(
+            classLoader = new URLClassLoader(
                     new URL[]{fileModule.toURI().toURL()},
                     this.getClass().getClassLoader()
             );
@@ -90,10 +91,19 @@ public class ModuleHandler {
             // Populate module's description field
             field.set(module, moduleDescription);
 
+            // Set field to private again (I don't know if it's necessary)
+            field.setAccessible(false);
             System.out.println("Module " + fileModule.getName() + " has been loaded");
             return module;
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                if (classLoader != null) {
+                    classLoader.close();
+                }
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
             return null;
         }
     }
