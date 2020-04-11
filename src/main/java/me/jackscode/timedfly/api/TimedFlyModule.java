@@ -2,21 +2,16 @@ package me.jackscode.timedfly.api;
 
 public abstract class TimedFlyModule {
 
-    /**
-     * Get the name of the current module.
-     * Every implementation must have this method.
-     *
-     * @return Name of the Module
-     */
-    public abstract String getName();
+    private TimedFlyModuleDescription moduleDescription;
 
     /**
-     * Get the description of the current module.
-     * Every implementation must have this method.
+     * Get the description of the module in different methods.
      *
-     * @return Description of the Module
+     * @return The description of the module
      */
-    public abstract String getDescription();
+    public TimedFlyModuleDescription getModuleDescription() {
+        return moduleDescription;
+    }
 
     /**
      * Gets called when the module gets enabled.
