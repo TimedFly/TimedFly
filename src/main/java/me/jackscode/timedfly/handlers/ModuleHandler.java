@@ -109,16 +109,16 @@ public class ModuleHandler {
     }
 
     private TimedFlyModuleDescription populateModuleDescription(FileConfiguration moduleConfig, String module) throws ModuleException {
-        // Get all the values from modules.yml file
+        // Get all the values from module.yml file
         String main = moduleConfig.getString("main");
         String name = moduleConfig.getString("name");
         String description = moduleConfig.getString("description");
         String version = moduleConfig.getString("version");
         List<String> authors = moduleConfig.getStringList("authors");
 
-        String moduleException = "There is no '%s' section on modules.yml of " + module;
+        String moduleException = "There is no '%s' section on module.yml of " + module;
 
-        // Check to see if main, name, version is in the modules.yml file
+        // Check to see if main, name, version is in the module.yml file
         if (main == null) {
             throw new ModuleException(String.format(moduleException, "main"));
         } else if (name == null) {
