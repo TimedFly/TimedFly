@@ -37,7 +37,13 @@ public class ModuleHandler {
 
     public Module enableModule(File fileModule) {
         try {
-            System.out.println("Attempting to load module: " + fileModule.getName());
+            String filePath = fileModule.getPath();
+
+            if (!fileModule.exists()) {
+                throw new ModuleException(fileModule.getPath() + " does not exist!");
+            }
+
+            System.out.println("Attempting to load module: " + filePath);
 
             // Prepare to load class
             URLClassLoader classLoader = new URLClassLoader(
@@ -55,7 +61,7 @@ public class ModuleHandler {
 
             // module.yml must exist
             if (inputStream == null) {
-                throw new ModuleException("There is no module.yml file on the module " + fileModule.getName());
+                throw new ModuleException("There is no module.yml file on the module " + filePath);
             }
 
             // Read contents of module.yml file
@@ -67,7 +73,7 @@ public class ModuleHandler {
             moduleConfig.load(reader);
 
             // Create an instance of the module description and add the values
-            ModuleDescription moduleDescription = populateModuleDescription(moduleConfig, fileModule.getName());
+            ModuleDescription moduleDescription = populateModuleDescription(moduleConfig, filePath);
 
             // Check if the module already exists
             boolean exists = modules.stream()
@@ -77,7 +83,7 @@ public class ModuleHandler {
                             .equals(moduleDescription.getName())
                     );
             if (exists) {
-                throw new ModuleException("There already exist a module with the name of " + fileModule.getName());
+                throw new ModuleException("There already exist a module with the name of " + filePath);
             }
 
             // Path to main class
@@ -111,7 +117,7 @@ public class ModuleHandler {
             // Close classloader because we dont need it any more.
             classLoader.close();
 
-            System.out.println("Module " + fileModule.getName() + " has been loaded");
+            System.out.println("Module " + filePath + " has been loaded");
             modules.add(module);
             module.onModuleEnable();
             return module;
@@ -131,7 +137,7 @@ public class ModuleHandler {
         if (remove) modules.remove(module);
     }
 
-    private ModuleDescription populateModuleDescription(FileConfiguration moduleConfig, String module) throws ModuleException {
+    private ModuleDescription populateModuleDescription(FileConfiguration moduleConfig, String filePath) throws ModuleException {
         // Get all the values from module.yml file
         String main = moduleConfig.getString("main");
         String name = moduleConfig.getString("name");
@@ -139,7 +145,7 @@ public class ModuleHandler {
         String version = moduleConfig.getString("version");
         List<String> authors = moduleConfig.getStringList("authors");
 
-        String moduleException = "There is no '%s' section on module.yml of " + module;
+        String moduleException = "There is no '%s' section on module.yml of " + filePath;
 
         // Check to see if main, name, version is in the module.yml file
         if (main == null) {

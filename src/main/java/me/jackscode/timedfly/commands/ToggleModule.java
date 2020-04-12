@@ -8,16 +8,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class ToggleModule implements CommandExecutor {
-    private List<Module> modules;
-    private ModuleHandler moduleHandler;
-    private Plugin plugin;
+
+    private final List<Module> modules;
+    private final ModuleHandler moduleHandler;
+    private final Plugin plugin;
 
     public ToggleModule(ModuleHandler moduleHandler, Plugin plugin) {
         this.moduleHandler = moduleHandler;
@@ -34,8 +33,7 @@ public class ToggleModule implements CommandExecutor {
 
         if (args.length < 2) return false;
 
-        String moduleName = args[1];
-        if (moduleName == null) return false;
+        String moduleName = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
         if (args[0].equals("enable")) {
             File module = new File(plugin.getDataFolder(), "/modules/" + moduleName + ".jar");
