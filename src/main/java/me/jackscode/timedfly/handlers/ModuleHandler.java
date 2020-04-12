@@ -13,39 +13,45 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ModuleHandler {
 
+    private final List<Module> modules;
 
-    public List<Module> loadModules(Path path) {
+    public ModuleHandler() {
+        this.modules = new ArrayList<>();
+    }
+
+    public void enableModules(Path path) {
         try {
-            return Files.list(path)
+            Files.list(path)
                     .map(Path::toFile)
-                    .map(this::enableModules)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .forEach(this::enableModule);
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
-    public Module enableModules(File fileModule) {
-        URLClassLoader classLoader = null;
+    public Module enableModule(File fileModule) {
         try {
             System.out.println("Attempting to load module: " + fileModule.getName());
 
             // Prepare to load class
-            classLoader = new URLClassLoader(
+            URLClassLoader classLoader = new URLClassLoader(
                     new URL[]{fileModule.toURI().toURL()},
                     this.getClass().getClassLoader()
             );
 
             // Get module.yml file
             InputStream inputStream = classLoader.getResourceAsStream("module.yml");
+
+            Enumeration<URL> resources = classLoader.getResources("");
+            while (resources.hasMoreElements()) {
+                System.out.println(resources.nextElement().getFile());
+            }
 
             // module.yml must exist
             if (inputStream == null) {
@@ -62,6 +68,17 @@ public class ModuleHandler {
 
             // Create an instance of the module description and add the values
             ModuleDescription moduleDescription = populateModuleDescription(moduleConfig, fileModule.getName());
+
+            // Check if the module already exists
+            boolean exists = modules.stream()
+                    .anyMatch(module -> module
+                            .getModuleDescription()
+                            .getName()
+                            .equals(moduleDescription.getName())
+                    );
+            if (exists) {
+                throw new ModuleException("There already exist a module with the name of " + fileModule.getName());
+            }
 
             // Path to main class
             String main = moduleDescription.getMain();
@@ -91,21 +108,27 @@ public class ModuleHandler {
             // Populate module's description field
             field.set(module, moduleDescription);
 
-            // Set field to private again (I don't know if it's necessary)
-            field.setAccessible(false);
+            // Close classloader because we dont need it any more.
+            classLoader.close();
+
             System.out.println("Module " + fileModule.getName() + " has been loaded");
+            modules.add(module);
+            module.onModuleEnable();
             return module;
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                if (classLoader != null) {
-                    classLoader.close();
-                }
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
             return null;
         }
+    }
+
+    public void disableModule(Module module) {
+        disableModule(module, true);
+    }
+
+    public void disableModule(Module module, boolean remove) {
+        module.onModuleDisable();
+        System.out.println("Module disabled: " + module.getModuleDescription().getName());
+        if (remove) modules.remove(module);
     }
 
     private ModuleDescription populateModuleDescription(FileConfiguration moduleConfig, String module) throws ModuleException {
@@ -134,4 +157,7 @@ public class ModuleHandler {
         return new ModuleDescription(main, name, description, version, authors);
     }
 
+    public List<Module> getModules() {
+        return modules;
+    }
 }
