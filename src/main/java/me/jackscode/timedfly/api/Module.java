@@ -1,15 +1,15 @@
 package me.jackscode.timedfly.api;
 
-public abstract class TimedFlyModule {
+public abstract class Module {
 
-    private TimedFlyModuleDescription moduleDescription;
+    private ModuleDescription moduleDescription;
 
     /**
      * Get the description of the module in different methods.
      *
      * @return The description of the module
      */
-    public TimedFlyModuleDescription getModuleDescription() {
+    public ModuleDescription getModuleDescription() {
         return moduleDescription;
     }
 

@@ -1,7 +1,7 @@
 package me.jackscode.timedfly.handlers;
 
-import me.jackscode.timedfly.api.TimedFlyModule;
-import me.jackscode.timedfly.api.TimedFlyModuleDescription;
+import me.jackscode.timedfly.api.Module;
+import me.jackscode.timedfly.api.ModuleDescription;
 import me.jackscode.timedfly.exceptions.ModuleException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class ModuleHandler {
 
 
-    public List<TimedFlyModule> loadModules(Path path) {
+    public List<Module> loadModules(Path path) {
         try {
             return Files.list(path)
                     .map(Path::toFile)
@@ -33,7 +33,7 @@ public class ModuleHandler {
         }
     }
 
-    public TimedFlyModule enableModules(File fileModule) {
+    public Module enableModules(File fileModule) {
         URLClassLoader classLoader = null;
         try {
             System.out.println("Attempting to load module: " + fileModule.getName());
@@ -61,7 +61,7 @@ public class ModuleHandler {
             moduleConfig.load(reader);
 
             // Create an instance of the module description and add the values
-            TimedFlyModuleDescription moduleDescription = populateModuleDescription(moduleConfig, fileModule.getName());
+            ModuleDescription moduleDescription = populateModuleDescription(moduleConfig, fileModule.getName());
 
             // Path to main class
             String main = moduleDescription.getMain();
@@ -76,11 +76,11 @@ public class ModuleHandler {
             Object instance = constructor.newInstance();
 
             // Class must extend Module abstract class
-            if (!(instance instanceof TimedFlyModule)) {
+            if (!(instance instanceof Module)) {
                 throw new ModuleException(main + " must implement Module");
             }
 
-            TimedFlyModule module = (TimedFlyModule) instance;
+            Module module = (Module) instance;
 
             // Get the module's description field to be populated
             Field field = module.getClass().getSuperclass().getDeclaredField("moduleDescription");
@@ -108,7 +108,7 @@ public class ModuleHandler {
         }
     }
 
-    private TimedFlyModuleDescription populateModuleDescription(FileConfiguration moduleConfig, String module) throws ModuleException {
+    private ModuleDescription populateModuleDescription(FileConfiguration moduleConfig, String module) throws ModuleException {
         // Get all the values from module.yml file
         String main = moduleConfig.getString("main");
         String name = moduleConfig.getString("name");
@@ -131,7 +131,7 @@ public class ModuleHandler {
             description = "No description provided";
         }
 
-        return new TimedFlyModuleDescription(main, name, description, version, authors);
+        return new ModuleDescription(main, name, description, version, authors);
     }
 
 }

@@ -2,7 +2,7 @@ package me.jackscode.timedfly.api;
 
 import java.util.List;
 
-public class TimedFlyModuleDescription {
+public class ModuleDescription {
 
     private final String main;
     private final String name;
@@ -10,7 +10,7 @@ public class TimedFlyModuleDescription {
     private final String version;
     private final List<String> authors;
 
-    public TimedFlyModuleDescription(String main, String name, String description, String version, List<String> authors) {
+    public ModuleDescription(String main, String name, String description, String version, List<String> authors) {
         this.main = main;
         this.name = name;
         this.description = description;

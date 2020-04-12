@@ -2,7 +2,7 @@ package me.jackscode.timedfly.api;
 
 import org.bukkit.entity.Player;
 
-public interface TimedFlyCurrency {
+public interface Currency {
     String name();
 
     boolean withdraw(Player player, int amount);
