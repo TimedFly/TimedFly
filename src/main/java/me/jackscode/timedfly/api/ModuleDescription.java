@@ -1,5 +1,7 @@
 package me.jackscode.timedfly.api;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class ModuleDescription {
@@ -10,7 +12,13 @@ public class ModuleDescription {
     private final String version;
     private final List<String> authors;
 
-    public ModuleDescription(String main, String name, String description, String version, List<String> authors) {
+    public ModuleDescription(
+            @NotNull String main,
+            @NotNull String name,
+            @NotNull String description,
+            @NotNull String version,
+            @NotNull List<String> authors
+    ) {
         this.main = main;
         this.name = name;
         this.description = description;

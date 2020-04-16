@@ -1,5 +1,7 @@
 package me.jackscode.timedfly.enums;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum CommandType {
 
     TIMED_FLY("tf"),
@@ -7,7 +9,7 @@ public enum CommandType {
 
     String name;
 
-    CommandType(String commandName){
+    CommandType(@NotNull String commandName){
         this.name = commandName;
     }
 

@@ -1,15 +1,16 @@
 package me.jackscode.timedfly.api;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public interface Currency {
     String name();
 
-    boolean withdraw(Player player, int amount);
+    boolean withdraw(@NotNull Player player, int amount);
 
-    boolean deposit(Player player, int amount);
+    boolean deposit(@NotNull Player player, int amount);
 
-    boolean has(Player player, int amount);
+    boolean has(@NotNull Player player, int amount);
 
-    int balance(Player player);
+    int balance(@NotNull Player player);
 }

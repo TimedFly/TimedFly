@@ -3,6 +3,7 @@ package me.jackscode.timedfly.api;
 import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.exceptions.CommandException;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -16,16 +17,11 @@ public abstract class Command {
     CommandType commandType;
 
     public Command(
-            String name,
-            CommandType commandType,
+            @NotNull String name,
+            @NotNull CommandType commandType,
             @Nullable String description,
             @Nullable List<String> aliases
     ) throws CommandException {
-        if (name == null) {
-            throw new CommandException("Name of the command cannot be empty.");
-        } else if (commandType == null) {
-            throw new CommandException("Type of the command cannot be empty.");
-        }
 
         this.name = name;
         this.commandType = commandType;

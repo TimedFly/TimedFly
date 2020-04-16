@@ -50,7 +50,7 @@ public class CurrencyHandler {
      * @param name Name of the currency to get.
      * @return The currency class found by the name provided
      */
-    public Currency getCurrency(String name) {
+    public Currency getCurrency(@NotNull String name) {
         return currencies
                 .stream()
                 .filter(currency -> currency.name().equals(name))

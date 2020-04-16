@@ -26,14 +26,18 @@ public class ModuleHandler {
     private final CurrencyHandler currencyHandler;
     private final TimedFly plugin;
 
-    public ModuleHandler(@NotNull CommandHandler commandHandler, CurrencyHandler currencyHandler, TimedFly plugin) {
+    public ModuleHandler(
+            @NotNull CommandHandler commandHandler,
+            @NotNull CurrencyHandler currencyHandler,
+            @NotNull TimedFly plugin
+    ) {
         this.commandHandler = commandHandler;
         this.currencyHandler = currencyHandler;
         this.modules = new ArrayList<>();
         this.plugin = plugin;
     }
 
-    public void enableModules(Path path) {
+    public void enableModules(@NotNull Path path) {
         try {
             Files.list(path)
                     .map(Path::toFile)
@@ -43,7 +47,7 @@ public class ModuleHandler {
         }
     }
 
-    public Module enableModule(File fileModule) {
+    public Module enableModule(@NotNull File fileModule) {
         String filePath = fileModule.getPath();
         try {
             if (!fileModule.exists()) {
@@ -141,7 +145,7 @@ public class ModuleHandler {
         System.out.println("All modules had been disabled.");
     }
 
-    public void disableModule(Module module) {
+    public void disableModule(@NotNull Module module) {
         module.onModuleDisable();
         module.getCommandList().forEach(command -> {
             try {
@@ -155,7 +159,10 @@ public class ModuleHandler {
         modules.remove(module);
     }
 
-    private ModuleDescription populateModuleDescription(FileConfiguration moduleConfig, String filePath) throws ModuleException {
+    private ModuleDescription populateModuleDescription(
+            @NotNull FileConfiguration moduleConfig,
+            @NotNull String filePath
+    ) throws ModuleException {
         // Get all the values from module.yml file
         String main = moduleConfig.getString("main");
         String name = moduleConfig.getString("name");
@@ -182,7 +189,11 @@ public class ModuleHandler {
         return new ModuleDescription(main, name, description, version, authors);
     }
 
-    private void setFields(Module module, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
+    private void setFields(
+            @NotNull Module module,
+            @NotNull String fieldName,
+            @NotNull Object value
+    ) throws NoSuchFieldException, IllegalAccessException {
         // Get the module's description field to be populated
         Field field = module.getClass().getSuperclass().getDeclaredField(fieldName);
 

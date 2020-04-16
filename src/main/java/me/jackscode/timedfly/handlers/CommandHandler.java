@@ -2,6 +2,7 @@ package me.jackscode.timedfly.handlers;
 
 import me.jackscode.timedfly.api.Command;
 import me.jackscode.timedfly.exceptions.CommandException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +15,7 @@ public class CommandHandler {
         this.commands = new HashSet<>();
     }
 
-    public void register(Command command) throws CommandException {
+    public void register(@NotNull Command command) throws CommandException {
         if (commands.stream().anyMatch(cmd -> cmd.getName().equals(command.getName()))) {
             throw new CommandException(String.format(
                     "Command with name %s already exists.",
@@ -27,7 +28,7 @@ public class CommandHandler {
         System.out.println("Command registered: " + command.getName());
     }
 
-    public void unregister(Command command) throws CommandException {
+    public void unregister(@NotNull Command command) throws CommandException {
         if (commands.stream().noneMatch(cmd -> cmd.getName().equals(command.getName()))) {
             throw new CommandException(String.format(
                     "Command with name %s does not exists.",

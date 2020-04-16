@@ -5,6 +5,7 @@ import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public abstract class Module {
      * @param commands Commands to be registered
      * @throws CommandException If name already exists this will be thrown
      */
-    public void registerCommands(Command... commands) throws CommandException {
+    public void registerCommands(@NotNull Command... commands) throws CommandException {
         for (Command command : commands) {
             commandHandler.register(command);
             commandList.add(command);
