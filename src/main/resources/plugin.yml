@@ -6,4 +6,8 @@ authors: [By_Jack]
 description: Get Fly for a limited amount of time, but wait... you gotta pay first.
 commands:
   timedfly:
-    aliases: tf
+    aliases:
+      - tf
+  tfly:
+    aliases:
+      -

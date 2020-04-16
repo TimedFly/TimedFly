@@ -1,7 +1,9 @@
 package me.jackscode.timedfly;
 
 import me.jackscode.timedfly.api.Module;
-import me.jackscode.timedfly.commands.ToggleModule;
+import me.jackscode.timedfly.commands.TF;
+import me.jackscode.timedfly.commands.TFly;
+import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,18 +12,24 @@ import java.util.List;
 
 public final class TimedFly extends JavaPlugin {
 
+    private CommandHandler commandHandler;
     private ModuleHandler moduleHandler;
 
     @Override
     public void onEnable() {
-        handleModules();
-        this.getCommand("timedfly").setExecutor(new ToggleModule(moduleHandler, this));
+        this.createInstances();
+        this.handleModules();
+        this.enableCommands();
     }
 
     @Override
     public void onDisable() {
-        List<Module> modules = moduleHandler.getModules();
-        modules.forEach(module -> moduleHandler.disableModule(module, false));
+        this.moduleHandler.disableAllModules();
+    }
+
+    private void createInstances() {
+        this.commandHandler = new CommandHandler();
+        this.moduleHandler = new ModuleHandler(this.commandHandler, this);
     }
 
     private void handleModules() {
@@ -34,17 +42,19 @@ public final class TimedFly extends JavaPlugin {
             }
         }
 
-        ModuleHandler moduleHandler = new ModuleHandler();
-        moduleHandler.enableModules(dataFolder.toPath());
+        this.moduleHandler.enableModules(dataFolder.toPath());
 
-        this.moduleHandler = moduleHandler;
-
-        List<Module> modules = moduleHandler.getModules();
+        List<Module> modules = this.moduleHandler.getModules();
 
         if (modules == null) {
             System.out.println("Could not load any modules... Something happened.");
         } else if (modules.isEmpty()) {
             System.out.println("There were no modules to load");
         }
+    }
+
+    private void enableCommands() {
+        this.getCommand("timedfly").setExecutor(new TF(this.commandHandler));
+        this.getCommand("tfly").setExecutor(new TFly(this.commandHandler));
     }
 }

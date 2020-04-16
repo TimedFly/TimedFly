@@ -1,10 +1,13 @@
 package me.jackscode.timedfly.handlers;
 
+import me.jackscode.timedfly.TimedFly;
 import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.api.ModuleDescription;
+import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.exceptions.ModuleException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -14,15 +17,18 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 public class ModuleHandler {
 
     private final List<Module> modules;
+    private final CommandHandler commandHandler;
+    private final TimedFly plugin;
 
-    public ModuleHandler() {
+    public ModuleHandler(@NotNull CommandHandler commandHandler, TimedFly plugin) {
+        this.commandHandler = commandHandler;
         this.modules = new ArrayList<>();
+        this.plugin = plugin;
     }
 
     public void enableModules(Path path) {
@@ -36,9 +42,8 @@ public class ModuleHandler {
     }
 
     public Module enableModule(File fileModule) {
+        String filePath = fileModule.getPath();
         try {
-            String filePath = fileModule.getPath();
-
             if (!fileModule.exists()) {
                 throw new ModuleException(fileModule.getPath() + " does not exist!");
             }
@@ -54,11 +59,6 @@ public class ModuleHandler {
             // Get module.yml file
             InputStream inputStream = classLoader.getResourceAsStream("module.yml");
 
-            Enumeration<URL> resources = classLoader.getResources("");
-            while (resources.hasMoreElements()) {
-                System.out.println(resources.nextElement().getFile());
-            }
-
             // module.yml must exist
             if (inputStream == null) {
                 throw new ModuleException("There is no module.yml file on the module " + filePath);
@@ -73,7 +73,7 @@ public class ModuleHandler {
             moduleConfig.load(reader);
 
             // Create an instance of the module description and add the values
-            ModuleDescription moduleDescription = populateModuleDescription(moduleConfig, filePath);
+            ModuleDescription moduleDescription = this.populateModuleDescription(moduleConfig, filePath);
 
             // Check if the module already exists
             boolean exists = modules.stream()
@@ -105,17 +105,13 @@ public class ModuleHandler {
 
             Module module = (Module) instance;
 
-            // Get the module's description field to be populated
-            Field field = module.getClass().getSuperclass().getDeclaredField("moduleDescription");
-
-            // Set private variable accessible to be able to change it
-            field.setAccessible(true);
-
-            // Populate module's description field
-            field.set(module, moduleDescription);
+            // Set the values for all needed fields.
+            this.setFields(module, "moduleDescription", moduleDescription);
+            this.setFields(module, "commandHandler", commandHandler);
+            this.setFields(module, "moduleHandler", this);
+            this.setFields(module, "plugin", this.plugin);
 
             // Close classloader because we dont need it any more.
-            classLoader.close();
 
             System.out.println("Module " + filePath + " has been loaded");
             modules.add(module);
@@ -123,18 +119,37 @@ public class ModuleHandler {
             return module;
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Could not load module: " + filePath);
             return null;
         }
     }
 
-    public void disableModule(Module module) {
-        disableModule(module, true);
+    public void disableAllModules() {
+        modules.forEach(module -> {
+            module.onModuleDisable();
+            module.getCommandList().forEach(command -> {
+                try {
+                    commandHandler.unregister(command);
+                } catch (CommandException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
+        System.out.println("All modules had been disabled.");
     }
 
-    public void disableModule(Module module, boolean remove) {
+    public void disableModule(Module module) {
         module.onModuleDisable();
+        module.getCommandList().forEach(command -> {
+            try {
+                commandHandler.unregister(command);
+            } catch (CommandException e) {
+                e.printStackTrace();
+            }
+        });
+
         System.out.println("Module disabled: " + module.getModuleDescription().getName());
-        if (remove) modules.remove(module);
+        modules.remove(module);
     }
 
     private ModuleDescription populateModuleDescription(FileConfiguration moduleConfig, String filePath) throws ModuleException {
@@ -156,11 +171,23 @@ public class ModuleHandler {
             throw new ModuleException(String.format(moduleException, "version"));
         }
 
+        // Set default value for module description.
         if (description == null) {
             description = "No description provided";
         }
 
         return new ModuleDescription(main, name, description, version, authors);
+    }
+
+    private void setFields(Module module, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
+        // Get the module's description field to be populated
+        Field field = module.getClass().getSuperclass().getDeclaredField(fieldName);
+
+        // Set private variable accessible to be able to change it
+        field.setAccessible(true);
+
+        // Populate module's description field
+        field.set(module, value);
     }
 
     public List<Module> getModules() {
