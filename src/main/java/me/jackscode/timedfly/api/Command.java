@@ -1,6 +1,7 @@
 package me.jackscode.timedfly.api;
 
 import me.jackscode.timedfly.enums.CommandType;
+import me.jackscode.timedfly.exceptions.CommandException;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,27 +15,70 @@ public abstract class Command {
     List<String> aliases;
     CommandType commandType;
 
-    public Command(String name, String description, @Nullable List<String> aliases, CommandType commandType) {
+    public Command(
+            String name,
+            CommandType commandType,
+            @Nullable String description,
+            @Nullable List<String> aliases
+    ) throws CommandException {
+        if (name == null) {
+            throw new CommandException("Name of the command cannot be empty.");
+        } else if (commandType == null) {
+            throw new CommandException("Type of the command cannot be empty.");
+        }
+
         this.name = name;
+        this.commandType = commandType;
+
         this.description = description;
         this.aliases = aliases == null ? new ArrayList<>() : aliases;
-        this.commandType = commandType;
     }
 
+    /**
+     * Run the logic of this command.
+     * every module must override this method if using a command.
+     *
+     * @param sender The command executor
+     * @param args   Arguments of this command
+     */
     public abstract void execute(CommandSender sender, String[] args);
 
+    /**
+     * Get the command's name. This must be present, else
+     * a {@link CommandException} will be thrown.
+     *
+     * @return Command's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get the description of this command.
+     * If no description provide (if null),
+     * and empty string will be retuned.
+     *
+     * @return Command's description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Get the aliases of this command if any.
+     * Returns and empty list if the aliases is null.
+     *
+     * @return Command's aliases
+     */
     public List<String> getAliases() {
         return aliases;
     }
 
+    /**
+     * Get the TYPE of the command from {@link CommandType} enum
+     *
+     * @return Command's typ
+     */
     public CommandType getCommandType() {
         return commandType;
     }

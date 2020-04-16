@@ -10,11 +10,13 @@ import java.util.List;
 
 public abstract class Module {
 
+    private final List<Command> commandList;
+
     private ModuleDescription moduleDescription;
     private CommandHandler commandHandler;
     private ModuleHandler moduleHandler;
     private TimedFly plugin;
-    private final List<Command> commandList;
+
 
     {
         this.commandList = new ArrayList<>();
@@ -29,18 +31,42 @@ public abstract class Module {
         return moduleDescription;
     }
 
+    /**
+     * Get all commands available on this module
+     *
+     * @return List of commands from this module
+     */
     public List<Command> getCommandList() {
         return commandList;
     }
 
+    /**
+     * Get the class in charge of registering and unregistering
+     * commands from modules. Useful for unregistering commands from
+     * other modules.
+     *
+     * @return Command handler of the main plugin
+     */
     public CommandHandler getCommandHandler() {
         return commandHandler;
     }
 
+    /**
+     * Get the class in charge of enabling and disabling modules.
+     * Can be used to enable or disable other modules at runtime.
+     *
+     * @return Module handler of the main plugin
+     */
     public ModuleHandler getModuleHandler() {
         return moduleHandler;
     }
 
+    /**
+     * Get an instance of the main plugin, makes it so you can get
+     * the config, the data folder, etc...
+     *
+     * @return Main plugin instance
+     */
     public TimedFly getPlugin() {
         return plugin;
     }
