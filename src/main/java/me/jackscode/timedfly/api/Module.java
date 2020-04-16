@@ -3,6 +3,7 @@ package me.jackscode.timedfly.api;
 import me.jackscode.timedfly.TimedFly;
 import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
+import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public abstract class Module {
 
     private ModuleDescription moduleDescription;
     private CommandHandler commandHandler;
+    private CurrencyHandler currencyHandler;
     private ModuleHandler moduleHandler;
     private TimedFly plugin;
 
@@ -49,6 +51,16 @@ public abstract class Module {
      */
     public CommandHandler getCommandHandler() {
         return commandHandler;
+    }
+
+    /**
+     * Get the class in charge of managing currencies.
+     * Useful for adding, removing, and getting the enabled currencies.
+     *
+     * @return Currency handler of the main plugin
+     */
+    public CurrencyHandler getCurrencyHandler() {
+        return currencyHandler;
     }
 
     /**

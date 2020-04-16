@@ -4,6 +4,7 @@ import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.commands.TF;
 import me.jackscode.timedfly.commands.TFly;
 import me.jackscode.timedfly.handlers.CommandHandler;
+import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public final class TimedFly extends JavaPlugin {
 
     private CommandHandler commandHandler;
+    private CurrencyHandler currencyHandler;
     private ModuleHandler moduleHandler;
 
     @Override
@@ -29,7 +31,12 @@ public final class TimedFly extends JavaPlugin {
 
     private void createInstances() {
         this.commandHandler = new CommandHandler();
-        this.moduleHandler = new ModuleHandler(this.commandHandler, this);
+        this.currencyHandler = new CurrencyHandler();
+        this.moduleHandler = new ModuleHandler(
+                this.commandHandler,
+                this.currencyHandler,
+                this
+        );
     }
 
     private void handleModules() {

@@ -23,10 +23,12 @@ public class ModuleHandler {
 
     private final List<Module> modules;
     private final CommandHandler commandHandler;
+    private final CurrencyHandler currencyHandler;
     private final TimedFly plugin;
 
-    public ModuleHandler(@NotNull CommandHandler commandHandler, TimedFly plugin) {
+    public ModuleHandler(@NotNull CommandHandler commandHandler, CurrencyHandler currencyHandler, TimedFly plugin) {
         this.commandHandler = commandHandler;
+        this.currencyHandler = currencyHandler;
         this.modules = new ArrayList<>();
         this.plugin = plugin;
     }
@@ -107,7 +109,8 @@ public class ModuleHandler {
 
             // Set the values for all needed fields.
             this.setFields(module, "moduleDescription", moduleDescription);
-            this.setFields(module, "commandHandler", commandHandler);
+            this.setFields(module, "commandHandler", this.commandHandler);
+            this.setFields(module, "currencyHandler", this.currencyHandler);
             this.setFields(module, "moduleHandler", this);
             this.setFields(module, "plugin", this.plugin);
 
