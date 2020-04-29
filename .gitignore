@@ -2,7 +2,6 @@
 .idea/
 TimedFly5.iml
 
-# Test and compiled files
+# Compiled files
 out/
 target/
-*/test/
