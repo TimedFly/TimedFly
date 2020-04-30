@@ -2,8 +2,8 @@ package me.jackscode.timedfly.commands;
 
 import me.jackscode.timedfly.api.Command;
 import me.jackscode.timedfly.api.Messenger;
-import me.jackscode.timedfly.api.TFConsole;
-import me.jackscode.timedfly.api.TFPlayer;
+import me.jackscode.timedfly.api.entity.TFConsole;
+import me.jackscode.timedfly.api.entity.TFPlayer;
 import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import org.bukkit.Bukkit;

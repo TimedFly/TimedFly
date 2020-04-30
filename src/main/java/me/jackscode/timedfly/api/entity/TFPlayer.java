@@ -1,7 +1,13 @@
-package me.jackscode.timedfly.api;
+package me.jackscode.timedfly.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
+import me.jackscode.timedfly.api.Messenger;
+import me.jackscode.timedfly.api.events.TimedFlyEndEvent;
+import me.jackscode.timedfly.api.events.TimedFlyRunningEvent;
+import me.jackscode.timedfly.api.events.TimedFlyStartEvent;
+import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -27,12 +33,13 @@ import java.util.UUID;
 
     public void startTimer() {
         this.sendMessage("Timer for player " + this.player.getName() + " started");
-        // TODO: Timer
+        Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
+        TimerManager.start();
     }
 
-    public void stopTimer() {
+    @SneakyThrows public void stopTimer() {
         this.sendMessage("Timer for player " + this.player.getName() + " stopped");
-        // TODO: Timer
+        Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
     }
 
     @Override

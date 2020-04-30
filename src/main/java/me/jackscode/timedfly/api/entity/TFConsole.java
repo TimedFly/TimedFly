@@ -1,5 +1,6 @@
-package me.jackscode.timedfly.api;
+package me.jackscode.timedfly.api.entity;
 
+import me.jackscode.timedfly.api.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 
