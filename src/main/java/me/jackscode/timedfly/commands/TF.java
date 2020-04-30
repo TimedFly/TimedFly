@@ -26,6 +26,8 @@ public class TF implements CommandExecutor {
             @NotNull String label,
             @NotNull String[] args
     ) {
+        if (args.length == 0) return true;
+
         List<Command> commands = this.commandHandler
                 .getCommands()
                 .stream()
@@ -33,8 +35,6 @@ public class TF implements CommandExecutor {
                 .collect(Collectors.toList());
 
         if (commands.isEmpty()) return true;
-
-        if (args.length == 0) return true;
 
         commands.stream()
                 .filter(cmd -> cmd.getName().equals(args[0]))

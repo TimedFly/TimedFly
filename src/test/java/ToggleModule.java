@@ -1,6 +1,7 @@
 import me.jackscode.timedfly.api.Command;
 import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.enums.CommandType;
+import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.ModuleHandler;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
@@ -16,12 +17,12 @@ public class ToggleModule extends Command {
     private final ModuleHandler moduleHandler;
     private final Plugin plugin;
 
-    public ToggleModule(ModuleHandler moduleHandler, Plugin plugin) {
+    public ToggleModule(ModuleHandler moduleHandler, Plugin plugin) throws CommandException {
         super(
                 "toggle",
+                CommandType.TIMED_FLY,
                 "Toggles modules on and off",
-                null,
-                CommandType.TIMED_FLY
+                null
         );
         this.moduleHandler = moduleHandler;
         this.modules = moduleHandler.getModules();

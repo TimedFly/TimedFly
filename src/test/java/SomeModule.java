@@ -3,11 +3,14 @@ import me.jackscode.timedfly.exceptions.CommandException;
 
 public class SomeModule extends Module {
 
-
     @Override
     public void onModuleEnable() {
         try {
-            this.registerCommands(new SomeCommand(), new ToggleModule(this.getModuleHandler(), this.getPlugin()));
+            this.registerCommands(
+                    new SomeCommand(),
+                    new ToggleModule(this.getModuleHandler(), this.getPlugin()),
+                    new TestPlayerCommand()
+            );
         } catch (CommandException e) {
             e.printStackTrace();
         }
