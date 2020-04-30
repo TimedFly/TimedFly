@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.UUID;
 
-@Getter public class TFPlayer {
+@Getter public class TFPlayer extends Messenger {
 
     @Setter private int timeLeft;
     @Setter private int initialTime;
@@ -22,6 +22,7 @@ import java.util.UUID;
     public TFPlayer(UUID uuid) {
         this.uuid = uuid;
         this.player = Bukkit.getOfflinePlayer(uuid);
+        this.tfPlayer = this;
     }
 
     public void startTimer() {
@@ -34,6 +35,7 @@ import java.util.UUID;
         // TODO: Timer
     }
 
+    @Override
     public boolean sendMessage(String message) {
         Player player = this.player.getPlayer();
         if (player == null) return false;
@@ -42,6 +44,7 @@ import java.util.UUID;
         return true;
     }
 
+    @Override
     public boolean sendMessage(String[] messages) {
         Player player = this.player.getPlayer();
         if (player == null) return false;

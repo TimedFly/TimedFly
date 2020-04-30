@@ -1,9 +1,9 @@
 import me.jackscode.timedfly.api.Command;
+import me.jackscode.timedfly.api.Messenger;
 import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.ModuleHandler;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -30,7 +30,7 @@ public class ToggleModule extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(Messenger sender, String[] args) {
         if (args.length == 0) return;
 
         if (args[0].equals("list")) {

@@ -34,10 +34,10 @@ public abstract class Command {
      * Run the logic of this command.
      * every module must override this method if using a command.
      *
-     * @param sender The command executor
+     * @param messenger The command executor
      * @param args   Arguments of this command
      */
-    public abstract void execute(CommandSender sender, String[] args);
+    public abstract void execute(Messenger messenger, String[] args);
 
     /**
      * Get the command's name. This must be present, else

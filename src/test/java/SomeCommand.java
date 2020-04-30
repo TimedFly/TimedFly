@@ -1,7 +1,7 @@
 import me.jackscode.timedfly.api.Command;
+import me.jackscode.timedfly.api.Messenger;
 import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.exceptions.CommandException;
-import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 
@@ -17,7 +17,7 @@ public class SomeCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(Messenger sender, String[] args) {
         sender.sendMessage(String.format(
                 "Here is some info about this command: \n" +
                         "Name: %s\nDescription:%s\nType: %s\nAliases: %s\nArguments: %s",

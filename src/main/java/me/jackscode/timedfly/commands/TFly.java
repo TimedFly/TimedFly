@@ -1,10 +1,15 @@
 package me.jackscode.timedfly.commands;
 
 import me.jackscode.timedfly.api.Command;
+import me.jackscode.timedfly.api.Messenger;
+import me.jackscode.timedfly.api.TFConsole;
+import me.jackscode.timedfly.api.TFPlayer;
 import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.handlers.CommandHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -36,9 +41,16 @@ public class TFly implements CommandExecutor {
 
         if (commands.isEmpty()) return true;
 
+        final Messenger messenger;
+        if (sender instanceof Player) {
+            messenger = new TFPlayer(((Player) sender).getUniqueId());
+        } else {
+            messenger = new TFConsole(Bukkit.getConsoleSender());
+        }
+
         commands.stream()
                 .filter(cmd -> cmd.getName().equals(args[0]))
-                .forEach(cmd -> cmd.execute(sender, Arrays.copyOfRange(args, 1, args.length)));
+                .forEach(cmd -> cmd.execute(messenger, Arrays.copyOfRange(args, 1, args.length)));
 
         return true;
     }
