@@ -5,6 +5,7 @@ import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.api.ModuleDescription;
 import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.exceptions.ModuleException;
+import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +25,18 @@ public class ModuleHandler {
     private final List<Module> modules;
     private final CommandHandler commandHandler;
     private final CurrencyHandler currencyHandler;
+    private final TimerManager timerManager;
     private final TimedFly plugin;
 
     public ModuleHandler(
             @NotNull CommandHandler commandHandler,
             @NotNull CurrencyHandler currencyHandler,
+            @NotNull TimerManager timerManager,
             @NotNull TimedFly plugin
     ) {
         this.commandHandler = commandHandler;
         this.currencyHandler = currencyHandler;
+        this.timerManager = timerManager;
         this.modules = new ArrayList<>();
         this.plugin = plugin;
     }
@@ -116,6 +120,7 @@ public class ModuleHandler {
             this.setFields(module, "commandHandler", this.commandHandler);
             this.setFields(module, "currencyHandler", this.currencyHandler);
             this.setFields(module, "moduleHandler", this);
+            this.setFields(module, "timerManager", this.timerManager);
             this.setFields(module, "plugin", this.plugin);
 
             // Close classloader because we dont need it any more.

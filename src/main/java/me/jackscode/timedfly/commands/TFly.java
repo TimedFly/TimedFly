@@ -43,7 +43,7 @@ public class TFly implements CommandExecutor {
 
         final Messenger messenger;
         if (sender instanceof Player) {
-            messenger = new TFPlayer(((Player) sender).getUniqueId());
+            messenger = new TFPlayer(((Player) sender));
         } else {
             messenger = new TFConsole(Bukkit.getConsoleSender());
         }

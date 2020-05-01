@@ -1,6 +1,5 @@
 package me.jackscode.timedfly;
 
-import lombok.SneakyThrows;
 import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.commands.TF;
 import me.jackscode.timedfly.commands.TFly;
@@ -18,6 +17,7 @@ public final class TimedFly extends JavaPlugin {
     private CommandHandler commandHandler;
     private CurrencyHandler currencyHandler;
     private ModuleHandler moduleHandler;
+    private TimerManager timerManager;
 
     @Override
     public void onEnable() {
@@ -26,18 +26,20 @@ public final class TimedFly extends JavaPlugin {
         this.enableCommands();
     }
 
-    @SneakyThrows @Override
+    @Override
     public void onDisable() {
         this.moduleHandler.disableAllModules();
-        TimerManager.stop();
+        this.timerManager.stop();
     }
 
     private void createInstances() {
         this.commandHandler = new CommandHandler();
         this.currencyHandler = new CurrencyHandler();
+        this.timerManager = new TimerManager();
         this.moduleHandler = new ModuleHandler(
                 this.commandHandler,
                 this.currencyHandler,
+                this.timerManager,
                 this
         );
     }

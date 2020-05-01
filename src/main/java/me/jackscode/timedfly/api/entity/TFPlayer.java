@@ -2,15 +2,11 @@ package me.jackscode.timedfly.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import me.jackscode.timedfly.api.Messenger;
 import me.jackscode.timedfly.api.events.TimedFlyEndEvent;
-import me.jackscode.timedfly.api.events.TimedFlyRunningEvent;
 import me.jackscode.timedfly.api.events.TimedFlyStartEvent;
-import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -22,24 +18,27 @@ import java.util.UUID;
     @Setter private int initialTime;
     @Setter private boolean running;
     @Setter private boolean hasTime;
-    private final OfflinePlayer player;
+    private final Player player;
     private final UUID uuid;
 
-    public TFPlayer(UUID uuid) {
-        this.uuid = uuid;
-        this.player = Bukkit.getOfflinePlayer(uuid);
+    public TFPlayer(Player player) {
+        this.player = player;
+        this.uuid = player.getUniqueId();
         this.tfPlayer = this;
     }
 
     public void startTimer() {
         this.sendMessage("Timer for player " + this.player.getName() + " started");
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
-        TimerManager.start();
     }
 
-    @SneakyThrows public void stopTimer() {
+    public void stopTimer() {
         this.sendMessage("Timer for player " + this.player.getName() + " stopped");
         Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
+    }
+
+    public void decreaseTime() {
+        this.timeLeft--;
     }
 
     @Override

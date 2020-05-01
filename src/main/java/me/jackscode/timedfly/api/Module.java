@@ -5,6 +5,7 @@ import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
+import me.jackscode.timedfly.managers.TimerManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public abstract class Module {
     private CommandHandler commandHandler;
     private CurrencyHandler currencyHandler;
     private ModuleHandler moduleHandler;
+    private TimerManager timerManager;
     private TimedFly plugin;
 
 
@@ -82,6 +84,16 @@ public abstract class Module {
      */
     public TimedFly getPlugin() {
         return plugin;
+    }
+
+    /**
+     * Get an instance of the timer manager, so you stop and start
+     * the timer whenever you want.
+     *
+     * @return Manger for the global timer.
+     */
+    public TimerManager getTimerManager() {
+        return timerManager;
     }
 
     /**
