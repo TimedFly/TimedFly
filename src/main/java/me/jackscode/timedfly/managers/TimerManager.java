@@ -25,8 +25,13 @@ public class TimerManager {
     public void start() {
         if (!isRunning()) {
             this.scheduledFuture = this.scheduler.scheduleAtFixedRate(() -> {
+                if (this.players.isEmpty()) return;
+
                 this.players.forEach((player, tfPlayer) -> {
-                    if (tfPlayer == null || !tfPlayer.hasTime()) return;
+                    if (tfPlayer == null || !tfPlayer.hasTime() || !tfPlayer.isTimeRunning()) return;
+                    tfPlayer.decreaseTime();
+                    tfPlayer.sendMessage(tfPlayer.getTimeLeft() + "");
+
                     TaskManager.runSync((task) -> {
                         Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer));
                     });

@@ -46,6 +46,9 @@ import java.util.UUID;
         }
         this.sendMessage("Timer for player " + this.player.getName() + " stopped");
         this.setTimeRunning(false);
+        this.setHasTime(false);
+        this.player.setAllowFlight(false);
+        this.player.setFlying(false);
         Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
     }
 
@@ -79,5 +82,9 @@ import java.util.UUID;
         boolean hasTime = this.timeLeft > 0;
         this.hasTime = hasTime;
         return hasTime;
+    }
+
+    public void addTime(int time) {
+        this.timeLeft += time;
     }
 }

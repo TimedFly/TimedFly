@@ -1,8 +1,11 @@
 package me.jackscode.timedfly;
 
+import lombok.SneakyThrows;
 import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.commands.TF;
 import me.jackscode.timedfly.commands.TFly;
+import me.jackscode.timedfly.commands.TimerCommand;
+import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
@@ -21,16 +24,20 @@ public final class TimedFly extends JavaPlugin {
     private ModuleHandler moduleHandler;
     private TimerManager timerManager;
 
-    @Override
+    @SneakyThrows @Override
     public void onEnable() {
         this.createInstances();
         this.handleModules();
         this.enableCommands();
+
+        this.timerManager.start();
     }
 
     @Override
     public void onDisable() {
         this.moduleHandler.disableAllModules();
+
+        this.timerManager.stop();
     }
 
     private void createInstances() {
@@ -66,9 +73,10 @@ public final class TimedFly extends JavaPlugin {
         }
     }
 
-    private void enableCommands() {
+    private void enableCommands() throws CommandException {
         this.getCommand("timedfly").setExecutor(new TF(this.commandHandler, timerManager));
         this.getCommand("tfly").setExecutor(new TFly(this.commandHandler, timerManager));
+        this.commandHandler.register(new TimerCommand());
     }
 
     public void registerEvents(Listener... listener) {

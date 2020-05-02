@@ -21,7 +21,7 @@ public abstract class Command {
             @NotNull CommandType commandType,
             @Nullable String description,
             @Nullable List<String> aliases
-    ) throws CommandException {
+    ) {
 
         this.name = name;
         this.commandType = commandType;
