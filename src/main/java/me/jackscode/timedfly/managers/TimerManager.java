@@ -30,11 +30,14 @@ public class TimerManager {
                 this.players.forEach((player, tfPlayer) -> {
                     if (tfPlayer == null || !tfPlayer.hasTime() || !tfPlayer.isTimeRunning()) return;
                     tfPlayer.decreaseTime();
-                    tfPlayer.sendMessage(tfPlayer.getTimeLeft() + "");
 
                     TaskManager.runSync((task) -> {
                         Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer));
                     });
+
+                    if (tfPlayer.hasTime()) {
+                        tfPlayer.stopTimer();
+                    }
                 });
             }, 0, 1, TimeUnit.SECONDS);
         }

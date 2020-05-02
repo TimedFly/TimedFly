@@ -34,7 +34,6 @@ import java.util.UUID;
             this.sendMessage("You have no time left");
             return;
         }
-        this.sendMessage("Timer for player " + this.player.getName() + " started");
         this.setTimeRunning(true);
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
     }
@@ -44,7 +43,6 @@ import java.util.UUID;
             this.sendMessage("Timer is not running");
             return;
         }
-        this.sendMessage("Timer for player " + this.player.getName() + " stopped");
         this.setTimeRunning(false);
         this.setHasTime(false);
         this.player.setAllowFlight(false);
