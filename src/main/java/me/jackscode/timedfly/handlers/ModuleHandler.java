@@ -137,16 +137,8 @@ public class ModuleHandler {
     }
 
     public void disableAllModules() {
-        modules.forEach(module -> {
-            module.onModuleDisable();
-            module.getCommandList().forEach(command -> {
-                try {
-                    commandHandler.unregister(command);
-                } catch (CommandException e) {
-                    e.printStackTrace();
-                }
-            });
-        });
+        modules.forEach(Module::onModuleDisable);
+        commandHandler.unregisterAll();
         System.out.println("All modules had been disabled.");
     }
 

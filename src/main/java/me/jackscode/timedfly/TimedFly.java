@@ -7,9 +7,11 @@ import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
 import me.jackscode.timedfly.managers.TimerManager;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 public final class TimedFly extends JavaPlugin {
@@ -29,7 +31,6 @@ public final class TimedFly extends JavaPlugin {
     @Override
     public void onDisable() {
         this.moduleHandler.disableAllModules();
-        this.timerManager.stop();
     }
 
     private void createInstances() {
@@ -66,7 +67,17 @@ public final class TimedFly extends JavaPlugin {
     }
 
     private void enableCommands() {
-        this.getCommand("timedfly").setExecutor(new TF(this.commandHandler));
-        this.getCommand("tfly").setExecutor(new TFly(this.commandHandler));
+        this.getCommand("timedfly").setExecutor(new TF(this.commandHandler, timerManager));
+        this.getCommand("tfly").setExecutor(new TFly(this.commandHandler, timerManager));
+    }
+
+    public void registerEvents(Listener... listener) {
+        Arrays.stream(listener)
+                .forEachOrdered(event -> {
+                    System.out.println("Event registered");
+                    this.getServer()
+                            .getPluginManager()
+                            .registerEvents(event, this);
+                });
     }
 }

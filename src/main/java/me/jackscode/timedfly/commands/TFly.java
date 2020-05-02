@@ -6,6 +6,7 @@ import me.jackscode.timedfly.api.entity.TFConsole;
 import me.jackscode.timedfly.api.entity.TFPlayer;
 import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.handlers.CommandHandler;
+import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,9 +20,11 @@ import java.util.stream.Collectors;
 public class TFly implements CommandExecutor {
 
     private final CommandHandler commandHandler;
+    private final TimerManager timerManager;
 
-    public TFly(CommandHandler commandHandler) {
+    public TFly(CommandHandler commandHandler, TimerManager timerManager) {
         this.commandHandler = commandHandler;
+        this.timerManager = timerManager;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class TFly implements CommandExecutor {
 
         final Messenger messenger;
         if (sender instanceof Player) {
-            messenger = new TFPlayer(((Player) sender));
+            messenger = this.timerManager.getPlayer((Player) sender);
         } else {
             messenger = new TFConsole(Bukkit.getConsoleSender());
         }

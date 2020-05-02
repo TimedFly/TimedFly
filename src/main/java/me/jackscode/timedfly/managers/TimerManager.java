@@ -1,6 +1,5 @@
 package me.jackscode.timedfly.managers;
 
-import lombok.Getter;
 import me.jackscode.timedfly.api.entity.TFPlayer;
 import me.jackscode.timedfly.api.events.TimedFlyRunningEvent;
 import org.bukkit.Bukkit;
@@ -19,16 +18,18 @@ public class TimerManager {
     private ScheduledFuture<?> scheduledFuture;
 
     {
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-        players = new IdentityHashMap<>();
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
+        this.players = new IdentityHashMap<>();
     }
 
     public void start() {
         if (!isRunning()) {
-            scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
-                if (players.isEmpty()) return;
-                players.forEach((player, tfPlayer) -> {
-                    Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer));
+            this.scheduledFuture = this.scheduler.scheduleAtFixedRate(() -> {
+                this.players.forEach((player, tfPlayer) -> {
+                    if (tfPlayer == null) return;
+                    TaskManager.runSync((task) -> {
+                        Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer));
+                    });
                 });
             }, 0, 1, TimeUnit.SECONDS);
         }
@@ -36,16 +37,22 @@ public class TimerManager {
 
     public void stop() {
         if (isRunning()) {
-            scheduler.shutdownNow();
-            scheduledFuture.cancel(true);
+            this.scheduler.shutdownNow();
+            this.scheduledFuture.cancel(true);
         }
     }
 
     public boolean isRunning() {
-        return scheduledFuture != null && (!scheduledFuture.isCancelled() || !scheduledFuture.isDone());
+        return this.scheduledFuture != null && (!this.scheduledFuture.isCancelled() || !this.scheduledFuture.isDone());
     }
 
     public TFPlayer getPlayer(Player player) {
-        return players.containsKey(player) ? players.get(player) : new TFPlayer(player);
+        TFPlayer tfPlayer = this.players.get(player);
+        if (tfPlayer != null) {
+            return this.players.get(player);
+        }
+        tfPlayer = new TFPlayer(player);
+        this.players.put(player, tfPlayer);
+        return tfPlayer;
     }
 }
