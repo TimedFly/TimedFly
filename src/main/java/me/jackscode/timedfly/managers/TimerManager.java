@@ -26,7 +26,7 @@ public class TimerManager {
         if (!isRunning()) {
             this.scheduledFuture = this.scheduler.scheduleAtFixedRate(() -> {
                 this.players.forEach((player, tfPlayer) -> {
-                    if (tfPlayer == null) return;
+                    if (tfPlayer == null || !tfPlayer.hasTime()) return;
                     TaskManager.runSync((task) -> {
                         Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer));
                     });
@@ -54,5 +54,9 @@ public class TimerManager {
         tfPlayer = new TFPlayer(player);
         this.players.put(player, tfPlayer);
         return tfPlayer;
+    }
+
+    public void removePlayer(Player player) {
+        this.players.remove(player);
     }
 }

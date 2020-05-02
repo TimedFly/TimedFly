@@ -1,5 +1,6 @@
 package me.jackscode.timedfly.api.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import me.jackscode.timedfly.api.Messenger;
@@ -14,10 +15,11 @@ import java.util.UUID;
 
 @Getter public class TFPlayer extends Messenger {
 
+    @Getter(AccessLevel.NONE) @Setter private boolean hasTime;
     @Setter private int timeLeft;
     @Setter private int initialTime;
-    @Setter private boolean running;
-    @Setter private boolean hasTime;
+    @Setter private boolean timeRunning;
+    @Setter private boolean timePaused;
     private final Player player;
     private final UUID uuid;
 
@@ -28,12 +30,22 @@ import java.util.UUID;
     }
 
     public void startTimer() {
+        if (!this.hasTime()) {
+            this.sendMessage("You have no time left");
+            return;
+        }
         this.sendMessage("Timer for player " + this.player.getName() + " started");
+        this.setTimeRunning(true);
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
     }
 
     public void stopTimer() {
+        if (!this.isTimeRunning()) {
+            this.sendMessage("Timer is not running");
+            return;
+        }
         this.sendMessage("Timer for player " + this.player.getName() + " stopped");
+        this.setTimeRunning(false);
         Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
     }
 
@@ -63,4 +75,9 @@ import java.util.UUID;
         return true;
     }
 
+    public boolean hasTime() {
+        boolean hasTime = this.timeLeft > 0;
+        this.hasTime = hasTime;
+        return hasTime;
+    }
 }
