@@ -6,9 +6,9 @@ import me.jackscode.timedfly.api.entity.TFPlayer;
 
 public abstract class Messenger {
 
-    public abstract boolean sendMessage(String message);
+    public abstract boolean sendMessage(String... messages);
 
-    public abstract boolean sendMessage(String[] message);
+    public abstract boolean hasPermission(String... permissions);
 
     @Getter public TFConsole consoleSender;
 

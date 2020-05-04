@@ -29,11 +29,21 @@ public class TimerCommand extends Command {
                 break;
             case "add":
                 if (args.length < 2) return;
-                player.addTime(Integer.parseInt(args[1]));
+                if (player.hasPermission("fly.add")) {
+                    player.addTime(Integer.parseInt(args[1]));
+                    player.startTimer();
+                } else {
+                    player.sendMessage("You dont have permissions for this");
+                }
                 break;
             case "set":
                 if (args.length < 2) return;
-                player.setTimeLeft(Integer.parseInt(args[1]));
+                if (player.hasPermission("fly.set")) {
+                    player.setTimeLeft(Integer.parseInt(args[1]));
+                    player.startTimer();
+                } else {
+                    player.sendMessage("You dont have permissions for this");
+                }
                 break;
         }
     }

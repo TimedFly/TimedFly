@@ -2,6 +2,7 @@ package me.jackscode.timedfly;
 
 import lombok.SneakyThrows;
 import me.jackscode.timedfly.api.Module;
+import me.jackscode.timedfly.api.Permission;
 import me.jackscode.timedfly.commands.TF;
 import me.jackscode.timedfly.commands.TFly;
 import me.jackscode.timedfly.commands.TimerCommand;
@@ -28,6 +29,7 @@ public final class TimedFly extends JavaPlugin {
     public void onEnable() {
         this.createInstances();
         this.handleModules();
+        this.saveDefaultPermissions();
         this.enableCommands();
 
         this.timerManager.start();
@@ -76,7 +78,13 @@ public final class TimedFly extends JavaPlugin {
     private void enableCommands() throws CommandException {
         this.getCommand("timedfly").setExecutor(new TF(this.commandHandler, timerManager));
         this.getCommand("tfly").setExecutor(new TFly(this.commandHandler, timerManager));
+
         this.commandHandler.register(new TimerCommand());
+    }
+
+    private void saveDefaultPermissions() {
+        Permission.add("fly.add", "Add fly to self or others");
+        Permission.add("fly.set", "Set fly to self or others");
     }
 
     public void registerEvents(Listener... listener) {

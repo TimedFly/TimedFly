@@ -4,12 +4,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import me.jackscode.timedfly.api.Messenger;
+import me.jackscode.timedfly.api.Permission;
 import me.jackscode.timedfly.api.events.TimedFlyEndEvent;
 import me.jackscode.timedfly.api.events.TimedFlyStartEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -55,16 +57,7 @@ import java.util.UUID;
     }
 
     @Override
-    public boolean sendMessage(String message) {
-        Player player = this.player.getPlayer();
-        if (player == null) return false;
-
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-        return true;
-    }
-
-    @Override
-    public boolean sendMessage(String[] messages) {
+    public boolean sendMessage(String... messages) {
         Player player = this.player.getPlayer();
         if (player == null) return false;
 
@@ -73,6 +66,23 @@ import java.util.UUID;
                 .toArray(String[]::new);
 
         player.sendMessage(msgs);
+        return true;
+    }
+
+    @Override
+    public boolean hasPermission(String... permissions) {
+        for (String permission : permissions) {
+            Permission perm = Permission.get(permission);
+
+            if (perm == null) {
+                throw new InvalidParameterException("There is no permission with name: " + permission);
+            }
+
+            if (!getPlayer().hasPermission(perm.getNode())) {
+                return false;
+            }
+
+        }
         return true;
     }
 

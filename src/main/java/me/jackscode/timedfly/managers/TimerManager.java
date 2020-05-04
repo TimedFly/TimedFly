@@ -24,6 +24,7 @@ public class TimerManager {
 
     public void start() {
         if (!isRunning()) {
+            System.out.println("Starting timer...");
             this.scheduledFuture = this.scheduler.scheduleAtFixedRate(() -> {
                 if (this.players.isEmpty()) return;
 
@@ -45,6 +46,7 @@ public class TimerManager {
 
     public void stop() {
         if (isRunning()) {
+            System.out.println("Stopping timer...");
             this.scheduler.shutdownNow();
             this.scheduledFuture.cancel(true);
         }
