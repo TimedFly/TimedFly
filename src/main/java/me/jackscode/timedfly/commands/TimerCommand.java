@@ -30,6 +30,7 @@ public class TimerCommand extends Command {
             case "add":
                 if (args.length < 2) return;
                 if (player.hasPermission("fly.add")) {
+                    player.sendMessage("You have added time to your self, new time: {time_left}");
                     player.addTime(Integer.parseInt(args[1]));
                     player.startTimer();
                 } else {
@@ -39,6 +40,7 @@ public class TimerCommand extends Command {
             case "set":
                 if (args.length < 2) return;
                 if (player.hasPermission("fly.set")) {
+                    player.sendMessage("You have set your time to: {time_left}");
                     player.setTimeLeft(Integer.parseInt(args[1]));
                     player.startTimer();
                 } else {

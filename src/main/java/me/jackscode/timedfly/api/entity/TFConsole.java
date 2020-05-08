@@ -18,7 +18,10 @@ public class TFConsole extends Messenger {
     @Override
     public boolean sendMessage(String... messages) {
         String[] msgs = Arrays.stream(messages)
-                .map(message -> ChatColor.translateAlternateColorCodes('&', message))
+                .map(message -> {
+                    String colored = ChatColor.translateAlternateColorCodes('&', message);
+                    return this.replacePlaceholders(colored);
+                })
                 .toArray(String[]::new);
 
         this.console.sendMessage(msgs);

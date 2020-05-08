@@ -29,6 +29,8 @@ import java.util.UUID;
         this.player = player;
         this.uuid = player.getUniqueId();
         this.tfPlayer = this;
+
+        this.setPlaceholders();
     }
 
     public void startTimer() {
@@ -56,13 +58,27 @@ import java.util.UUID;
         this.timeLeft--;
     }
 
+
+    public boolean hasTime() {
+        boolean hasTime = this.timeLeft > 0;
+        this.hasTime = hasTime;
+        return hasTime;
+    }
+
+    public void addTime(int time) {
+        this.timeLeft += time;
+    }
+
     @Override
     public boolean sendMessage(String... messages) {
         Player player = this.player.getPlayer();
         if (player == null) return false;
 
         String[] msgs = Arrays.stream(messages)
-                .map(message -> ChatColor.translateAlternateColorCodes('&', message))
+                .map(message -> {
+                    String colored = ChatColor.translateAlternateColorCodes('&', message);
+                    return this.replacePlaceholders(colored);
+                })
                 .toArray(String[]::new);
 
         player.sendMessage(msgs);
@@ -86,13 +102,13 @@ import java.util.UUID;
         return true;
     }
 
-    public boolean hasTime() {
-        boolean hasTime = this.timeLeft > 0;
-        this.hasTime = hasTime;
-        return hasTime;
-    }
-
-    public void addTime(int time) {
-        this.timeLeft += time;
+    private void setPlaceholders() {
+        this.add("{player}", this.player.getName());
+        this.add("{time_left}", " PARSED ");
+        this.add("{time_left_seconds}", this.getTimeLeft() + "");
+        this.add("{time_left_minutes}", this.getTimeLeft() * 60 + "");
+        this.add("{initial_time}", " PARSED ");
+        this.add("{initial_time_seconds}", this.getInitialTime() + "");
+        this.add("{initial_time_minutes}", this.getInitialTime() * 60 + "");
     }
 }

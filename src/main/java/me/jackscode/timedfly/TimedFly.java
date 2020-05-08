@@ -10,6 +10,7 @@ import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
+import me.jackscode.timedfly.managers.PlaceholderManager;
 import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,8 +21,8 @@ import java.util.List;
 
 public final class TimedFly extends JavaPlugin {
 
-    private CommandHandler commandHandler;
     private CurrencyHandler currencyHandler;
+    private CommandHandler commandHandler;
     private ModuleHandler moduleHandler;
     private TimerManager timerManager;
 
