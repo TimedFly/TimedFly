@@ -24,7 +24,7 @@ public class MySQL extends SQL {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database
-                    + "?autoReconnect=true", user, password);
+                    + "?autoReconnect=true&useSSL=false", user, password);
             callback.handle(null, null);
         } catch (SQLException e) {
             callback.handle(e, null);
