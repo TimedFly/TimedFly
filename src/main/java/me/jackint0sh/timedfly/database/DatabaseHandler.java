@@ -48,9 +48,10 @@ public class DatabaseHandler {
                         username = config.getString("Database.Server.Username"),
                         password = config.getString("Database.Server.Password"),
                         db = config.getString("Database.Server.Database");
+                Boolean useSSL = config.getBoolean("Database.Server.UseSSL", false);
 
                 int port = config.getInt("Database.Server.Port");
-                database = new MySQL(plugin).connect(host, port, db, username, password, (error, result) -> {
+                database = new MySQL(plugin).connect(host, port, db, username, password, useSSL, (error, result) -> {
                     if (error != null) {
                         error.printStackTrace();
                         Bukkit.getPluginManager().disablePlugin(plugin);

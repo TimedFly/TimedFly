@@ -33,6 +33,8 @@ Database:
     Username: 'user'
     # password of your MySQL database
     Password: 'root'
+    # use SSL or NOT in MySQL database connection
+    UseSSL: false
 
 CustomCommands:
   Enable: true
