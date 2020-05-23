@@ -7,6 +7,7 @@ import me.jackscode.timedfly.api.Messenger;
 import me.jackscode.timedfly.api.Permission;
 import me.jackscode.timedfly.api.events.TimedFlyEndEvent;
 import me.jackscode.timedfly.api.events.TimedFlyStartEvent;
+import me.jackscode.timedfly.utilities.TimeParser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -58,7 +59,6 @@ import java.util.UUID;
         this.timeLeft--;
     }
 
-
     public boolean hasTime() {
         boolean hasTime = this.timeLeft > 0;
         this.hasTime = hasTime;
@@ -67,6 +67,13 @@ import java.util.UUID;
 
     public void addTime(int time) {
         this.timeLeft += time;
+    }
+
+    public String timeLeftToString() {
+        System.out.println(this.timeLeft);
+        System.out.println(TimeParser.toReadableString(0));
+        System.out.println(TimeParser.secondsToMs(this.timeLeft));
+        return TimeParser.toReadableString(TimeParser.secondsToMs(this.timeLeft));
     }
 
     @Override
@@ -104,7 +111,7 @@ import java.util.UUID;
 
     private void setPlaceholders() {
         this.add("{player}", this.player.getName());
-        this.add("{time_left}", " PARSED ");
+        this.add("{time_left}", this.timeLeftToString());
         this.add("{time_left_seconds}", this.getTimeLeft() + "");
         this.add("{time_left_minutes}", this.getTimeLeft() * 60 + "");
         this.add("{initial_time}", " PARSED ");
