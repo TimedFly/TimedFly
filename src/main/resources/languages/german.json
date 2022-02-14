@@ -1,0 +1,132 @@
+{
+  "language": "german",
+  "version": "1.0",
+  "fly": {
+    "on": "&7Fliegen &aaktiviert.",
+    "off": "&7Fliegen &cdeaktiviert.",
+    "time": {
+      "world_blacklisted": "&cDiese Welt ist gesperrt... Du kannst hier nicht fliegen",
+      "no_time": "Keine Zeit übrig",
+      "time_left": {
+        "self": "&aDu hast &e[time_left]&a Flugzeit übrig!",
+        "others": "&e[target]&a hat &e[time_left]&a Flugzeit übrig!"
+      },
+      "announcer": {
+        "title": "&eFlugzeit übrig:",
+        "subtitle": "&c[time_left]",
+        "chat": "&aDu hast &e[time_left]&a Flugzeit übrig!"
+      },
+      "flight_end": {
+        "chat": "&cFlugzeit hat geendet.",
+        "title": "&cFlugzeit hat geendet.",
+        "subtitle": "&eFrage für mehr den Admin.",
+        "action_bar": "&cFlugzeit hat geendet."
+      },
+      "flight_paused": {
+        "chat": "&cFlugzeit pausiert.",
+        "title": "&cFlugzeit pausiert.",
+        "subtitle": "[time_left]",
+        "action_bar": "&cFlugzeit pausiert."
+      },
+      "bought": "Du hast &e[time] &7 deiner Flugzeit hinzugefügt!",
+      "add": {
+        "self": "Flugzeit hinzugefügt: [time]",
+        "other": "&c[user_name]&7 hat &e[time]&7 seiner Flugzeit hinzugefügt."
+      },
+      "set": {
+        "self": "Flugzeit gesetzt auf: [time]",
+        "other": "&c[user_name]&7 hat seine Flugzeit auf &e[time]&7 gesetzt."
+      },
+      "toggle": {
+        "resume": "Dein Flugtimer läuft nun weiter!",
+        "pause": "Dein Flugtimer wurde pausiert!"
+      },
+      "attack_mode": {
+        "time_changed": "&cDeine Flugzeit hat sich geändert aber dein &eattack mode&c ist aktuell aktiv.",
+        "currently_active": "&cDu kannst nicht fliegen solange &eattack mode&c aktiv ist.",
+        "flight_disabled": "&7Starte &eattack mode&7. Fliegen &cdeaktiviert&7!",
+        "flight_enabled": "&7Stoppe &eattack mode&7. Fliegen &ist aktiviert&7!"
+      }
+    }
+  },
+  "time_string": {
+    "plural": {
+      "days": "Tage",
+      "hours": "Stunden",
+      "minutes": "Minuten",
+      "seconds": "Sekunden"
+    },
+    "singular": {
+      "days": "Tag",
+      "hours": "Stunde",
+      "minutes": "Minute",
+      "seconds": "Sekunde"
+    },
+    "short": {
+      "days": "d",
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "s"
+    }
+  },
+  "item_editor": {
+    "confirm": {
+      "yes": "&aJA",
+      "no": "&aNEIN",
+      "deleted": "&7Erfolgreich &cgelöscht&7!",
+      "saved": "&7Erfolgreich &agespeichert&7!"
+    },
+    "close": {
+      "title": "&e",
+      "lore": [
+        "&7",
+        "&cSchließe Inventar",
+        "&cwenn fertig!",
+        "&7"
+      ]
+    },
+    "cancel": {
+      "title": "&aAbbrechen",
+      "lore": [
+        "&7",
+        "&eHier klicken zum Abbrechen",
+        "&7"
+      ]
+    },
+    "change_item": {
+      "changed": "&7Material wurde geändert von: &e[old_material] &7zu: &e[new_material]"
+    }
+  },
+  "error": {
+    "unknown": "Etwas lief falsch in Zeile: [line]",
+    "usage": "&cUsage: [usage]",
+    "no_perms": "&cDu hast dafür keine Berechtigung!",
+    "no_money": "&cDu hast nicht genug Geld!",
+    "time_limit": {
+      "limit": "&cDu hast bereits das maximale Zeitlimit gekauft.",
+      "cooldown": "&cDu musst &e[cooldown]&c warten."
+    },
+    "disabled": {
+      "gui": "&cWarte, das ist illegal!"
+    },
+    "player": {
+      "not_online": "&cDer Spieler ist nicht online!",
+      "not_player": "&cNur Spieler können das."
+    },
+    "not_found": {
+      "command": "&cBefehl nicht gefunden. Versuche /tf help oder /tfly help"
+    },
+    "fly": {
+      "not_running": "Dein Timer läuft nicht..."
+    }
+  },
+  "update": {
+    "checking_for_update": "&7Prüfe auf Updates...",
+    "new_update": [
+      "&7Neues Update gefunden: &c[version]",
+      "&7Bitte herunterladen:",
+      "&c[url]"
+    ],
+    "no_new_update": "&7Aktuell sind keine Updates verfügbar"
+  }
+}
