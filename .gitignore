@@ -3,5 +3,6 @@ out/
 target/
 *.log
 *.iml
+.vscode/
 dependencies/*
 dependency-reduced-pom.xml

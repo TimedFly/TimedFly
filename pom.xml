@@ -114,6 +114,11 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>me.jackscode</groupId>
+            <artifactId>all-spigot-nms</artifactId>
+            <version>LATEST</version>
+          </dependency>
         <!--Local Dependencies-->
 
         <dependency>
@@ -130,14 +135,6 @@
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/dependencies/TokenManager.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>local.spigot.nms</groupId>
-            <artifactId>SpigotNMS</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/dependencies/all-spigot-nms.jar</systemPath>
         </dependency>
 
         <!--
