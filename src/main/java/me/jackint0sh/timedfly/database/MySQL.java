@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public abstract class MySQL extends SQL {
+public class MySQL extends SQL {
 
     public MySQL(Plugin plugin) {
         super(plugin);
@@ -29,5 +29,11 @@ public abstract class MySQL extends SQL {
             callback.handle(e, null);
         }
         return this;
+    }
+
+    @Override
+    public AsyncDatabase connect(String host, int port, String database, String user, String password,
+            Callback<String> callback) {
+        return this.connect(host, port, database, user, password, true, callback);
     }
 }
