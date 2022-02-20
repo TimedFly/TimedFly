@@ -34,13 +34,13 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             } else if (args.length > 1) {
                 List<String> players = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
                 players.add("*");
-                StringUtil.copyPartialMatches(args[1], players, completions);
+                StringUtil.copyPartialMatches(args[args.length - 1], players, completions);
             }
 
             Collections.sort(completions);
 
             return completions;
         }
-        return null;
+        return Collections.emptyList();
     }
 }
