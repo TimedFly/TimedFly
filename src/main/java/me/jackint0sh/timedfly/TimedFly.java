@@ -14,6 +14,7 @@ import me.jackint0sh.timedfly.utilities.Languages;
 import me.jackint0sh.timedfly.utilities.MessageUtil;
 import me.jackint0sh.timedfly.versions.Default;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.MultiLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,7 +51,7 @@ public final class TimedFly extends JavaPlugin {
         MessageUtil.setPluginName();
 
         Metrics metrics = new Metrics(this, 48668);
-        metrics.addCustomChart(new Metrics.MultiLineChart("players_and_servers", () -> {
+        metrics.addCustomChart(new MultiLineChart("players_and_servers", () -> {
             Map<String, Integer> valueMap = new HashMap<>();
             valueMap.put("servers", 1);
             valueMap.put("players", Bukkit.getOnlinePlayers().size());
