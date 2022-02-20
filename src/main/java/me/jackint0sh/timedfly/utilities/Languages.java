@@ -31,10 +31,10 @@ public class Languages {
     }
 
     public static void createFiles() {
-        String[] languages = {"english"};
-        Arrays.stream(languages).forEach(language -> {
-            plugin.saveResource("languages/" + language + ".json", true);
-        });
+        String[] languages = {"english", "german", "italian", "romanian"};
+        Arrays.stream(languages).forEach(language -> 
+            plugin.saveResource("languages/" + language + ".json", true)
+        );
     }
 
     public static Object get(String path) {
