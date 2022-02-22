@@ -58,9 +58,9 @@ public final class TimedFly extends JavaPlugin {
             return valueMap;
         }));
 
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            PlayerListener.handlePlayerQuery(PlayerManager.getCachedPlayer(player.getUniqueId()), false);
-        });
+        Bukkit.getOnlinePlayers().forEach(player ->
+            PlayerListener.handlePlayerQuery(PlayerManager.getCachedPlayer(player.getUniqueId()), false)
+        );
 
         MessageUtil.sendConsoleMessage("&cAssets loaded. Plugin ready!");
 
@@ -170,7 +170,8 @@ public final class TimedFly extends JavaPlugin {
             Constructor<?> ctor = clazz.getConstructor();
             ctor.newInstance();
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            MessageUtil.sendError(e.getMessage());
+            MessageUtil.sendError("Something went wrong while trying to enable NMS for &6" + version);
+            MessageUtil.sendError("Using default class.");
             new Default();
         }
 

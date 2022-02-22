@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.jackint0sh.timedfly</groupId>
     <artifactId>TimedFly</artifactId>
-    <version>4.4.1-BETA</version>
+    <version>4.4.2-BETA</version>
     <packaging>jar</packaging>
     <description>Fly for a limited amount of time by paying some cash</description>
     <properties>
@@ -32,11 +30,15 @@
                 <configuration>
                     <relocations>
                         <relocation>
-                            <pattern>org.bstats.bukkit</pattern>
-                            <shadedPattern>me.jackint0sh.timedfly.hooks</shadedPattern>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>me.jackint0sh.timedfly.hooks.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                            <shadedPattern>me.jackint0sh.timedfly.hooks.nbtapi</shadedPattern>
                         </relocation>
                     </relocations>
-                </configuration>
+                </configuration> 
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -81,7 +83,12 @@
 
         <repository>
             <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -103,7 +110,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>LATEST</version>
+            <version>2.11.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -115,10 +122,17 @@
         </dependency>
 
         <dependency>
-            <groupId>me.jackscode</groupId>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>jacxk.github.io</groupId>
             <artifactId>all-spigot-nms</artifactId>
             <version>LATEST</version>
-          </dependency>
+        </dependency>
+        -->
         <!--Local Dependencies-->
 
         <dependency>
@@ -135,6 +149,14 @@
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/dependencies/TokenManager.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>local.all-spigot-nms</groupId>
+            <artifactId>all-spigot-nms</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/dependencies/all-spigot-nms.jar</systemPath>
         </dependency>
 
         <!--
