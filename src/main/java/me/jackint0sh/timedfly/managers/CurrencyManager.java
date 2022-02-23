@@ -29,7 +29,9 @@ public class CurrencyManager {
 
     public static Currency getCurrency(String currency) {
         if (currency == null) return CurrencyManager.getDefaultCurrency();
-        return CurrencyManager.currencies.get(currency);
+        Currency curr = CurrencyManager.currencies.get(currency);
+        if (curr == null) return CurrencyManager.getDefaultCurrency();
+        else return curr;
     }
 
     public static Collection<Currency> getCurrencies() {
