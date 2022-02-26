@@ -36,7 +36,7 @@ public class TimerManager {
                         Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer));
                     });
 
-                    if (tfPlayer.hasTime()) {
+                    if (!tfPlayer.hasTime()) {
                         tfPlayer.stopTimer();
                     }
                 });

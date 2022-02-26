@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TFly implements CommandExecutor {
 
@@ -40,7 +39,7 @@ public class TFly implements CommandExecutor {
                 .getCommands()
                 .stream()
                 .filter(cmd -> cmd.getCommandType() == CommandType.TFLY)
-                .collect(Collectors.toList());
+                .toList();
 
         if (commands.isEmpty()) return true;
 

@@ -3,6 +3,8 @@ package me.jackscode.timedfly.utilities;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import org.jetbrains.annotations.NotNull;
+
 public class TimeParser {
 
     private static final Map<String, String> timeLang = new HashMap<>();
@@ -39,15 +41,15 @@ public class TimeParser {
         if (TimeParser.isNumeric(toParse.charAt(toParse.length() - 1)))
             throw new TimeParser.TimeFormatException("String does not end with a time string");
 
-        Stack<String> intStack = new Stack<>();
-        Stack<String> timeStack = new Stack<>();
+        Deque<String> intStack = new ArrayDeque<>();
+        Deque<String> timeStack = new ArrayDeque<>();
         long result = 0;
 
         fillStacks(new StringBuilder(toParse), intStack, timeStack);
 
         if (!sum) return -1;
 
-        while (!intStack.empty() && !timeStack.empty()) {
+        while (!intStack.isEmpty() && !timeStack.isEmpty()) {
             long integer = Integer.parseInt(intStack.pop());
             String time = timeStack.pop();
 
@@ -65,6 +67,7 @@ public class TimeParser {
         return toReadableString(ms, longWord, false);
     }
 
+    @NotNull
     public static String toReadableString(long ms, boolean longWord, boolean cut) {
         StringBuilder result = new StringBuilder();
         long time = ms;
@@ -132,7 +135,7 @@ public class TimeParser {
             return readableString;
         }
 
-        return null;
+        return "0";
     }
 
     public static long toSeconds(long ms) {
@@ -143,7 +146,7 @@ public class TimeParser {
         return TimeUnit.SECONDS.toMillis(seconds);
     }
 
-    private static void fillStacks(StringBuilder string, Stack<String> intStack, Stack<String> timeStack) throws TimeParser.TimeFormatException {
+    private static void fillStacks(StringBuilder string, Deque<String> intStack, Deque<String> timeStack) throws TimeParser.TimeFormatException {
         if (string.length() != 0) {
             intStack.push(findInteger(string));
             timeStack.push(findTimeString(string));

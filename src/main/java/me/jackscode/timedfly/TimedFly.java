@@ -10,7 +10,6 @@ import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
-import me.jackscode.timedfly.managers.PlaceholderManager;
 import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,7 +25,8 @@ public final class TimedFly extends JavaPlugin {
     private ModuleHandler moduleHandler;
     private TimerManager timerManager;
 
-    @SneakyThrows @Override
+    @SneakyThrows
+    @Override
     public void onEnable() {
         this.createInstances();
         this.handleModules();
@@ -51,18 +51,15 @@ public final class TimedFly extends JavaPlugin {
                 this.commandHandler,
                 this.currencyHandler,
                 this.timerManager,
-                this
-        );
+                this);
     }
 
     private void handleModules() {
         File dataFolder = new File(this.getDataFolder(), "/modules/");
 
-        if (!dataFolder.exists()) {
-            if (!dataFolder.mkdirs()) {
-                System.out.println("Could not make modules folder");
-                return;
-            }
+        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
+            System.out.println("Could not make modules folder");
+            return;
         }
 
         this.moduleHandler.enableModules(dataFolder.toPath());
@@ -91,10 +88,10 @@ public final class TimedFly extends JavaPlugin {
     public void registerEvents(Listener... listener) {
         Arrays.stream(listener)
                 .forEachOrdered(event -> {
-                    System.out.println("Event registered");
                     this.getServer()
                             .getPluginManager()
                             .registerEvents(event, this);
+                    System.out.println("Event registered");
                 });
     }
 }

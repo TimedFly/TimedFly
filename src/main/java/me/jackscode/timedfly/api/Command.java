@@ -16,7 +16,7 @@ public abstract class Command {
     List<String> aliases;
     CommandType commandType;
 
-    public Command(
+    protected Command(
             @NotNull String name,
             @NotNull CommandType commandType,
             @Nullable String description,

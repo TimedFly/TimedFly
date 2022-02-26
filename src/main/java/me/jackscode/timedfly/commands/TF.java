@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TF implements CommandExecutor {
 
@@ -39,7 +38,7 @@ public class TF implements CommandExecutor {
                 .getCommands()
                 .stream()
                 .filter(cmd -> cmd.getCommandType() == CommandType.TIMED_FLY)
-                .collect(Collectors.toList());
+                .toList();
 
         if (commands.isEmpty()) return true;
 

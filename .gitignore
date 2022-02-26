@@ -12,3 +12,4 @@ dependencies/
 
 # Other
 *-pom.xml
+.apt*

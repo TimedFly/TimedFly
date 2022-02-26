@@ -47,6 +47,8 @@ public class TimerCommand extends Command {
                     player.sendMessage("You dont have permissions for this");
                 }
                 break;
+            default:
+                player.sendMessage("Please use and argument: add,set,stop,start");
         }
     }
 }

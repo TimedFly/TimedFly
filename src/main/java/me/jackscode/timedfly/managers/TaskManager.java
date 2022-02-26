@@ -8,15 +8,20 @@ import java.util.function.Consumer;
 
 public class TaskManager {
 
+    private TaskManager() {
+    }
+
     private static final Plugin plugin = Bukkit.getPluginManager().getPlugin("TimedFly");
 
     public static void runAsync(Consumer<BukkitTask> callback) {
-        if (plugin == null) return;
+        if (plugin == null)
+            return;
         Bukkit.getScheduler().runTaskAsynchronously(plugin, callback);
     }
 
     public static void runSync(Consumer<BukkitTask> callback) {
-        if (plugin == null) return;
+        if (plugin == null)
+            return;
         Bukkit.getScheduler().runTask(plugin, callback);
     }
 

@@ -39,7 +39,10 @@ import java.util.UUID;
             this.sendMessage("You have no time left");
             return;
         }
+        this.player.setAllowFlight(true);
+        this.player.setFlying(true);
         this.setTimeRunning(true);
+        this.setHasTime(true);
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
     }
 
@@ -70,9 +73,6 @@ import java.util.UUID;
     }
 
     public String timeLeftToString() {
-        System.out.println(this.timeLeft);
-        System.out.println(TimeParser.toReadableString(0));
-        System.out.println(TimeParser.secondsToMs(this.timeLeft));
         return TimeParser.toReadableString(TimeParser.secondsToMs(this.timeLeft));
     }
 

@@ -3,9 +3,12 @@ package me.jackscode.timedfly.managers;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 public class PlaceholderManager {
 
-    private final Map<String, String> placeholders;
+    @Getter
+    final Map<String, String> placeholders;
 
     public PlaceholderManager() {
         this.placeholders = new HashMap<>();

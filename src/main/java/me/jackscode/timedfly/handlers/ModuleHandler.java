@@ -10,6 +10,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import lombok.SneakyThrows;
+
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ModuleHandler {
 
@@ -42,17 +45,22 @@ public class ModuleHandler {
     }
 
     public void enableModules(@NotNull Path path) {
+        Stream<Path> files = null;
         try {
-            Files.list(path)
-                    .map(Path::toFile)
+            files = Files.list(path);
+            files.map(Path::toFile)
                     .forEach(this::enableModule);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (files != null) files.close();
         }
     }
 
+    @SneakyThrows
     public Module enableModule(@NotNull File fileModule) {
         String filePath = fileModule.getPath();
+        URLClassLoader classLoader = null;
         try {
             if (!fileModule.exists()) {
                 throw new ModuleException(fileModule.getPath() + " does not exist!");
@@ -61,7 +69,7 @@ public class ModuleHandler {
             System.out.println("Attempting to load module: " + filePath);
 
             // Prepare to load class
-            URLClassLoader classLoader = new URLClassLoader(
+            classLoader = new URLClassLoader(
                     new URL[]{fileModule.toURI().toURL()},
                     this.getClass().getClassLoader()
             );
@@ -133,6 +141,8 @@ public class ModuleHandler {
             e.printStackTrace();
             System.out.println("Could not load module: " + filePath);
             return null;
+        } finally {
+            if (classLoader != null) classLoader.close();
         }
     }
 
@@ -199,6 +209,8 @@ public class ModuleHandler {
 
         // Populate module's description field
         field.set(module, value);
+        
+        field.setAccessible(false);
     }
 
     public List<Module> getModules() {
