@@ -15,12 +15,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-public class TF implements CommandExecutor {
+public class Main implements CommandExecutor {
 
     private final CommandHandler commandHandler;
     private final TimerManager timerManager;
 
-    public TF(CommandHandler commandHandler, TimerManager timerManager) {
+    public Main(CommandHandler commandHandler, TimerManager timerManager) {
         this.commandHandler = commandHandler;
         this.timerManager = timerManager;
     }

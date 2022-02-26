@@ -23,6 +23,7 @@ import java.util.UUID;
     @Setter private int initialTime;
     @Setter private boolean timeRunning;
     @Setter private boolean timePaused;
+    @Setter @Getter private boolean preventFallDamage;
     private final Player player;
     private final UUID uuid;
 
@@ -43,6 +44,7 @@ import java.util.UUID;
         this.player.setFlying(true);
         this.setTimeRunning(true);
         this.setHasTime(true);
+        this.setPreventFallDamage(false);
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
     }
 
@@ -51,10 +53,11 @@ import java.util.UUID;
             this.sendMessage("Timer is not running");
             return;
         }
-        this.setTimeRunning(false);
-        this.setHasTime(false);
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
+        this.setTimeRunning(false);
+        this.setHasTime(false);
+        this.setPreventFallDamage(true);
         Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
     }
 
@@ -87,7 +90,6 @@ import java.util.UUID;
                     return this.replacePlaceholders(colored);
                 })
                 .toArray(String[]::new);
-
         player.sendMessage(msgs);
         return true;
     }

@@ -3,13 +3,14 @@ package me.jackscode.timedfly;
 import lombok.SneakyThrows;
 import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.api.Permission;
-import me.jackscode.timedfly.commands.TF;
+import me.jackscode.timedfly.commands.Main;
 import me.jackscode.timedfly.commands.TFly;
 import me.jackscode.timedfly.commands.TimerCommand;
 import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
+import me.jackscode.timedfly.listeners.FallDamage;
 import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,6 +33,7 @@ public final class TimedFly extends JavaPlugin {
         this.handleModules();
         this.saveDefaultPermissions();
         this.enableCommands();
+        this.registerEvents(new FallDamage(timerManager));
 
         this.timerManager.start();
     }
@@ -74,7 +76,7 @@ public final class TimedFly extends JavaPlugin {
     }
 
     private void enableCommands() throws CommandException {
-        this.getCommand("timedfly").setExecutor(new TF(this.commandHandler, timerManager));
+        this.getCommand("timedfly").setExecutor(new Main(this.commandHandler, timerManager));
         this.getCommand("tfly").setExecutor(new TFly(this.commandHandler, timerManager));
 
         this.commandHandler.register(new TimerCommand());
@@ -91,7 +93,7 @@ public final class TimedFly extends JavaPlugin {
                     this.getServer()
                             .getPluginManager()
                             .registerEvents(event, this);
-                    System.out.println("Event registered");
+                    System.out.println("Event " + event.getClass().getSimpleName() + " registered");
                 });
     }
 }
