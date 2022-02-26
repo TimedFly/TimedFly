@@ -1,7 +1,14 @@
 # IDE files
 .idea/
 TimedFly5.iml
+.vscode/
 
 # Compiled files
 out/
 target/
+
+# Local Dependencies
+dependencies/
+
+# Other
+*-pom.xml
