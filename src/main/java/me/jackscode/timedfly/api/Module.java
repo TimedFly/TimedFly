@@ -6,14 +6,19 @@ import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
 import me.jackscode.timedfly.managers.TimerManager;
+
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Module {
 
     private final List<Command> commandList;
+    private final List<Listener> eventListeners;
 
     private ModuleDescription moduleDescription;
     private CommandHandler commandHandler;
@@ -25,6 +30,7 @@ public abstract class Module {
 
     {
         this.commandList = new ArrayList<>();
+        this.eventListeners = new ArrayList<>();
     }
 
     /**
@@ -43,6 +49,15 @@ public abstract class Module {
      */
     public List<Command> getCommandList() {
         return commandList;
+    }
+
+    /**
+     * Get all event listeners available on this module
+     *
+     * @return List of listeners from this module
+     */
+    public List<Listener> getEventListeners() {
+        return eventListeners;
     }
 
     /**
@@ -117,12 +132,22 @@ public abstract class Module {
      * @param commands Commands to be registered
      * @throws CommandException If name already exists this will be thrown
      */
-    public void registerCommands(@NotNull Command... commands) throws CommandException {
+    public void registerCommands(@NotNull Module module, @NotNull Command... commands) throws CommandException {
         for (Command command : commands) {
-            commandHandler.register(command);
+            commandHandler.register(command, module);
             commandList.add(command);
         }
     }
 
+    public void registerEvents(@NotNull Listener... listeners) {
+        plugin.registerEvents(listeners);
+        eventListeners.addAll(Arrays.asList(listeners));
+    }
 
+    public void unregisterEvents() {
+        eventListeners.stream().forEach(listener -> {
+            HandlerList.unregisterAll(listener);
+            System.out.println("Unregistering events: " + listener.getClass().getSimpleName());
+        });
+    }
 }

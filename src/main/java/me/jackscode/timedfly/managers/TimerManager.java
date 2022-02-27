@@ -31,10 +31,10 @@ public class TimerManager {
                         tfPlayer.decreaseTime();
 
                         TaskManager.runSync(
-                                (task) -> Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer)));
+                                task -> Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer)));
 
                         if (!tfPlayer.hasTime())
-                            TaskManager.runSync((task) -> tfPlayer.stopTimer());
+                            TaskManager.runSync(task -> tfPlayer.stopTimer());
                     }
                 });
             }, 20, 20);

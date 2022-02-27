@@ -6,6 +6,7 @@ import me.jackscode.timedfly.api.Permission;
 import me.jackscode.timedfly.commands.Main;
 import me.jackscode.timedfly.commands.TFly;
 import me.jackscode.timedfly.commands.TimerCommand;
+import me.jackscode.timedfly.commands.Modules;
 import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import me.jackscode.timedfly.handlers.CurrencyHandler;
@@ -76,7 +77,8 @@ public final class TimedFly extends JavaPlugin {
         this.getCommand("timedfly").setExecutor(new Main(this.commandHandler));
         this.getCommand("tfly").setExecutor(new TFly(this.commandHandler));
 
-        this.commandHandler.register(new TimerCommand());
+        this.commandHandler.register(new TimerCommand(), this);
+        this.commandHandler.register(new Modules(moduleHandler), this);
     }
 
     private void saveDefaultPermissions() {

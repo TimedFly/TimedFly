@@ -5,11 +5,12 @@ import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.api.ModuleDescription;
 import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.exceptions.ModuleException;
-import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.io.*;
@@ -20,15 +21,19 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ModuleHandler {
 
-    private final List<Module> modules;
     private final CommandHandler commandHandler;
     private final CurrencyHandler currencyHandler;
     private final TimedFly plugin;
+    @Getter private final List<Module> modules;
+    @Getter private final Map<String, File> modulesPath;
 
     public ModuleHandler(
             @NotNull CommandHandler commandHandler,
@@ -38,6 +43,7 @@ public class ModuleHandler {
         this.commandHandler = commandHandler;
         this.currencyHandler = currencyHandler;
         this.modules = new ArrayList<>();
+        this.modulesPath = new HashMap<>();
         this.plugin = plugin;
     }
 
@@ -91,7 +97,7 @@ public class ModuleHandler {
             ModuleDescription moduleDescription = this.populateModuleDescription(moduleConfig, filePath);
 
             // Check if the module already exists
-            boolean exists = modules.stream()
+            boolean exists = this.modules.stream()
                     .anyMatch(module -> module
                             .getModuleDescription()
                             .getName()
@@ -127,9 +133,8 @@ public class ModuleHandler {
             this.setFields(module, "moduleHandler", this);
             this.setFields(module, "plugin", this.plugin);
 
-            // Close classloader because we dont need it any more.
-
-            System.out.println("Module " + filePath + " has been loaded");
+            System.out.println("Module " + moduleDescription.getName() + " has been loaded");
+            modulesPath.putIfAbsent(moduleDescription.getName(), fileModule);
             modules.add(module);
             module.onModuleEnable();
             return module;
@@ -138,13 +143,14 @@ public class ModuleHandler {
             System.out.println("Could not load module: " + filePath);
             return null;
         } finally {
+            // Close classloader because we dont need it any more.
             if (classLoader != null) classLoader.close();
         }
     }
 
     public void disableAllModules() {
-        modules.forEach(Module::onModuleDisable);
-        commandHandler.unregisterAll();
+        this.modules.forEach(Module::onModuleDisable);
+        this.commandHandler.unregisterAll();
         System.out.println("All modules had been disabled.");
     }
 
@@ -152,14 +158,16 @@ public class ModuleHandler {
         module.onModuleDisable();
         module.getCommandList().forEach(command -> {
             try {
-                commandHandler.unregister(command);
+                this.commandHandler.unregister(command);
             } catch (CommandException e) {
                 e.printStackTrace();
             }
         });
 
+        module.unregisterEvents();
+
         System.out.println("Module disabled: " + module.getModuleDescription().getName());
-        modules.remove(module);
+        this.modules.remove(module);
     }
 
     private ModuleDescription populateModuleDescription(
@@ -206,10 +214,11 @@ public class ModuleHandler {
         // Populate module's description field
         field.set(module, value);
         
+        // Make it private again
         field.setAccessible(false);
     }
 
-    public List<Module> getModules() {
-        return modules;
+    public Optional<Module> getModule(String name) {
+        return this.modules.stream().filter(module -> module.getModuleDescription().getName().equals(name)).findFirst();
     }
 }

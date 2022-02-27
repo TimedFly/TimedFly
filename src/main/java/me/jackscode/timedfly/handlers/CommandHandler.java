@@ -1,6 +1,7 @@
 package me.jackscode.timedfly.handlers;
 
 import me.jackscode.timedfly.api.Command;
+import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.exceptions.CommandException;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,34 +16,35 @@ public class CommandHandler {
         this.commands = new HashSet<>();
     }
 
-    public void register(@NotNull Command command) throws CommandException {
-        if (commands.stream().anyMatch(cmd -> cmd.getName().equals(command.getName()))) {
+    public void register(@NotNull Command command, @NotNull Object module) throws CommandException {
+        if (this.commands.stream().anyMatch(cmd -> cmd.getName().equals(command.getName()))) {
             throw new CommandException(String.format(
                     "Command with name %s already exists.",
                     command.getName()
             ));
         }
 
-        commands.add(command);
+        this.commands.add(command);
+        if (module instanceof Module) ((Module) module).getCommandList().add(command);
 
         System.out.println("Command registered: " + command.getName());
     }
 
     public void unregister(@NotNull Command command) throws CommandException {
-        if (commands.stream().noneMatch(cmd -> cmd.getName().equals(command.getName()))) {
+        if (this.commands.stream().noneMatch(cmd -> cmd.getName().equals(command.getName()))) {
             throw new CommandException(String.format(
                     "Command with name %s does not exists.",
                     command.getName()
             ));
         }
 
-        commands.remove(command);
+        this.commands.remove(command);
 
         System.out.println("Command unregistered: " + command.getName());
     }
 
     public void unregisterAll() {
-        commands.clear();
+        this.commands.clear();
 
         System.out.println("All commands had been unregistered");
     }
