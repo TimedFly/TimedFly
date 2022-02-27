@@ -93,7 +93,7 @@
                             <target name="Copy the target jar to the test minecraft server">
                                 <copy todir="${server.path}">
                                     <fileset dir="${project.build.directory}">
-                                        <include name="**/${name}-${version}.jar"/>
+                                        <include name="**/${project.name}-${project.version}.jar"/>
                                     </fileset>
                                 </copy>
                             </target>

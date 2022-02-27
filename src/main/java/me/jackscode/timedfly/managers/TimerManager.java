@@ -3,70 +3,60 @@ package me.jackscode.timedfly.managers;
 import me.jackscode.timedfly.api.entity.TFPlayer;
 import me.jackscode.timedfly.api.events.TimedFlyRunningEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.IdentityHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TimerManager {
 
-    private final ScheduledExecutorService scheduler;
-    private final IdentityHashMap<Player, TFPlayer> players;
-    private ScheduledFuture<?> scheduledFuture;
+    private static BukkitTask timer;
+    private static final Set<TFPlayer> players = new HashSet<>();
 
-    {
-        this.scheduler = Executors.newSingleThreadScheduledExecutor();
-        this.players = new IdentityHashMap<>();
+    private TimerManager() {
     }
 
-    public void start() {
+    public static synchronized void start() {
         if (!isRunning()) {
             System.out.println("Starting timer...");
-            this.scheduledFuture = this.scheduler.scheduleAtFixedRate(() -> {
-                if (this.players.isEmpty()) return;
+            timer = TaskManager.runAsyncScheduler(() -> {
+                if (players.isEmpty()) {
+                    System.out.println("There are no players with timeleft");
+                    stop();
+                    return;
+                }
+                players.forEach(tfPlayer -> {
+                    if (tfPlayer != null && tfPlayer.hasTime() && tfPlayer.isTimeRunning()) {
+                        tfPlayer.decreaseTime();
 
-                this.players.forEach((player, tfPlayer) -> {
-                    if (tfPlayer == null || !tfPlayer.hasTime() || !tfPlayer.isTimeRunning()) return;
-                    tfPlayer.decreaseTime();
+                        TaskManager.runSync(
+                                (task) -> Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer)));
 
-                    TaskManager.runSync((task) -> {
-                        Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(tfPlayer));
-                    });
-
-                    if (!tfPlayer.hasTime()) {
-                        tfPlayer.stopTimer();
+                        if (!tfPlayer.hasTime())
+                            TaskManager.runSync((task) -> tfPlayer.stopTimer());
                     }
                 });
-            }, 0, 1, TimeUnit.SECONDS);
+            }, 20, 20);
         }
     }
 
-    public void stop() {
+    public static void stop() {
         if (isRunning()) {
             System.out.println("Stopping timer...");
-            this.scheduler.shutdownNow();
-            this.scheduledFuture.cancel(true);
+            timer.cancel();
         }
     }
 
-    public boolean isRunning() {
-        return this.scheduledFuture != null && (!this.scheduledFuture.isCancelled() || !this.scheduledFuture.isDone());
+    public static boolean isRunning() {
+        return timer != null && !timer.isCancelled();
     }
 
-    public TFPlayer getPlayer(Player player) {
-        TFPlayer tfPlayer = this.players.get(player);
-        if (tfPlayer != null) {
-            return this.players.get(player);
-        }
-        tfPlayer = new TFPlayer(player);
-        this.players.put(player, tfPlayer);
-        return tfPlayer;
+    public static void addPlayer(@NotNull TFPlayer player) {
+        players.add(player);
     }
 
-    public void removePlayer(Player player) {
-        this.players.remove(player);
+    public static void removePlayer(@NotNull TFPlayer player) {
+        players.remove(player);
     }
 }

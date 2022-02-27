@@ -7,6 +7,7 @@ import me.jackscode.timedfly.api.Messenger;
 import me.jackscode.timedfly.api.Permission;
 import me.jackscode.timedfly.api.events.TimedFlyEndEvent;
 import me.jackscode.timedfly.api.events.TimedFlyStartEvent;
+import me.jackscode.timedfly.managers.TimerManager;
 import me.jackscode.timedfly.utilities.TimeParser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,10 +15,12 @@ import org.bukkit.entity.Player;
 
 import java.security.InvalidParameterException;
 import java.util.Arrays;
+import java.util.IdentityHashMap;
 import java.util.UUID;
 
 @Getter public class TFPlayer extends Messenger {
 
+    private static final IdentityHashMap<Player, TFPlayer> players = new IdentityHashMap<>();
     @Getter(AccessLevel.NONE) @Setter private boolean hasTime;
     @Setter private int timeLeft;
     @Setter private int initialTime;
@@ -45,6 +48,9 @@ import java.util.UUID;
         this.setTimeRunning(true);
         this.setHasTime(true);
         this.setPreventFallDamage(false);
+
+        TimerManager.addPlayer(this);
+        if (!TimerManager.isRunning()) TimerManager.start();
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
     }
 
@@ -55,9 +61,11 @@ import java.util.UUID;
         }
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
+        this.setPreventFallDamage(true);
         this.setTimeRunning(false);
         this.setHasTime(false);
-        this.setPreventFallDamage(true);
+
+        TimerManager.removePlayer(this);
         Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
     }
 
@@ -66,9 +74,8 @@ import java.util.UUID;
     }
 
     public boolean hasTime() {
-        boolean hasTime = this.timeLeft > 0;
-        this.hasTime = hasTime;
-        return hasTime;
+        this.hasTime = this.timeLeft > 0;
+        return this.hasTime;
     }
 
     public void addTime(int time) {
@@ -119,5 +126,14 @@ import java.util.UUID;
         this.add("{initial_time}", " PARSED ");
         this.add("{initial_time_seconds}", this.getInitialTime() + "");
         this.add("{initial_time_minutes}", this.getInitialTime() * 60 + "");
+    }
+    
+
+    public static TFPlayer getPlayer(Player player) {
+        TFPlayer tfPlayer = players.get(player);
+        if (tfPlayer != null) return tfPlayer;
+        tfPlayer = new TFPlayer(player);
+        players.put(player, tfPlayer);
+        return tfPlayer;
     }
 }

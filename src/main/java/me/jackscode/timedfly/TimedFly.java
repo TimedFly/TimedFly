@@ -24,7 +24,6 @@ public final class TimedFly extends JavaPlugin {
     private CurrencyHandler currencyHandler;
     private CommandHandler commandHandler;
     private ModuleHandler moduleHandler;
-    private TimerManager timerManager;
 
     @SneakyThrows
     @Override
@@ -33,26 +32,24 @@ public final class TimedFly extends JavaPlugin {
         this.handleModules();
         this.saveDefaultPermissions();
         this.enableCommands();
-        this.registerEvents(new FallDamage(timerManager));
+        this.registerEvents(new FallDamage());
 
-        this.timerManager.start();
+        TimerManager.start();
     }
 
     @Override
     public void onDisable() {
         this.moduleHandler.disableAllModules();
 
-        this.timerManager.stop();
+        TimerManager.stop();
     }
 
     private void createInstances() {
         this.commandHandler = new CommandHandler();
         this.currencyHandler = new CurrencyHandler();
-        this.timerManager = new TimerManager();
         this.moduleHandler = new ModuleHandler(
                 this.commandHandler,
                 this.currencyHandler,
-                this.timerManager,
                 this);
     }
 
@@ -76,8 +73,8 @@ public final class TimedFly extends JavaPlugin {
     }
 
     private void enableCommands() throws CommandException {
-        this.getCommand("timedfly").setExecutor(new Main(this.commandHandler, timerManager));
-        this.getCommand("tfly").setExecutor(new TFly(this.commandHandler, timerManager));
+        this.getCommand("timedfly").setExecutor(new Main(this.commandHandler));
+        this.getCommand("tfly").setExecutor(new TFly(this.commandHandler));
 
         this.commandHandler.register(new TimerCommand());
     }

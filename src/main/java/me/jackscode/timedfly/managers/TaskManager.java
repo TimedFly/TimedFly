@@ -18,6 +18,11 @@ public class TaskManager {
             return;
         Bukkit.getScheduler().runTaskAsynchronously(plugin, callback);
     }
+    
+    public static BukkitTask runAsyncScheduler(Runnable callback,  long delay, long period) {
+        if (plugin == null) return null;
+        return Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, callback, delay, period);
+    }
 
     public static void runSync(Consumer<BukkitTask> callback) {
         if (plugin == null)

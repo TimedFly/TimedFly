@@ -3,9 +3,9 @@ package me.jackscode.timedfly.commands;
 import me.jackscode.timedfly.api.Command;
 import me.jackscode.timedfly.api.Messenger;
 import me.jackscode.timedfly.api.entity.TFConsole;
+import me.jackscode.timedfly.api.entity.TFPlayer;
 import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.handlers.CommandHandler;
-import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,11 +18,9 @@ import java.util.List;
 public class Main implements CommandExecutor {
 
     private final CommandHandler commandHandler;
-    private final TimerManager timerManager;
 
-    public Main(CommandHandler commandHandler, TimerManager timerManager) {
+    public Main(CommandHandler commandHandler) {
         this.commandHandler = commandHandler;
-        this.timerManager = timerManager;
     }
 
     @Override
@@ -44,7 +42,7 @@ public class Main implements CommandExecutor {
 
         final Messenger messenger;
         if (sender instanceof Player) {
-            messenger = this.timerManager.getPlayer((Player) sender);
+            messenger = TFPlayer.getPlayer((Player) sender);
         } else {
             messenger = new TFConsole(Bukkit.getConsoleSender());
         }
