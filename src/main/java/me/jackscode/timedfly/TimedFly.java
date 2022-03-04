@@ -5,7 +5,9 @@ import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.api.Permission;
 import me.jackscode.timedfly.commands.Main;
 import me.jackscode.timedfly.commands.TFly;
+import me.jackscode.timedfly.commands.TabComplete;
 import me.jackscode.timedfly.commands.TimerCommand;
+import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.commands.Modules;
 import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.handlers.CommandHandler;
@@ -13,6 +15,8 @@ import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
 import me.jackscode.timedfly.listeners.FallDamage;
 import me.jackscode.timedfly.managers.TimerManager;
+
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -76,9 +80,12 @@ public final class TimedFly extends JavaPlugin {
     private void enableCommands() throws CommandException {
         this.getCommand("timedfly").setExecutor(new Main(this.commandHandler));
         this.getCommand("tfly").setExecutor(new TFly(this.commandHandler));
-
+        
         this.commandHandler.register(new TimerCommand(), this);
         this.commandHandler.register(new Modules(moduleHandler), this);
+        
+        Bukkit.getPluginCommand("timedfly").setTabCompleter(new TabComplete(commandHandler, CommandType.TIMED_FLY));
+        Bukkit.getPluginCommand("tfly").setTabCompleter(new TabComplete(commandHandler, CommandType.TFLY));
     }
 
     private void saveDefaultPermissions() {
