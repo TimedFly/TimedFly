@@ -93,6 +93,7 @@ import java.util.UUID;
 
         String[] msgs = Arrays.stream(messages)
                 .map(message -> {
+                    message = "&7[&cTimedFly&7] &f" + message;
                     String colored = ChatColor.translateAlternateColorCodes('&', message);
                     return this.replacePlaceholders(colored);
                 })

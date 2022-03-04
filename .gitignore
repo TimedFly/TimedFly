@@ -13,3 +13,4 @@ dependencies/
 # Other
 *-pom.xml
 .apt*
+*err*.log

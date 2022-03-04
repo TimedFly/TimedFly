@@ -7,7 +7,6 @@ import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.exceptions.ModuleException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
@@ -38,8 +37,7 @@ public class ModuleHandler {
     public ModuleHandler(
             @NotNull CommandHandler commandHandler,
             @NotNull CurrencyHandler currencyHandler,
-            @NotNull TimedFly plugin
-    ) {
+            @NotNull TimedFly plugin) {
         this.commandHandler = commandHandler;
         this.currencyHandler = currencyHandler;
         this.modules = new ArrayList<>();
@@ -51,12 +49,12 @@ public class ModuleHandler {
         Stream<Path> files = null;
         try {
             files = Files.list(path);
-            files.map(Path::toFile)
-                    .forEach(this::enableModule);
+            files.map(Path::toFile).forEach(this::enableModule);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (files != null) files.close();
+            if (files != null)
+                files.close();
         }
     }
 
@@ -73,9 +71,8 @@ public class ModuleHandler {
 
             // Prepare to load class
             classLoader = new URLClassLoader(
-                    new URL[]{fileModule.toURI().toURL()},
-                    this.getClass().getClassLoader()
-            );
+                    new URL[] { fileModule.toURI().toURL() },
+                    this.getClass().getClassLoader());
 
             // Get module.yml file
             InputStream inputStream = classLoader.getResourceAsStream("module.yml");
@@ -101,8 +98,7 @@ public class ModuleHandler {
                     .anyMatch(module -> module
                             .getModuleDescription()
                             .getName()
-                            .equals(moduleDescription.getName())
-                    );
+                            .equals(moduleDescription.getName()));
             if (exists) {
                 throw new ModuleException("There already exist a module with the name of " + filePath);
             }
@@ -144,7 +140,8 @@ public class ModuleHandler {
             return null;
         } finally {
             // Close classloader because we dont need it any more.
-            if (classLoader != null) classLoader.close();
+            if (classLoader != null)
+                classLoader.close();
         }
     }
 
@@ -172,8 +169,7 @@ public class ModuleHandler {
 
     private ModuleDescription populateModuleDescription(
             @NotNull FileConfiguration moduleConfig,
-            @NotNull String filePath
-    ) throws ModuleException {
+            @NotNull String filePath) throws ModuleException {
         // Get all the values from module.yml file
         String main = moduleConfig.getString("main");
         String name = moduleConfig.getString("name");
@@ -203,8 +199,7 @@ public class ModuleHandler {
     private void setFields(
             @NotNull Module module,
             @NotNull String fieldName,
-            @NotNull Object value
-    ) throws NoSuchFieldException, IllegalAccessException {
+            @NotNull Object value) throws NoSuchFieldException, IllegalAccessException {
         // Get the module's description field to be populated
         Field field = module.getClass().getSuperclass().getDeclaredField(fieldName);
 
@@ -213,7 +208,7 @@ public class ModuleHandler {
 
         // Populate module's description field
         field.set(module, value);
-        
+
         // Make it private again
         field.setAccessible(false);
     }
