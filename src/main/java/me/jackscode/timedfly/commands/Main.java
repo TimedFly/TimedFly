@@ -67,7 +67,7 @@ public class Main implements CommandExecutor {
 
         if (count[0] == 0) {
             messenger.sendHoverableMessage(
-                    "&7Unrecognized command &3%s".formatted(args[0]),
+                    "&7Unrecognized command &3%s. &7Use &6/timedfly help.".formatted(args[0]),
                     new OnClick(ClickEvent.Action.RUN_COMMAND, "/tf help"),
                     "Click here to display the help message.");
         }
