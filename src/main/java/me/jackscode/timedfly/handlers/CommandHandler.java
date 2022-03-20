@@ -3,6 +3,8 @@ package me.jackscode.timedfly.handlers;
 import me.jackscode.timedfly.api.Command;
 import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.exceptions.CommandException;
+
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -27,7 +29,7 @@ public class CommandHandler {
         this.commands.add(command);
         if (module instanceof Module) ((Module) module).getCommandList().add(command);
 
-        System.out.println("Command registered: " + command.getName());
+        Bukkit.getLogger().info("Command registered: " + command.getName());
     }
 
     public void unregister(@NotNull Command command) throws CommandException {
@@ -40,13 +42,13 @@ public class CommandHandler {
 
         this.commands.remove(command);
 
-        System.out.println("Command unregistered: " + command.getName());
+        Bukkit.getLogger().info("Command unregistered: " + command.getName());
     }
 
     public void unregisterAll() {
         this.commands.clear();
 
-        System.out.println("All commands had been unregistered");
+        Bukkit.getLogger().info("All commands had been unregistered");
     }
 
     public Set<Command> getCommands() {

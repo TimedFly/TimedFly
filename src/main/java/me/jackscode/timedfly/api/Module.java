@@ -7,6 +7,7 @@ import me.jackscode.timedfly.handlers.CurrencyHandler;
 import me.jackscode.timedfly.handlers.ModuleHandler;
 import me.jackscode.timedfly.managers.TimerManager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
@@ -147,7 +148,7 @@ public abstract class Module {
     public void unregisterEvents() {
         eventListeners.stream().forEach(listener -> {
             HandlerList.unregisterAll(listener);
-            System.out.println("Unregistering events: " + listener.getClass().getSimpleName());
+            Bukkit.getLogger().info("Unregistering events: " + listener.getClass().getSimpleName());
         });
     }
 }

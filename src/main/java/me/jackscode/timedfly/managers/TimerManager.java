@@ -19,10 +19,10 @@ public class TimerManager {
 
     public static synchronized void start() {
         if (!isRunning()) {
-            System.out.println("Starting timer...");
+            Bukkit.getLogger().info("Starting timer...");
             timer = TaskManager.runAsyncScheduler(() -> {
                 if (players.isEmpty()) {
-                    System.out.println("There are no players with timeleft");
+                    Bukkit.getLogger().info("There are no players with timeleft");
                     stop();
                     return;
                 }
@@ -43,7 +43,7 @@ public class TimerManager {
 
     public static void stop() {
         if (isRunning()) {
-            System.out.println("Stopping timer...");
+            Bukkit.getLogger().info("Stopping timer...");
             timer.cancel();
         }
     }

@@ -62,7 +62,7 @@ public final class TimedFly extends JavaPlugin {
         File dataFolder = new File(this.getDataFolder(), "/modules/");
 
         if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            System.out.println("Could not make modules folder");
+            Bukkit.getLogger().severe("Could not make modules folder");
             return;
         }
 
@@ -71,19 +71,19 @@ public final class TimedFly extends JavaPlugin {
         List<Module> modules = this.moduleHandler.getModules();
 
         if (modules == null) {
-            System.out.println("Could not load any modules... Something happened.");
+            Bukkit.getLogger().severe("Could not load any modules... Something happened.");
         } else if (modules.isEmpty()) {
-            System.out.println("There were no modules to load");
+            Bukkit.getLogger().warning("There were no modules to load");
         }
     }
 
     private void enableCommands() throws CommandException {
         this.getCommand("timedfly").setExecutor(new Main(this.commandHandler));
         this.getCommand("tfly").setExecutor(new TFly(this.commandHandler));
-        
+
         this.commandHandler.register(new TimerCommand(), this);
         this.commandHandler.register(new Modules(moduleHandler), this);
-        
+
         Bukkit.getPluginCommand("timedfly").setTabCompleter(new TabComplete(commandHandler, CommandType.TIMED_FLY));
         Bukkit.getPluginCommand("tfly").setTabCompleter(new TabComplete(commandHandler, CommandType.TFLY));
     }
@@ -99,7 +99,7 @@ public final class TimedFly extends JavaPlugin {
                     this.getServer()
                             .getPluginManager()
                             .registerEvents(event, this);
-                    System.out.println("Event " + event.getClass().getSimpleName() + " registered");
+                    Bukkit.getLogger().info("Event " + event.getClass().getSimpleName() + " registered");
                 });
     }
 }

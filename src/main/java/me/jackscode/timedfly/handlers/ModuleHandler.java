@@ -5,6 +5,8 @@ import me.jackscode.timedfly.api.Module;
 import me.jackscode.timedfly.api.ModuleDescription;
 import me.jackscode.timedfly.exceptions.CommandException;
 import me.jackscode.timedfly.exceptions.ModuleException;
+
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +69,7 @@ public class ModuleHandler {
                 throw new ModuleException(fileModule.getPath() + " does not exist!");
             }
 
-            System.out.println("Attempting to load module: " + filePath);
+            Bukkit.getLogger().info("Attempting to load module: " + filePath);
 
             // Prepare to load class
             classLoader = new URLClassLoader(
@@ -129,14 +131,14 @@ public class ModuleHandler {
             this.setFields(module, "moduleHandler", this);
             this.setFields(module, "plugin", this.plugin);
 
-            System.out.println("Module " + moduleDescription.getName() + " has been loaded");
+            Bukkit.getLogger().info("Module " + moduleDescription.getName() + " has been loaded");
             modulesPath.putIfAbsent(moduleDescription.getName(), fileModule);
             modules.add(module);
             module.onModuleEnable();
             return module;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Could not load module: " + filePath);
+            Bukkit.getLogger().warning("Could not load module: " + filePath);
             return null;
         } finally {
             // Close classloader because we dont need it any more.
@@ -148,7 +150,7 @@ public class ModuleHandler {
     public void disableAllModules() {
         this.modules.forEach(Module::onModuleDisable);
         this.commandHandler.unregisterAll();
-        System.out.println("All modules had been disabled.");
+        Bukkit.getLogger().info("All modules had been disabled.");
     }
 
     public void disableModule(@NotNull Module module) {
@@ -163,7 +165,7 @@ public class ModuleHandler {
 
         module.unregisterEvents();
 
-        System.out.println("Module disabled: " + module.getModuleDescription().getName());
+        Bukkit.getLogger().info("Module disabled: " + module.getModuleDescription().getName());
         this.modules.remove(module);
     }
 
