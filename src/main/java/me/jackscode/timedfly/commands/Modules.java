@@ -26,11 +26,19 @@ public class Modules extends Command {
         this.moduleHandler = moduleHandler;
 
         this.addArgs("enable", Arrays.asList(
-                new Argument("name", ArgumentType.REQUIRED, "Name of the module to enable.",
+                new Argument("name",
+                        ArgumentType.REQUIRED,
+                        "Name of the module to enable.",
                         "TimerMessages")));
         this.addArgs("disable", Arrays.asList(
-                new Argument("name", ArgumentType.REQUIRED, "Name of the module to disable.",
-                        "Databases")));
+                new Argument("name",
+                        ArgumentType.REQUIRED,
+                        "Name of the module to disable.",
+                        "Databases",
+                        moduleHandler.getModules()
+                                .stream()
+                                .map(module -> module.getModuleDescription().getName())
+                                .toList())));
     }
 
     @Override
