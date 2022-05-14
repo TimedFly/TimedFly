@@ -3,18 +3,13 @@ package me.jackint0sh.timedfly.listeners;
 import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.Item;
-import me.jackint0sh.timedfly.versions.ServerVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class InventoryListener implements Listener {

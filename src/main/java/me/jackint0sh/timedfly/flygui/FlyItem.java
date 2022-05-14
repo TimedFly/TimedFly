@@ -36,6 +36,8 @@ public class FlyItem {
     private boolean enableOnFlyDisable;
     private Currency currency;
     private Material currency_item;
+    private double flySpeedMultiplier;
+
     private static Map<String, FlyItem> configItemMap = new HashMap<>();
 
     public FlyItem() {
@@ -53,6 +55,7 @@ public class FlyItem {
         this.amount = 1;
         this.currency = CurrencyManager.getDefaultCurrency();
         this.currency_item = Material.DIAMOND;
+        this.flySpeedMultiplier = 10.0F;
 
         FlyItem.configItemMap.put(key, this);
     }
@@ -87,6 +90,7 @@ public class FlyItem {
             this.enableOnFlyDisable = config.getBoolean(itemKey + ".OnFlyDisable.Enable");
             this.currency = CurrencyManager.getCurrency(config.getString(itemKey + ".Currency.Type"));
             this.currency_item = Material.matchMaterial(config.getString(itemKey + ".Currency.Item"));
+            this.flySpeedMultiplier = config.getDouble(itemKey + ".FlySpeedMultiplier");
 
             FlyItem.configItemMap.put(key, this);
         } catch (Exception e) {
@@ -333,6 +337,14 @@ public class FlyItem {
         this.enableOnFlyDisable = enableOnFlyDisable;
         return this;
     }
+    
+    public double getFlySpeedMultiplier() {
+        return flySpeedMultiplier;
+    }
+
+    public void setFlySpeedMultiplier(float flySpeedMultiplier) {
+        this.flySpeedMultiplier = flySpeedMultiplier;
+    }
 
     @Override
     public String toString() {
@@ -358,6 +370,10 @@ public class FlyItem {
                 ", glow=" + glow +
                 ", usePerms=" + usePerms +
                 ", currency=" + currency +
+                ", flySpeedMultiplier=" + flySpeedMultiplier +
+                ", onFlyDisable=" + onFlyDisable +
+                ", enableOnClick=" + enableOnClick +
+                ", enableOnFlyDisable=" + enableOnFlyDisable +
                 '}';
     }
 }

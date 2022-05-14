@@ -100,6 +100,8 @@ JoinFlying:
   # Amount of blocks above the player's location.
   Height: 2
 
+GlobalFlySpeedMultiplier: 1.0 # Change the speed multiplier globally. Each FlyItem overrides this setting.
+
 # Set to false if you are lazy and you are using spigot 1.8
 Sounds:
   Enable: true

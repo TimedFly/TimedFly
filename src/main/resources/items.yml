@@ -44,3 +44,4 @@ Items:
       Type: 'vault' # Available currencies: none, vault, tokenmanager, playerpoints, levels, exp, item
       # If the TYPE is 'item' what's bellow will take effect
       Item: DIAMOND
+    FlySpeedMultiplier: 1.0 # Multiplies the player speed when flying. Max amount: 10.0

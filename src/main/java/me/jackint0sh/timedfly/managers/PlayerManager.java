@@ -8,6 +8,7 @@ import me.jackint0sh.timedfly.utilities.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -28,6 +29,7 @@ public class PlayerManager {
     private long initialTime;
     private long currentTimeLimit;
     private long limitCoolDown;
+    private double flySpeedMultiplier;
     private boolean hasTime;
     private boolean onFloor;
     private boolean timeRunning;
@@ -37,12 +39,14 @@ public class PlayerManager {
     private String lastItemUsed;
     private boolean inBlacklistedWorld;
     private List<World> worlds;
+    private FileConfiguration config;
 
     private PlayerManager(UUID playerUuid) {
         this(playerUuid, 0, 0, false, true, false);
     }
 
-    private PlayerManager(UUID playerUuid, long timeLeft, long initialTime, boolean hasTime, boolean onFloor, boolean timeRunning) {
+    private PlayerManager(UUID playerUuid, long timeLeft, long initialTime, boolean hasTime, boolean onFloor,
+            boolean timeRunning) {
         this.playerUuid = playerUuid;
         this.timeLeft = timeLeft;
         this.initialTime = initialTime;
@@ -51,21 +55,28 @@ public class PlayerManager {
         this.timeRunning = timeRunning;
         this.player = Bukkit.getPlayer(playerUuid);
         this.currentTimeLimit = 0;
-        this.worlds = Config.getConfig("config").get()
+        if (this.player == null)
+            this.player = Bukkit.getOfflinePlayer(playerUuid).getPlayer();
+            
+        this.config = Config.getConfig("config").get();
+        this.worlds = this.config
                 .getStringList("World-List.Worlds")
                 .stream()
                 .map(Bukkit::getWorld)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        if (this.player == null) this.player = Bukkit.getOfflinePlayer(playerUuid).getPlayer();
+        this.flySpeedMultiplier = config.getDouble("GlobalFlySpeedMultiplier");
     }
 
     public void startTimer() {
-        if (this.player.isOnline()) this.player.setAllowFlight(true);
+        if (this.player.isOnline())
+            this.player.setAllowFlight(true);
         if (!this.isOnFloor()) {
             this.fromPlugin = true;
             this.timeRunning = true;
-            if (this.player.isOnline()) this.player.setFlying(true);
+            this.player.setFlySpeed((float) (flySpeedMultiplier * 10) / 100);
+            if (this.player.isOnline())
+                this.player.setFlying(true);
         }
         TimerManager.startIfNot();
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
@@ -77,7 +88,9 @@ public class PlayerManager {
         if (this.player.isOnline()) {
             this.player.setAllowFlight(false);
             this.player.setFlying(false);
-            if (!this.player.isOnGround()) this.disableFallDamage();
+            this.player.setFlySpeed(0.1F);
+            if (!this.player.isOnGround())
+                this.disableFallDamage();
         }
         Bukkit.getPluginManager().callEvent(new TimedFlyEndEvent(this));
     }
@@ -126,25 +139,31 @@ public class PlayerManager {
     }
 
     private static boolean hasPermissions(Player player, boolean and, Permissions... permissions) {
-        if (player.isOp() || player.hasPermission(Permissions.ADMIN.getPermission())) return true;
+        if (player.isOp() || player.hasPermission(Permissions.ADMIN.getPermission()))
+            return true;
 
         boolean hasPerm;
         if (and) {
-            hasPerm = Arrays.stream(permissions).allMatch(permission -> PlayerManager.hasPermission(player, permission));
+            hasPerm = Arrays.stream(permissions)
+                    .allMatch(permission -> PlayerManager.hasPermission(player, permission));
         } else {
-            hasPerm = Arrays.stream(permissions).anyMatch(permission -> PlayerManager.hasPermission(player, permission));
+            hasPerm = Arrays.stream(permissions)
+                    .anyMatch(permission -> PlayerManager.hasPermission(player, permission));
         }
         return hasPerm;
     }
 
     private static boolean hasPermissions(CommandSender sender, boolean and, Permissions... permissions) {
-        if (sender.isOp() || sender.hasPermission(Permissions.ADMIN.getPermission())) return true;
+        if (sender.isOp() || sender.hasPermission(Permissions.ADMIN.getPermission()))
+            return true;
 
         boolean hasPerm;
         if (and) {
-            hasPerm = Arrays.stream(permissions).allMatch(permission -> PlayerManager.hasPermission(sender, permission));
+            hasPerm = Arrays.stream(permissions)
+                    .allMatch(permission -> PlayerManager.hasPermission(sender, permission));
         } else {
-            hasPerm = Arrays.stream(permissions).anyMatch(permission -> PlayerManager.hasPermission(sender, permission));
+            hasPerm = Arrays.stream(permissions)
+                    .anyMatch(permission -> PlayerManager.hasPermission(sender, permission));
         }
         return hasPerm;
     }
@@ -166,8 +185,10 @@ public class PlayerManager {
     }
 
     public void enterAttackMode() {
-        if (!Config.getConfig("config").get().getBoolean("StopTimerOn.Attack.Enable")) return;
-        if (this.hasPermission(Permissions.BYPASS_ATTACK) || this.inBlacklistedWorld) return;
+        if (!this.config.getBoolean("StopTimerOn.Attack.Enable"))
+            return;
+        if (this.hasPermission(Permissions.BYPASS_ATTACK) || this.inBlacklistedWorld)
+            return;
 
         if (!this.isAttacking() && this.isTimeRunning()) {
             this.player.setAllowFlight(false);
@@ -178,13 +199,15 @@ public class PlayerManager {
             MessageUtil.sendTranslation(this.player, "fly.time.attack_mode.flight_disabled");
         }
 
-        if (attackTimer != null) attackTimer.cancel();
+        if (attackTimer != null)
+            attackTimer.cancel();
 
         try {
-            long cooldown = TimeParser.parse(Config.getConfig("config").get().getString("StopTimerOn.Attack.Cooldown"));
+            long cooldown = TimeParser.parse(this.config.getString("StopTimerOn.Attack.Cooldown"));
 
             attackTimer = PluginTask.runLater(() -> {
-                if (!hasTime() || this.inBlacklistedWorld) return;
+                if (!hasTime() || this.inBlacklistedWorld)
+                    return;
                 setAttacking(false).setTimeRunning(true);
                 player.setAllowFlight(true);
                 MessageUtil.sendTranslation(player, "fly.time.attack_mode.flight_enabled");
@@ -196,12 +219,15 @@ public class PlayerManager {
 
     public boolean handleWorldChange(@Nullable World from) {
         World to = player.getWorld();
-        if (from != null && from.getName().equals(to.getName())) return true;
-        String type = Config.getConfig("config").get().getString("World-List.Type");
+        if (from != null && from.getName().equals(to.getName()))
+            return true;
+        String type = this.config.getString("World-List.Type");
 
-        if (type == null || !hasTime()) return true;
+        if (type == null || !hasTime())
+            return true;
         else if (type.equals("all")) {
-            if (!isAttacking()) startTimer();
+            if (!isAttacking())
+                startTimer();
             this.inBlacklistedWorld = false;
             return true;
         }
@@ -209,7 +235,8 @@ public class PlayerManager {
         switch (type) {
             case "enable":
                 if (this.worlds.stream().anyMatch(world -> to.getName().equals(world.getName()))) {
-                    if (!isAttacking()) startTimer();
+                    if (!isAttacking())
+                        startTimer();
                     this.inBlacklistedWorld = false;
                     return true;
                 } else {
@@ -226,7 +253,8 @@ public class PlayerManager {
                     return false;
                 } else {
                     this.inBlacklistedWorld = false;
-                    if (!isAttacking()) startTimer();
+                    if (!isAttacking())
+                        startTimer();
                     return true;
                 }
         }
@@ -263,7 +291,8 @@ public class PlayerManager {
     }
 
     public static PlayerManager getCachedPlayer(UUID uuid) {
-        if (playerCache.get(uuid) != null) return playerCache.get(uuid);
+        if (playerCache.get(uuid) != null)
+            return playerCache.get(uuid);
         playerCache.put(uuid, new PlayerManager(uuid));
         return playerCache.get(uuid);
     }
@@ -289,7 +318,6 @@ public class PlayerManager {
         this.playerUuid = playerUuid;
         return this;
     }
-
 
     public PlayerManager setPlayer(Player player) {
         this.player = player;
@@ -319,7 +347,8 @@ public class PlayerManager {
 
     public PlayerManager addTime(long time) {
         this.timeLeft += time;
-        if (this.timeLeft > this.initialTime) this.initialTime = this.timeLeft;
+        if (this.timeLeft > this.initialTime)
+            this.initialTime = this.timeLeft;
         return this;
     }
 
@@ -388,7 +417,7 @@ public class PlayerManager {
 
     public boolean passedCurrentTimeLimit() {
         try {
-            long limit = TimeParser.parse(Config.getConfig("config").get().getString("LimitMaxTime.Time"));
+            long limit = TimeParser.parse(this.config.getString("LimitMaxTime.Time"));
             return this.currentTimeLimit >= limit;
         } catch (TimeParser.TimeFormatException e) {
             e.printStackTrace();
@@ -399,7 +428,7 @@ public class PlayerManager {
     public PlayerManager addCurrentTimeLimit(long time) {
         this.currentTimeLimit += time;
         if (passedCurrentTimeLimit() && this.limitCoolDown == 0) {
-            String cooldown = Config.getConfig("config").get().getString("LimitMaxTime.Cooldown");
+            String cooldown = this.config.getString("LimitMaxTime.Cooldown");
             try {
                 this.limitCoolDown = System.currentTimeMillis() + TimeParser.parse(cooldown);
             } catch (TimeParser.TimeFormatException e) {
@@ -423,9 +452,11 @@ public class PlayerManager {
     }
 
     public PlayerManager updateStore() {
-        if (!this.player.isOnline()) return this;
+        if (!this.player.isOnline())
+            return this;
         FlyInventory flyInventory = FlyInventory.getFlyInventory(player.getOpenInventory().getTitle());
-        if (flyInventory != null) flyInventory.setItems(FlightStore.createContents(player));
+        if (flyInventory != null)
+            flyInventory.setItems(FlightStore.createContents(player));
         return this;
     }
 
@@ -453,6 +484,15 @@ public class PlayerManager {
 
     public PlayerManager setFromPlugin(boolean fromPlugin) {
         this.fromPlugin = fromPlugin;
+        return this;
+    }
+
+    public double getFlySpeedMultiplier() {
+        return this.flySpeedMultiplier;
+    }
+
+    public PlayerManager setFlySpeedMultiplier(double multiplier) {
+        this.flySpeedMultiplier = multiplier;
         return this;
     }
 

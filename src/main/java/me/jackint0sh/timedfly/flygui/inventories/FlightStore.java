@@ -116,6 +116,7 @@ public class FlightStore {
                                         .setManualFly(false)
                                         .setFromPlugin(true)
                                         .addTime(time)
+                                        .setFlySpeedMultiplier(item.getFlySpeedMultiplier())
                                         .addCurrentTimeLimit(time)
                                         .updateStore()
                                         .startTimer();
