@@ -14,15 +14,15 @@ public abstract class ServerVersion {
     protected static ServerVersion serverVersion;
 
     public void sendActionBar(Player player, String text) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(MessageUtil.color(text)));
+        //player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(MessageUtil.color(text)));
     }
 
     public void sendTitle(Player player, String title, String subtile) {
-        player.sendTitle(MessageUtil.color(title), MessageUtil.color(subtile), 0, 5 * 20, 0);
+        //player.sendTitle(MessageUtil.color(title), MessageUtil.color(subtile), 0, 5 * 20, 0);
     }
 
     public void sendTitle(Player player, String title, String subtile, int fadeIn, int stay, int fadeOut) {
-        player.sendTitle(MessageUtil.color(title), MessageUtil.color(subtile), fadeIn, stay, fadeOut);
+        //player.sendTitle(MessageUtil.color(title), MessageUtil.color(subtile), fadeIn, stay, fadeOut);
     }
 
     public ItemStack setNBT(ItemStack itemStack, String key, String value) {

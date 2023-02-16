@@ -68,8 +68,7 @@ public class AttackListener implements Listener {
 
     @EventHandler
     public void onAttackBow(ProjectileHitEvent event) {
-        if (event.getHitBlock() != null) return;
-
+        if (event.getEntity() != null) return;
         if (event.getEntity().getShooter() instanceof Player) {
             Player player = (Player) event.getEntity().getShooter();
             PlayerManager playerManager = PlayerManager.getCachedPlayer(player.getUniqueId());

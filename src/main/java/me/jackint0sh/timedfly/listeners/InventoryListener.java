@@ -4,6 +4,7 @@ import me.jackint0sh.timedfly.flygui.FlyInventory;
 import me.jackint0sh.timedfly.flygui.FlyItem;
 import me.jackint0sh.timedfly.flygui.Item;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,7 +43,7 @@ public class InventoryListener implements Listener {
             } else if (command.startsWith(PLAYER)) {
                 Bukkit.dispatchCommand(player, command.substring(PLAYER.length()));
             } else if (command.startsWith(SOUND)) {
-                player.getWorld().playSound(player.getLocation(), command.substring(SOUND.length()), 5, 0);
+                player.getWorld().playSound(player.getLocation(), Sound.valueOf(command.substring(SOUND.length())), 5, 0);
             }
         };
         switch (type.toLowerCase()) {

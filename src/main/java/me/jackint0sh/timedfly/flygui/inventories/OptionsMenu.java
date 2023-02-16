@@ -29,7 +29,7 @@ public class OptionsMenu {
                 .glow(true);
         createOption(player, 0, glow, event -> flyItem.setGlow(glow.toggled()));
 
-        Item permOnly = new Item(Material.COMMAND_BLOCK)
+        Item permOnly = new Item(Material.COMMAND)
                 .setName("&bPerms Only")
                 .toggle(flyItem.isUsePerms());
         createOption(player, 1, permOnly, event -> flyItem.setUsePerms(permOnly.toggled()));
@@ -40,12 +40,12 @@ public class OptionsMenu {
                 .addItemFlags(ItemFlag.values());
         createOption(player, 2, hideAtt, event -> flyItem.setHideAttributes(hideAtt.toggled()));
 
-        Item hideEnch = new Item(Material.ENCHANTING_TABLE)
+        Item hideEnch = new Item(Material.ENCHANTMENT_TABLE)
                 .setName("&bHide Enchants")
                 .toggle(flyItem.isHideEnchants());
         createOption(player, 3, hideEnch, event -> flyItem.setHideEnchants(hideEnch.toggled()));
 
-        Item hidePlace = new Item(Material.GRASS_BLOCK)
+        Item hidePlace = new Item(Material.GRASS)
                 .setName("&bHide Place On")
                 .toggle(flyItem.isHidePlaceOn());
         createOption(player, 4, hidePlace, event -> flyItem.setHidePlaceOn(hidePlace.toggled()));
@@ -104,7 +104,7 @@ public class OptionsMenu {
                     player.closeInventory();
                 });
 
-        Item cooldown = new Item(Material.CLOCK)
+        Item cooldown = new Item(Material.WATCH)
                 .setName("&bCooldown")
                 .setLore("&7", "&eChange the cooldown", "&eof this item.", "&7", "&fCurrent: &7" + flyItem.getCooldown(), "&7")
                 .onClick(event -> {
@@ -146,12 +146,12 @@ public class OptionsMenu {
     }
 
     private static void createOption(Player player, int slot, Item item, Consumer<InventoryClickEvent> consumer) {
-        Item toggle = new Item(item.toggled() ? Material.LIME_DYE : Material.GRAY_DYE)
+        Item toggle = new Item(item.toggled() ? Material.EMERALD_BLOCK : Material.REDSTONE_BLOCK)
                 .setName(item.toggled() ? "&aEnabled" : "&cDisabled")
                 .setLore("&7", "&eClick here to toggle", "&ethis option.", "&7");
         Consumer<InventoryClickEvent> clickEventConsumer = event -> {
             item.toggle(!item.toggled());
-            toggle.setMaterial(item.toggled() ? Material.LIME_DYE : Material.GRAY_DYE)
+            toggle.setMaterial(item.toggled() ? Material.EMERALD_BLOCK : Material.REDSTONE_BLOCK)
                     .setName(item.toggled() ? "&aEnabled" : "&cDisabled");
             inventory.setItem(toggle, slot, 1);
         };

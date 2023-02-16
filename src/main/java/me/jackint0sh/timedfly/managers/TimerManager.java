@@ -12,15 +12,16 @@ import java.util.UUID;
 public class TimerManager {
 
     private static BukkitTask timer;
+    private static boolean cancelled;
 
     public static void startIfNot() {
-        if (timer == null || timer.isCancelled()) start();
+        if (timer == null || cancelled) start();
     }
 
     public static void start() {
         MessageUtil.sendConsoleMessage("&cInitializing fly timer...");
 
-        if (timer != null && !timer.isCancelled()) {
+        if (timer != null && !cancelled) {
             MessageUtil.sendError("Timer already initialized!!!");
             return;
         }
@@ -30,13 +31,12 @@ public class TimerManager {
     }
 
     private static void stop() {
-        MessageUtil.sendConsoleMessage("&cStopping fly timer...");
-        if (timer != null && !timer.isCancelled()) {
+        cancelled = true;
+        if (timer != null) {
             timer.cancel();
             timer = null;
             MessageUtil.sendConsoleMessage("&cFly timer stopped!");
-        } else MessageUtil.sendError("Fly timer already stopped!!!");
-
+        }
     }
 
     private static class Timer extends BukkitRunnable {
@@ -52,7 +52,7 @@ public class TimerManager {
                 Bukkit.getPluginManager().callEvent(new TimedFlyRunningEvent(playerManager));
             }
 
-            if (Config.getConfig("config").get().getBoolean("AutoStopTimer") && PlayerManager.getPlayersTimeLeft() < 0) {
+            if (Config.getConfig("config").get().getBoolean("AutoStopTimer") && PlayerManager.getPlayersTimeLeft() < 1) {
                 MessageUtil.sendConsoleMessage("&cThere are no players with a timer running.");
                 TimerManager.stop();
             }

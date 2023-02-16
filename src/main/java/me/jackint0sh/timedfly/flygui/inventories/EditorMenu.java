@@ -24,7 +24,7 @@ public class EditorMenu {
 
         String name = !flyItem.getName().isEmpty() ? flyItem.getName() : "None";
 
-        Item material = new Item(Material.GRASS_BLOCK)
+        Item material = new Item(Material.GRASS)
                 .onClick(event -> {
                     FlyItemCreator.setInnerState(player, FlyItemCreator.InnerState.CHANGE_ITEM);
                     ChangeItemMenu.create(player);
@@ -65,7 +65,7 @@ public class EditorMenu {
                     FlyItemCreator.setInnerState(player, FlyItemCreator.InnerState.CHANGE_PRICE);
                     player.closeInventory();
                 });
-        Item time = new Item(Material.CLOCK)
+        Item time = new Item(Material.WATCH)
                 .setName("&aChange Time")
                 .setLore("&7", "&eClick here and type the", "&etime in the chat.", "&7", "&fCurrent: &7" + flyItem.getTime())
                 .onClick(event -> {
@@ -73,7 +73,7 @@ public class EditorMenu {
                     FlyItemCreator.setInnerState(player, FlyItemCreator.InnerState.CHANGE_TIME);
                     player.closeInventory();
                 });
-        Item options = new Item(Material.REDSTONE_TORCH)
+        Item options = new Item(Material.REDSTONE_TORCH_ON)
                 .setName("&aExtra Options")
                 .setLore("&7", "&eClick here to edit", "&eextra options.", "&7")
                 .onClick(event -> {

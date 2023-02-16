@@ -21,7 +21,7 @@ public class ChangeItemMenu {
 
     public static Inventory create(Player player, boolean b) {
         AtomicBoolean cancelled = new AtomicBoolean(false);
-        Item pane = new Item(Material.GRAY_STAINED_GLASS_PANE)
+        Item pane = new Item(Material.SIGN)
                 .setName(Languages.getString("item_editor.close.title"))
                 .setLore(Languages.getStringArray("item_editor.close.lore"));
 
