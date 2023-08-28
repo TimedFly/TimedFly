@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class TimeParser {
 
+    private TimeParser() {}
+
     private static final Map<String, String> timeLang = new HashMap<>();
     private static final Collection<String> timeString = timeLang.values();
 

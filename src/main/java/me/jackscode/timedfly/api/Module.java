@@ -10,6 +10,7 @@ import me.jackscode.timedfly.managers.TimerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -27,7 +28,6 @@ public abstract class Module {
     private ModuleHandler moduleHandler;
     private TimerManager timerManager;
     private TimedFly plugin;
-
 
     {
         this.commandList = new ArrayList<>();
@@ -133,18 +133,38 @@ public abstract class Module {
      * @param commands Commands to be registered
      * @throws CommandException If name already exists this will be thrown
      */
-    public void registerCommands(@NotNull Module module, @NotNull Command... commands) throws CommandException {
+    public void registerCommands(@NotNull Command... commands) throws CommandException {
         for (Command command : commands) {
-            commandHandler.register(command, module);
+            commandHandler.register(command, this);
             commandList.add(command);
         }
     }
 
+    /**
+     * Unregister all commands linked to this module.
+     * @throws CommandException
+    */
+    public void unregisterCommands() throws CommandException {
+        for (Command command : this.commandList) {
+            this.commandHandler.unregister(command);
+        }
+
+        this.commandList.clear();
+    }
+
+    /**
+     * Register events to be handled by the plugin.
+     * Works the same as {@link PluginManager#registerEvents(org.bukkit.command.CommandMap)}
+     * @param listeners Classes to be registered.
+     */
     public void registerEvents(@NotNull Listener... listeners) {
         plugin.registerEvents(listeners);
         eventListeners.addAll(Arrays.asList(listeners));
     }
 
+    /**
+     * Unregister all events from this module.
+     */
     public void unregisterEvents() {
         eventListeners.stream().forEach(listener -> {
             HandlerList.unregisterAll(listener);
