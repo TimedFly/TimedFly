@@ -18,9 +18,9 @@ import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.UUID;
 
-@Getter public class TFPlayer extends Messenger {
+@Getter public class FlyPlayer extends Messenger {
 
-    private static final IdentityHashMap<Player, TFPlayer> players = new IdentityHashMap<>();
+    private static final IdentityHashMap<Player, FlyPlayer> players = new IdentityHashMap<>();
     @Getter(AccessLevel.NONE) @Setter private boolean hasTime;
     @Setter private int timeLeft;
     @Setter private int initialTime;
@@ -30,10 +30,10 @@ import java.util.UUID;
     private final Player player;
     private final UUID uuid;
 
-    public TFPlayer(Player player) {
+    public FlyPlayer(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
-        this.tfPlayer = this;
+        this.flyPlayer = this;
 
         this.setPlaceholders();
     }
@@ -130,11 +130,11 @@ import java.util.UUID;
     }
     
 
-    public static TFPlayer getPlayer(Player player) {
-        TFPlayer tfPlayer = players.get(player);
-        if (tfPlayer != null) return tfPlayer;
-        tfPlayer = new TFPlayer(player);
-        players.put(player, tfPlayer);
-        return tfPlayer;
+    public static FlyPlayer getPlayer(Player player) {
+        FlyPlayer flyPlayer = players.get(player);
+        if (flyPlayer != null) return flyPlayer;
+        flyPlayer = new FlyPlayer(player);
+        players.put(player, flyPlayer);
+        return flyPlayer;
     }
 }

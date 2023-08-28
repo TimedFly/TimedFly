@@ -6,11 +6,11 @@ import org.bukkit.command.ConsoleCommandSender;
 
 import java.util.Arrays;
 
-public class TFConsole extends Messenger {
+public class FlyConsole extends Messenger {
 
     private final ConsoleCommandSender console;
 
-    public TFConsole(ConsoleCommandSender console) {
+    public FlyConsole(ConsoleCommandSender console) {
         this.console = console;
         this.consoleSender = this;
     }

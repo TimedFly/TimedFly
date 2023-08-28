@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import me.jackscode.timedfly.api.entity.TFPlayer;
+import me.jackscode.timedfly.api.entity.FlyPlayer;
 
 public class FallDamage implements Listener {
 
@@ -18,7 +18,7 @@ public class FallDamage implements Listener {
         Entity entity = event.getEntity();
         if (entity.isDead() || event.getCause().compareTo(DamageCause.FALL) != 0)
             return;
-        TFPlayer tfPlayer = TFPlayer.getPlayer((Player) entity);
+        FlyPlayer tfPlayer = FlyPlayer.getPlayer((Player) entity);
         if (tfPlayer != null && tfPlayer.isPreventFallDamage()) {
             tfPlayer.setPreventFallDamage(false);
             event.setCancelled(true);

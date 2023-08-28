@@ -1,6 +1,6 @@
 package me.jackscode.timedfly.managers;
 
-import me.jackscode.timedfly.api.entity.TFPlayer;
+import me.jackscode.timedfly.api.entity.FlyPlayer;
 import me.jackscode.timedfly.api.events.TimedFlyRunningEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
@@ -12,7 +12,7 @@ import java.util.Set;
 public class TimerManager {
 
     private static BukkitTask timer;
-    private static final Set<TFPlayer> players = new HashSet<>();
+    private static final Set<FlyPlayer> players = new HashSet<>();
 
     private TimerManager() {
     }
@@ -52,11 +52,11 @@ public class TimerManager {
         return timer != null && !timer.isCancelled();
     }
 
-    public static void addPlayer(@NotNull TFPlayer player) {
+    public static void addPlayer(@NotNull FlyPlayer player) {
         players.add(player);
     }
 
-    public static void removePlayer(@NotNull TFPlayer player) {
+    public static void removePlayer(@NotNull FlyPlayer player) {
         players.remove(player);
     }
 }

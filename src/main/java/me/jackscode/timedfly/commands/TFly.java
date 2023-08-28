@@ -3,8 +3,8 @@ package me.jackscode.timedfly.commands;
 import me.jackscode.timedfly.api.Command;
 import me.jackscode.timedfly.api.Messenger;
 import me.jackscode.timedfly.api.Messenger.OnClick;
-import me.jackscode.timedfly.api.entity.TFConsole;
-import me.jackscode.timedfly.api.entity.TFPlayer;
+import me.jackscode.timedfly.api.entity.FlyConsole;
+import me.jackscode.timedfly.api.entity.FlyPlayer;
 import me.jackscode.timedfly.enums.CommandType;
 import me.jackscode.timedfly.handlers.CommandHandler;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -35,9 +35,9 @@ public class TFly implements CommandExecutor {
 
         final Messenger messenger;
         if (sender instanceof Player) {
-            messenger = TFPlayer.getPlayer((Player) sender);
+            messenger = FlyPlayer.getPlayer((Player) sender);
         } else {
-            messenger = new TFConsole(Bukkit.getConsoleSender());
+            messenger = new FlyConsole(Bukkit.getConsoleSender());
         }
 
         List<Command> commands = this.commandHandler

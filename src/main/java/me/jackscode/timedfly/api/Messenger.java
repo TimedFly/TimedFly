@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.Getter;
-import me.jackscode.timedfly.api.entity.TFConsole;
-import me.jackscode.timedfly.api.entity.TFPlayer;
+import me.jackscode.timedfly.api.entity.FlyConsole;
+import me.jackscode.timedfly.api.entity.FlyPlayer;
 import me.jackscode.timedfly.managers.PlaceholderManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -22,10 +22,10 @@ public abstract class Messenger extends PlaceholderManager {
     public abstract boolean hasPermission(String... permissions);
 
     @Getter
-    public TFConsole consoleSender;
+    public FlyConsole consoleSender;
 
     @Getter
-    public TFPlayer tfPlayer;
+    public FlyPlayer flyPlayer;
 
     public boolean isConsole() {
         return consoleSender != null;
@@ -50,7 +50,7 @@ public abstract class Messenger extends PlaceholderManager {
         message.setHoverEvent(hoverEvent);
         message.setClickEvent(clickEvent);
 
-        tfPlayer.getPlayer().spigot().sendMessage(message);
+        flyPlayer.getPlayer().spigot().sendMessage(message);
     }
 
     public static class OnClick {

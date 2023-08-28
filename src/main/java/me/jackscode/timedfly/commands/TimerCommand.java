@@ -6,7 +6,7 @@ import me.jackscode.timedfly.api.Argument;
 import me.jackscode.timedfly.api.ArgumentType;
 import me.jackscode.timedfly.api.Command;
 import me.jackscode.timedfly.api.Messenger;
-import me.jackscode.timedfly.api.entity.TFPlayer;
+import me.jackscode.timedfly.api.entity.FlyPlayer;
 import me.jackscode.timedfly.enums.CommandType;
 import net.md_5.bungee.api.chat.ClickEvent;
 
@@ -48,7 +48,7 @@ public class TimerCommand extends Command {
         if (this.invalidArgsLength(messenger, args, 1))
             return;
 
-        TFPlayer player = messenger.getTfPlayer();
+        FlyPlayer player = messenger.getFlyPlayer();
         switch (args[0]) {
             case "help":
                 this.sendHelpMessage(messenger, true);
