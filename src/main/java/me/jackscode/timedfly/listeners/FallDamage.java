@@ -16,6 +16,8 @@ public class FallDamage implements Listener {
         if (event.isCancelled())
             return;
         Entity entity = event.getEntity();
+        if (!(entity instanceof Player))
+            return;
         if (entity.isDead() || event.getCause().compareTo(DamageCause.FALL) != 0)
             return;
         FlyPlayer tfPlayer = FlyPlayer.getPlayer((Player) entity);
