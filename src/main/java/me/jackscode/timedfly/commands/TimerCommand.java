@@ -32,6 +32,7 @@ public class TimerCommand extends Command {
                         "Time to to set to specified player, or yourself.",
                         "5m"),
                 playerArgument));
+        this.addArgs("timeleft", Arrays.asList(playerArgument));
     }
 
     @Override
@@ -88,7 +89,7 @@ public class TimerCommand extends Command {
                 }
                 break;
             case "timeleft":
-                player.sendMessage(player.timeLeftToString());
+                player.sendMessage("Your remaining time is: &a{time_left}");
                 break;
             default:
                 player.sendHoverableMessage(

@@ -66,6 +66,7 @@ public final class TimedFly extends JavaPlugin {
             return;
         }
 
+        this.copyDefaultModules();
         this.moduleHandler.enableModules(dataFolder.toPath());
 
         List<Module> modules = this.moduleHandler.getModules();
@@ -75,6 +76,14 @@ public final class TimedFly extends JavaPlugin {
         } else if (modules.isEmpty()) {
             Bukkit.getLogger().warning("There were no modules to load");
         }
+    }
+
+    private void copyDefaultModules() {
+        String[] defaultModules = {  };
+
+        Arrays.stream(defaultModules).forEach(moduleName -> {
+            this.saveResource("modules/" + moduleName + ".jar", true);
+        });
     }
 
     private void enableCommands() throws CommandException {
