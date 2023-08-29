@@ -12,7 +12,6 @@ public class FlyConsole extends Messenger {
 
     public FlyConsole(ConsoleCommandSender console) {
         this.console = console;
-        this.consoleSender = this;
     }
 
     @Override

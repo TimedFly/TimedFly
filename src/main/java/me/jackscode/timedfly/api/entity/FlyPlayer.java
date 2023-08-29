@@ -22,8 +22,8 @@ import java.util.UUID;
 
     private static final IdentityHashMap<Player, FlyPlayer> players = new IdentityHashMap<>();
     @Getter(AccessLevel.NONE) @Setter private boolean hasTime;
-    @Setter private int timeLeft;
-    @Setter private int initialTime;
+    @Setter private long timeLeft;
+    @Setter private long initialTime;
     @Setter private boolean timeRunning;
     @Setter private boolean timePaused;
     @Setter @Getter private boolean preventFallDamage;
@@ -33,7 +33,6 @@ import java.util.UUID;
     public FlyPlayer(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
-        this.flyPlayer = this;
 
         this.setPlaceholders();
     }
@@ -50,7 +49,7 @@ import java.util.UUID;
         this.setPreventFallDamage(false);
 
         TimerManager.addPlayer(this);
-        if (!TimerManager.isRunning()) TimerManager.start();
+        TimerManager.start();
         Bukkit.getPluginManager().callEvent(new TimedFlyStartEvent(this));
     }
 
@@ -78,7 +77,7 @@ import java.util.UUID;
         return this.hasTime;
     }
 
-    public void addTime(int time) {
+    public void addTime(long time) {
         this.timeLeft += time;
     }
 
@@ -88,6 +87,8 @@ import java.util.UUID;
 
     @Override
     public boolean sendMessage(String... messages) {
+        this.setPlaceholders();
+
         Player player = this.player.getPlayer();
         if (player == null) return false;
 

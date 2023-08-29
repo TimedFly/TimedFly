@@ -21,14 +21,8 @@ public abstract class Messenger extends PlaceholderManager {
 
     public abstract boolean hasPermission(String... permissions);
 
-    @Getter
-    public FlyConsole consoleSender;
-
-    @Getter
-    public FlyPlayer flyPlayer;
-
     public boolean isConsole() {
-        return consoleSender != null;
+        return this instanceof FlyConsole;
     }
 
     public void sendHoverableMessage(String msg, OnClick onclick, String... desc) {
@@ -50,7 +44,7 @@ public abstract class Messenger extends PlaceholderManager {
         message.setHoverEvent(hoverEvent);
         message.setClickEvent(clickEvent);
 
-        flyPlayer.getPlayer().spigot().sendMessage(message);
+        ((FlyPlayer) this).getPlayer().spigot().sendMessage(message);
     }
 
     public static class OnClick {
