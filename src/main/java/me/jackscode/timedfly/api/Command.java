@@ -212,9 +212,16 @@ public abstract class Command {
     public boolean invalidArgsLength(Messenger messenger, String[] args, int minSize) {
         if (args.length >= minSize)
             return false;
+
+        String command = "timedfly";
+        if (commandType == CommandType.TFLY)
+            command = "tfly";
+        else if (commandType == CommandType.TIMED_FLY)
+            command = "timedfly";
+
         messenger.sendHoverableMessage(
-                "&cIncorrect usage. Try &6/timedfly %s help".formatted(this.name),
-                new Messenger.OnClick(ClickEvent.Action.RUN_COMMAND, "/timedfly %s help".formatted(this.name)),
+                "&cIncorrect usage. Try &6/%s %s help".formatted(command, this.name),
+                new Messenger.OnClick(ClickEvent.Action.RUN_COMMAND, "/%s %s help".formatted(command, this.name)),
                 "Click to display help.");
         return true;
     }
