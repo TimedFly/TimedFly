@@ -55,7 +55,7 @@ public class TimeParser {
             long integer = Integer.parseInt(intStack.pop());
             String time = timeStack.pop();
 
-            result += timeMs(integer, time);
+            result += getTimeInSeconds(integer, time);
         }
 
         return result;
@@ -183,11 +183,11 @@ public class TimeParser {
         string.delete(0, i);
 
         String builderString = time.toString();
-        if (!isTimeString(builderString)) throw new TimeParser.TimeFormatException("Invalid time string provided");
+        if (!isTimeString(builderString)) throw new TimeParser.TimeFormatException("Invalid time string provided: " + builderString);
         return builderString;
     }
 
-    private static long timeMs(long integer, String string) {
+    private static long getTimeInSeconds(long integer, String string) {
         Collection<String> timeCollection = timeString;
 
         if (timeCollection.isEmpty()) {
@@ -196,7 +196,7 @@ public class TimeParser {
 
         return timeCollection.stream()
                 .filter(value -> value.startsWith(string))
-                .mapToLong(value -> TimeUnit.valueOf(value.toUpperCase()).toMillis(integer))
+                .mapToLong(value -> TimeUnit.valueOf(value.toUpperCase()).toSeconds(integer))
                 .sum();
     }
 
