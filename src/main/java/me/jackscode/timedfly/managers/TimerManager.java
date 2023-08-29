@@ -18,6 +18,7 @@ public class TimerManager {
     }
 
     public static synchronized void start() {
+        if (players.isEmpty()) return;
         if (!isRunning()) {
             Bukkit.getLogger().info("Starting timer...");
             timer = TaskManager.runAsyncScheduler(() -> {

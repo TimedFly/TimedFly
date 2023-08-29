@@ -89,8 +89,8 @@ import java.util.UUID;
     public boolean sendMessage(String... messages) {
         this.setPlaceholders();
 
-        Player player = this.player.getPlayer();
-        if (player == null) return false;
+        Player bukkitPlayer = this.player.getPlayer();
+        if (bukkitPlayer == null) return false;
 
         String[] msgs = Arrays.stream(messages)
                 .map(message -> {
@@ -99,7 +99,7 @@ import java.util.UUID;
                     return this.replacePlaceholders(colored);
                 })
                 .toArray(String[]::new);
-        player.sendMessage(msgs);
+        bukkitPlayer.sendMessage(msgs);
         return true;
     }
 

@@ -8,34 +8,30 @@ import me.jackscode.timedfly.api.Command;
 import me.jackscode.timedfly.api.Messenger;
 import me.jackscode.timedfly.api.entity.FlyPlayer;
 import me.jackscode.timedfly.enums.CommandType;
+import me.jackscode.timedfly.utilities.TimeParser;
+import me.jackscode.timedfly.utilities.TimeParser.TimeFormatException;
 import net.md_5.bungee.api.chat.ClickEvent;
 
 public class TimerCommand extends Command {
 
     public TimerCommand() {
         super("timer", CommandType.TFLY, "TIMER COMMAND");
-        this.addArgs("start", Arrays.asList(
-                new Argument("player", ArgumentType.OPTIONAL,
-                        "Starts the timer to a specified player, or yourself.",
-                        "By_Jack")));
+        Argument playerArgument = new Argument("player", ArgumentType.OPTIONAL,
+                "Starts the timer to a specified player, or yourself.",
+                "By_Jack");
+        this.addArgs("start", Arrays.asList(playerArgument));
         this.addArgs("stop",
-                Arrays.asList(new Argument("player", ArgumentType.OPTIONAL,
-                        "Stops the timer to a specified player, or yourself.",
-                        "mister_jairo")));
+                Arrays.asList(playerArgument));
         this.addArgs("add", Arrays.asList(
                 new Argument("time", ArgumentType.REQUIRED,
                         "Time to to add to specified player, or yourself.",
                         "100 seconds"),
-                new Argument("player", ArgumentType.OPTIONAL,
-                        "Player to to add the time to.",
-                        "Elprimero")));
+                playerArgument));
         this.addArgs("set", Arrays.asList(
                 new Argument("time", ArgumentType.REQUIRED,
                         "Time to to set to specified player, or yourself.",
                         "5m"),
-                new Argument("player", ArgumentType.OPTIONAL,
-                        "Player to to set the time to.",
-                        "BrayanPS")));
+                playerArgument));
     }
 
     @Override
@@ -48,7 +44,7 @@ public class TimerCommand extends Command {
         if (this.invalidArgsLength(messenger, args, 1))
             return;
 
-        FlyPlayer player = messenger.getFlyPlayer();
+        FlyPlayer player = (FlyPlayer) messenger;
         switch (args[0]) {
             case "help":
                 this.sendHelpMessage(messenger, true);
@@ -65,9 +61,13 @@ public class TimerCommand extends Command {
                     return;
                 }
                 if (player.hasPermission("fly.add")) {
-                    player.addTime(Integer.parseInt(args[1]));
-                    player.startTimer();
-                    player.sendMessage("You have added time to your self, new time: &3{time_left}");
+                    try {
+                        player.addTime(TimeParser.parse(args[1]));
+                        player.startTimer();
+                        player.sendMessage("You have added time to your self, new time: &3{time_left}");
+                    } catch (TimeFormatException e) {
+                        player.sendMessage(e.getMessage());
+                    }
                 } else {
                     player.sendMessage("&cYou dont have permissions for this.");
                 }
@@ -76,12 +76,19 @@ public class TimerCommand extends Command {
                 if (args.length < 2)
                     return;
                 if (player.hasPermission("fly.set")) {
-                    player.setTimeLeft(Integer.parseInt(args[1]));
-                    player.startTimer();
-                    player.sendMessage("You have set your time to: {time_left}");
+                    try {
+                        player.setTimeLeft(TimeParser.parse(args[1]));
+                        player.startTimer();
+                        player.sendMessage("You have set your time to: {time_left}");
+                    } catch (TimeFormatException e) {
+                        player.sendMessage(e.getMessage());
+                    }
                 } else {
                     player.sendMessage("&cYou dont have permissions for this.");
                 }
+                break;
+            case "timeleft":
+                player.sendMessage(player.timeLeftToString());
                 break;
             default:
                 player.sendHoverableMessage(
